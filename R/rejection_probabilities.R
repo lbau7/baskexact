@@ -34,9 +34,12 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
   if ((sum(targ) == design@k) & (length(unique(design@theta1)) == 1)) {
     probs_eff <- apply(events_eff, 1,
       function(x) get_prob(n = n, r = x, theta = design@theta1))
-    perm_fun <- function(x) ifelse(length(unique(x)) == 1, 1,
-      arrangements::npermutations(x = unique(x),
-        freq = Rfast::Table(x, names = FALSE)))
+    perm_fun <- function(x) {
+      tab <- tabulate(x + 1)
+      tab <- tab[tab != 0]
+      ifelse(length(unique(x)) == 1, 1,
+        arrangements::npermutations(x = unique(x), freq = tab))
+    }
     eff_perm <- apply(events_eff, 1, perm_fun)
     rej_prob <- sum(probs_eff * eff_perm)
   } else {

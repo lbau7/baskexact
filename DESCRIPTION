@@ -17,7 +17,6 @@ LinkingTo:
 Imports: 
     Rcpp,
 	arrangements,
-	Rfast,
 	methods
 Suggests: 
     testthat (>= 3.0.0),
