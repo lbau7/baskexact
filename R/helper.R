@@ -1,3 +1,4 @@
+# Get the critical value for individual baskets
 get_crit <- function(design, n, lambda) {
   shape1post <- design@shape1 + 1:n
   shape2post <- design@shape1 + n - 1:n
@@ -6,6 +7,8 @@ get_crit <- function(design, n, lambda) {
   which(prob >= lambda)[1]
 }
 
+# Get the critical value with borrowing when the number of responses
+# is equal in all baskets
 get_crit_pool <- function(design, n, lambda) {
   shape1pool <- (design@shape1 + 1:n) * design@k
   shape2pool <- (design@shape1 + n - 1:n) * design@k
