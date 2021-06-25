@@ -64,3 +64,40 @@ test_that("check_mon_within works", {
   expect_false(any(res9 != cummax(res9)))
   expect_false(monres2)
 })
+
+test_that("check_mon_between works", {
+  # Without Pruning
+  design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+    theta1 = rep(0.5, 4))
+  ev1 <- check_mon_between(design = design, n = 15, lambda = 0.99,
+    epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = TRUE)[[1]]
+
+  weights1 <- get_weights(design = design, n = 15, epsilon = 2, tau = 0,
+    logbase = 2)
+  res1 <- bskt_final(design = design, n = 15, lambda = 0.99,
+    r = ev1$Events[1, ], weight_mat = weights1)
+  res2 <- bskt_final(design = design, n = 15, lambda = 0.99,
+    r = ev1$Events[2, ], weight_mat = weights1)
+
+  res_nodet1 <- check_mon_between(design = design, n = 15, lambda = 0.99,
+    epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = FALSE)
+
+  # With Pruning
+  res_nodet2 <- check_mon_between(design = design, n = 15, lambda = 0.99,
+    epsilon = 2, tau = 0, logbase = 2, prune = TRUE, details = FALSE)
+
+  crit_pool <- get_crit_pool(design = design, n = 15, lambda = 0.99)
+  weights2 <- prune_weights(weights1, cut = crit_pool)
+  res3 <- bskt_final(design = design, n = 15, lambda = 0.99,
+    r = ev1$Events[1, ], weight_mat = weights2)
+  res4 <- bskt_final(design = design, n = 15, lambda = 0.99,
+    r = ev1$Events[2, ], weight_mat = weights2)
+
+  expect_equal(res1, ev1$Results[1, ])
+  expect_true(any(res1 == 1))
+  expect_equal(res2, ev1$Results[2, ])
+  expect_true(all(res2 == 0))
+  expect_false(res_nodet1)
+  expect_equal(res3, res4)
+  expect_true(res_nodet2)
+})
