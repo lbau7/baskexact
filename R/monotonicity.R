@@ -73,8 +73,9 @@ setMethod("check_mon_between", "Basket",
     res <- t(apply(events, 1, func))
     res_sig <- apply(res, 1, function(x) any(x == 1))
     res_test <- res_sig
-    if (details) detlist <- list()
 
+    if (details) detlist <- list()
+    checkout <- TRUE
     for (i in 1:length(res_sig)) {
       if (res_test[i]) {
         events_sel <- apply(events, 1, function(x) all(x >= events[i, ]))
@@ -84,24 +85,26 @@ setMethod("check_mon_between", "Basket",
           res_test[events_sel] <- FALSE
         } else {
           if (details) {
+            if (checkout) checkout <- FALSE
             detlist <- c(detlist, list(list(
               Events = rbind(events[i, ], events[events_sel & !res_sig, ]),
               Results = rbind(res[i, ], res[events_sel & !res_sig, ])
             )))
           } else {
+            checkout <- FALSE
             break
           }
         }
       }
     }
 
-    if (length(detlist) > 0) {
+    if (checkout) {
+      TRUE
+    } else {
       if (details) {
         detlist
       } else {
         FALSE
       }
-    } else {
-      TRUE
     }
   })
