@@ -17,6 +17,8 @@ get_crit_pool <- function(design, n, lambda) {
   which(prob >= lambda)[1]
 }
 
+# Returns a vector that determines which baskets are of interest
+# to compute the type 1 error rate or the power
 get_targ <- function(design, prob) {
   if (prob == "toer") {
     design@theta0 == design@theta1
@@ -25,10 +27,13 @@ get_targ <- function(design, prob) {
   }
 }
 
+
+# Calculate probability for an event to occur
 get_prob <- function(n, r, theta) {
   prod(stats::dbinom(x = r, size = n, prob = theta))
 }
 
+# Calculate the posterior probability
 post_beta <- function(shape, theta0) {
   stats::pbeta(theta0, shape1 = shape[1, ], shape2 = shape[2, ],
     lower.tail = FALSE)
