@@ -3,3 +3,4 @@
 ^man-roxygen$
 ^codecov\.yml$
 ^README\.Rmd$
+^\.travis\.yml$
