@@ -206,3 +206,40 @@ setGeneric("check_mon_between",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...)
     standardGeneric("check_mon_between")
 )
+
+#' Adjust Lambda
+#'
+#' Finds the value for \code{lambda} such that the family wise error
+#' rate is protected at level \code{alpha}.
+#'
+#' @template design
+#' @param alpha The one-sided signifance level.
+#' @template n
+#' @template tuning
+#' @template prune
+#' @param prec_digits Number of decimal places that are considered when
+#'   adjusting lambda
+#' @template dotdotdot
+#'
+#' @details \code{adjust_alpha} finds the greatest value with
+#' \code{prec_digits} for \code{lambda} which controls the family wise error
+#' rate at level \code{alpha} (one-sided). A combination of the uniroot
+#' function followed by a grid search is used to finde the correct value
+#' for \code{lambda}.
+#'
+#' @return The greatest value with \code{prec_digits} decimal places for
+#' \code{lambda} which controls the family wise error rate at level
+#' \code{alpha} (one-sided) and the exact family wise error rate for this
+#' value of \code{lambda}.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
+#'   theta1 = c(0.2, 0.2, 0.2))
+#' adjust_lambda(design = design, alpha = 0.025, n = 15, epsilon = 1, tau = 0,
+#'   logbase = 2, prune = FALSE, prec_digits = 4)
+setGeneric("adjust_lambda",
+  function(design, alpha = 0.025, n, epsilon, tau, logbase, prune,
+           prec_digits, ...)
+    standardGeneric("adjust_lambda")
+)
