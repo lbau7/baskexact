@@ -72,6 +72,12 @@ prior distributions and equal sample sizes for each basket this condition
 states that there are no cases where the null hypothesis of a basket is
 rejected when there is at least one other basket with more observed
 responses for which the null hypothesis cannot be rejected.
+
+If \code{prune = TRUE} then the baskets with an observed number of baskets
+smaller than the pooled critical value are not borrowed from. The
+pooled critical value is the smallest integer c for which all null
+hypotheses can be rejected if the number of responses is exactly c for
+all baskets.
 }
 \section{Methods (by class)}{
 \itemize{
