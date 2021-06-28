@@ -73,8 +73,6 @@ setValidity("OneStageBasket", function(object) {
     "theta1 must be between 0 and 1"
   } else if (any(object@theta0 > object@theta1)) {
     "theta1 must be greater than or equal to theta0"
-  } else if (all(object@theta0 == object@theta1)) {
-    "at least one theta1 must be greater than theta0"
   } else {
     TRUE
   }})

@@ -27,5 +27,4 @@ test_that("validity method works", {
   expect_error(setupBasket(k = 3, theta0 = 0.2,theta1 = c(0.2, 0.5, 1.1)))
   expect_error(setupBasket(k = 3, theta0 = 0.2,theta1 = c(0.2, 0.5, -0.1)))
   expect_error(setupBasket(k = 3, theta0 = 0.3,theta1 = c(0.2, 0.5, 0.5)))
-  expect_error(setupBasket(k = 3, theta0 = 0.2,theta1 = c(0.2, 0.2, 0.2)))
 })
