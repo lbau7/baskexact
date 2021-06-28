@@ -1,6 +1,6 @@
 test_that("check_mon_within works", {
   # Without Pruning
-  design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+  design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = rep(0.5, 4))
   r1 <- check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
     tau = 0, logbase = 2, prune = FALSE, details = TRUE)$Events
@@ -67,7 +67,7 @@ test_that("check_mon_within works", {
 
 test_that("check_mon_between works", {
   # Without Pruning
-  design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+  design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = rep(0.5, 4))
   ev1 <- check_mon_between(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = TRUE)[[1]]

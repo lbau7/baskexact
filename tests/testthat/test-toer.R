@@ -1,5 +1,5 @@
 test_that("toer works", {
-  design <- setupBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = c(0.5, 0.5, 0.5))
   toer_group <- suppressMessages(toer(design = design, n = 24, epsilon = 2,
     tau = 0.5, logbase = exp(1), lambda = 0.99, results = "group"))
@@ -14,7 +14,7 @@ test_that("toer works", {
 })
 
 test_that("toer stops when it's supposed to ", {
-  design <- setupBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = c(0.2, 0.5, 0.5))
   expect_error(toer(design = design, n = c(10, 15, 20), lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
