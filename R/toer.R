@@ -1,6 +1,6 @@
 #' @describeIn toer Type 1 error rate for a single-stage design.
 setMethod("toer", "OneStageBasket",
-  function(design, n, lambda, epsilon, tau, logbase = 2,
+  function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
            results = c("fwer", "group"), ...) {
     if (all(design@theta1 != design@theta0)) {
       message("all theta1 > theta0, computing type 1 error rates under global null")
@@ -15,6 +15,11 @@ setMethod("toer", "OneStageBasket",
     results <- match.arg(results)
     weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
       tau = tau, logbase = logbase)
+
+    if (prune) {
+      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
+    }
 
     if (results == "fwer") {
       reject_prob_ew(design = design, n = n, lambda = lambda,

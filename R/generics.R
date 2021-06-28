@@ -6,6 +6,7 @@
 #' @template n
 #' @template lambda
 #' @template tuning
+#' @template prune
 #' @param results Whether only the family wise error rate (option \code{fwer})
 #'   or also the rejection probabilities per group (option \code{group}) should
 #'   be returned.
@@ -38,6 +39,12 @@
 #' on the similarity between the posterior distributions of the response
 #' probability. Biometrical Journal, 62(2), 330-338.
 #'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
 #' @return If \code{results = "fwer"} then the family wise type 1 error rate is
 #' returned as a numeric value. If \code{results = "group"} then a list with
 #' the rejection probabilities per group and the family wise type 1 error rate
@@ -52,7 +59,7 @@
 #' design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
 #' toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 setGeneric("toer",
-  function(design, n, lambda, epsilon, tau, logbase = 2,
+  function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
            results = c("fwer", "group"), ...) standardGeneric("toer")
 )
 
@@ -64,6 +71,7 @@ setGeneric("toer",
 #' @template n
 #' @template lambda
 #' @template tuning
+#' @template prune
 #' @param results Whether only the experimentwise power (option \code{ewp})
 #'   or also the rejection probabilities per group (option \code{group}) should
 #'   be returned.
@@ -95,6 +103,12 @@ setGeneric("toer",
 #' on the similarity between the posterior distributions of the response
 #' probability. Biometrical Journal, 62(2), 330-338.
 #'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
 #' @return If \code{results = "ewp"} then the experimentwise power is
 #' returned as a numeric value. If \code{results = "group"} then a list with
 #' the rejection probabilities per group and the experimentwise power
@@ -107,7 +121,7 @@ setGeneric("toer",
 #' design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
 #' pow(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 setGeneric("pow",
-  function(design, n, lambda, epsilon, tau, logbase = 2,
+  function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
     results = c("ewp", "group"), ...) standardGeneric("pow")
 )
 
@@ -129,6 +143,12 @@ setGeneric("pow",
 #' states that there are no cases where the null hypothesis of a basket is
 #' rejected when there is at least one other basket with more observed
 #' responses for which the null hypothesis cannot be rejected.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
 #'
 #' @return If \code{details = FALSE} then only a logical value is returned.
 #' If \code{details = TRUE} then if there are any cases where the
@@ -164,6 +184,12 @@ setGeneric("check_mon_within",
 #' that there are no cases where at least one null hypothesis is rejected when
 #' when there is a case with an equal or higher number of responses in each
 #' basket for which no null hypothesis is rejected.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
 #'
 #' @return If \code{details = FALSE} then only a logical value is returned.
 #' If \code{details = TRUE} then if there are any cases where the

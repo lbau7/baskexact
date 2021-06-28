@@ -12,6 +12,7 @@ pow(
   epsilon,
   tau,
   logbase = 2,
+  prune = FALSE,
   results = c("ewp", "group"),
   ...
 )
@@ -23,6 +24,7 @@ pow(
   epsilon,
   tau,
   logbase = 2,
+  prune = FALSE,
   results = c("ewp", "group"),
   ...
 )
@@ -45,6 +47,9 @@ have to be that borrowing occurs. See details for more information.}
 \item{logbase}{A tuning parameter that determines which logarithm base is
 used to compute the Jensen-Shannon divergence. See details for more
 information.}
+
+\item{prune}{Whether the results should be pruned before the final
+analysis. See details for more information.}
 
 \item{results}{Whether only the experimentwise power (option \code{ewp})
 or also the rejection probabilities per group (option \code{group}) should
@@ -100,4 +105,10 @@ Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
 A Bayesian basket trial design that borrows information across strata based
 on the similarity between the posterior distributions of the response
 probability. Biometrical Journal, 62(2), 330-338.
+
+If \code{prune = TRUE} then the baskets with an observed number of baskets
+smaller than the pooled critical value are not borrowed from. The
+pooled critical value is the smallest integer c for which all null
+hypotheses can be rejected if the number of responses is exactly c for
+all baskets.
 }
