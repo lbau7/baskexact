@@ -2,7 +2,7 @@
 % Please edit documentation in R/generics.R, R/pow.R
 \name{pow}
 \alias{pow}
-\alias{pow,Basket-method}
+\alias{pow,OneStageBasket-method}
 \title{Power}
 \usage{
 pow(
@@ -16,7 +16,7 @@ pow(
   ...
 )
 
-\S4method{pow}{Basket}(
+\S4method{pow}{OneStageBasket}(
   design,
   n,
   lambda,
@@ -88,11 +88,11 @@ theta0 is greater than lambda, then the null hypothesis is rejected.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{Basket}: Power for a single stage design.
+\item \code{OneStageBasket}: Power for a single-stage design.
 }}
 
 \examples{
-design <- setupBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
+design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
 pow(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 }
 \references{

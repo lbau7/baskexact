@@ -27,7 +27,6 @@ get_targ <- function(design, prob) {
   }
 }
 
-
 # Calculate probability for an event to occur
 get_prob <- function(n, r, theta) {
   prod(stats::dbinom(x = r, size = n, prob = theta))

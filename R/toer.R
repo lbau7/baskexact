@@ -1,5 +1,5 @@
-#' @describeIn toer Type 1 error rate for a single stage design.
-setMethod("toer", "Basket",
+#' @describeIn toer Type 1 error rate for a single-stage design.
+setMethod("toer", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2,
            results = c("fwer", "group"), ...) {
     if (all(design@theta1 != design@theta0)) {

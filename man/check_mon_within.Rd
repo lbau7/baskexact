@@ -2,7 +2,7 @@
 % Please edit documentation in R/generics.R, R/monotonicity.R
 \name{check_mon_within}
 \alias{check_mon_within}
-\alias{check_mon_within,Basket-method}
+\alias{check_mon_within,OneStageBasket-method}
 \title{Check Within-Trial Monotonicity}
 \usage{
 check_mon_within(
@@ -17,7 +17,7 @@ check_mon_within(
   ...
 )
 
-\S4method{check_mon_within}{Basket}(
+\S4method{check_mon_within}{OneStageBasket}(
   design,
   n,
   lambda,
@@ -75,12 +75,12 @@ responses for which the null hypothesis cannot be rejected.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{Basket}: Within-trial monotonicity condition for a
-single stage design.
+\item \code{OneStageBasket}: Within-trial monotonicity condition for a
+single-stage design.
 }}
 
 \examples{
-design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
   theta1 = c(0.2, 0.5, 0.5, 0.5))
 check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
   tau = 0, prune = FALSE, details = TRUE)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/generics.R, R/monotonicity.R
 \name{check_mon_between}
 \alias{check_mon_between}
-\alias{check_mon_between,Basket-method}
+\alias{check_mon_between,OneStageBasket-method}
 \title{Check Between-Trial Monotonicity}
 \usage{
 check_mon_between(
@@ -17,7 +17,7 @@ check_mon_between(
   ...
 )
 
-\S4method{check_mon_between}{Basket}(
+\S4method{check_mon_between}{OneStageBasket}(
   design,
   n,
   lambda,
@@ -75,12 +75,12 @@ basket for which no null hypothesis is rejected.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{Basket}: Between-trial monotonicity condition for a
-single stage design.
+\item \code{OneStageBasket}: Between-trial monotonicity condition for a
+single-stage design.
 }}
 
 \examples{
-design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
   theta1 = c(0.2, 0.5, 0.5, 0.5))
 check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
   tau = 0, prune = FALSE, details = TRUE)

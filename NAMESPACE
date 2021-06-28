@@ -3,7 +3,7 @@
 export(check_mon_between)
 export(check_mon_within)
 export(pow)
-export(setupBasket)
+export(setupOneStageBasket)
 export(toer)
 importFrom(Rcpp,sourceCpp)
 useDynLib(baskexact, .registration = TRUE)

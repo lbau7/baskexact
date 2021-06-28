@@ -2,7 +2,7 @@
 % Please edit documentation in R/generics.R, R/toer.R
 \name{toer}
 \alias{toer}
-\alias{toer,Basket-method}
+\alias{toer,OneStageBasket-method}
 \title{Type 1 Error Rate}
 \usage{
 toer(
@@ -16,7 +16,7 @@ toer(
   ...
 )
 
-\S4method{toer}{Basket}(
+\S4method{toer}{OneStageBasket}(
   design,
   n,
   lambda,
@@ -91,11 +91,11 @@ theta0 is greater than lambda, then the null hypothesis is rejected.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{Basket}: Type 1 error rate for a single stage design.
+\item \code{OneStageBasket}: Type 1 error rate for a single-stage design.
 }}
 
 \examples{
-design <- setupBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
+design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
 toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 }
 \references{

@@ -49,7 +49,7 @@
 #' @export
 #'
 #' @examples
-#' design <- setupBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
+#' design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
 #' toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 setGeneric("toer",
   function(design, n, lambda, epsilon, tau, logbase = 2,
@@ -104,7 +104,7 @@ setGeneric("toer",
 #' @export
 #'
 #' @examples
-#' design <- setupBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
+#' design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
 #' pow(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 setGeneric("pow",
   function(design, n, lambda, epsilon, tau, logbase = 2,
@@ -137,7 +137,7 @@ setGeneric("pow",
 #' @export
 #'
 #' @examples
-#' design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
 #'   theta1 = c(0.2, 0.5, 0.5, 0.5))
 #' check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
 #'   tau = 0, prune = FALSE, details = TRUE)
@@ -172,7 +172,7 @@ setGeneric("check_mon_within",
 #' @export
 #'
 #' @examples
-#' design <- setupBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
 #'   theta1 = c(0.2, 0.5, 0.5, 0.5))
 #' check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
 #'   tau = 0, prune = FALSE, details = TRUE)

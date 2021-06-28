@@ -1,5 +1,5 @@
-#' @describeIn pow Power for a single stage design.
-setMethod("pow", "Basket",
+#' @describeIn pow Power for a single-stage design.
+setMethod("pow", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2,
            results = c("ewp", "group"), ...) {
     if (length(n) != 1) stop("n must have length 1")

@@ -1,6 +1,6 @@
 #' @describeIn check_mon_within Within-trial monotonicity condition for a
-#' single stage design.
-setMethod("check_mon_within", "Basket",
+#' single-stage design.
+setMethod("check_mon_within", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
     if (length(n) != 1) stop("n must have length 1")
     if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
@@ -54,8 +54,8 @@ setMethod("check_mon_within", "Basket",
   })
 
 #' @describeIn check_mon_between Between-trial monotonicity condition for a
-#' single stage design.
-setMethod("check_mon_between", "Basket",
+#' single-stage design.
+setMethod("check_mon_between", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
     crit <- get_crit(design = design, n = n, lambda = lambda)
     if (is.na(crit)) stop("sample size too small")
