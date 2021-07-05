@@ -29,11 +29,14 @@ reject_single_loop <- function(design, n, lambda, epsilon, tau,
         res <- bskt_final(design = design, n = n, lambda = lambda, r = events,
           weight_mat = weights)
 
-        if (any(res[targ] == 1)) {
+        if (any(res == 1)) {
           prob_temp <- get_prob(n = n, r = events, theta = design@theta1)
-          rej_ew <- rej_ew + prob_temp
-          rej_group[which(res[targ] == 1)] <- rej_group[which(res[targ] == 1)] +
+          rej_group[which(res == 1)] <- rej_group[which(res == 1)] +
             prob_temp
+
+          if (any(res[targ] == 1)) {
+            rej_ew <- rej_ew + prob_temp
+          }
         }
       }
     }
