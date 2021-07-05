@@ -4,6 +4,8 @@ test_that("toer works without pruning", {
     theta1 = rep(0.2, 3))
 
   # Proposed design (i) in Fujikawa et al.
+  # Compare the results of reject_prob_ew, reject_prob_group and
+  # reject_single_loop
   toer_group1 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
     tau = 0, logbase = exp(1), prune = FALSE, results = "group")
   toer_fwer1 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
@@ -12,6 +14,8 @@ test_that("toer works without pruning", {
     epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE, prob = "toer")
 
   # Proposed design (ii) in Fujikawa et al.
+  # Compare the results of reject_prob_ew, reject_prob_group and
+  # reject_single_loop
   toer_group2 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
     tau = 0.5, logbase = exp(1), prune = FALSE, results = "group")
   toer_fwer2 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
@@ -52,6 +56,8 @@ test_that("toer works with pruning", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = rep(0.2, 3))
 
+  # Compare the results of reject_prob_ew, reject_prob_group and
+  # reject_single_loop
   toer_group1 <- toer(design = design, n = 15, lambda = 0.95, epsilon = 1,
     tau = 0.2, logbase = 2, prune = TRUE, results = "group")
   toer_fwer1 <- toer(design = design, n = 15, lambda = 0.95, epsilon = 1,
