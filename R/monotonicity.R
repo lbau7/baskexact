@@ -5,9 +5,10 @@ NULL
 #' single-stage design.
 setMethod("check_mon_within", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
+    # Not working with different priors and different n!
     if (length(n) != 1) stop("n must have length 1")
     if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
-    if (epsilon < 0) stop("epsilon must be positive")
+    if (epsilon < 0) stop("epsilon must non-negative positive")
     if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
     if (logbase <= 0) stop("logbase must be positive")
 
@@ -20,11 +21,14 @@ setMethod("check_mon_within", "OneStageBasket",
     }
 
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
-    # Not working with different priors and different n
+    # Discard events where all or no baskets are significanct
     sel_events <- apply(events, 1,
       function(x) all(x >= crit) | all(x < crit_pool))
     events <- events[!sel_events, ]
 
+    # If pruning is used and no list of violating outcomes is desired,
+    # then outcomes with different number of responses in baskets that
+    # are pruned can be ignored
     if (prune & !details) {
       events[which(events < crit_pool)] <- 0
       events <- events[!duplicated(events), ]
@@ -33,8 +37,10 @@ setMethod("check_mon_within", "OneStageBasket",
     func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
       r = x, weight_mat = weight_mat)
 
+    # Conduct test for all remaining outcomes
     res <- t(apply(events, 1, func))
     res_sig <- rowSums(res)
+    # Investigate outcomes where some (but not all) baskets are significant
     res_inv <- res[which(res_sig > 0 & res_sig < design@k), ]
     no_mon <- apply(res_inv, 1, function(x) any(x != cummax(x)))
     check <- sum(no_mon) == 0
@@ -60,8 +66,12 @@ setMethod("check_mon_within", "OneStageBasket",
 #' single-stage design.
 setMethod("check_mon_between", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
-    crit <- get_crit(design = design, n = n, lambda = lambda)
-    if (is.na(crit)) stop("sample size too small")
+    if (length(n) != 1) stop("n must have length 1")
+    if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
+    if (epsilon < 0) stop("epsilon must non-negative positive")
+    if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
+    if (logbase <= 0) stop("logbase must be positive")
+
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
     weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
       tau = tau, logbase = logbase)
