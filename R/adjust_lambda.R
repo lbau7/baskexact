@@ -5,6 +5,9 @@ adjust_lambda <- function(design, alpha = 0.025, n, epsilon, tau, logbase,
   root_fun <- function(x) toer(design = design, n = n, lambda = x,
     epsilon = epsilon, tau = tau, logbase = logbase, prune = prune,
     results = "fwer") - alpha
+
+  # Use uniroot to find lambda close to the smallest lambda that protects
+  # the significance level at alpha
   uni_root <- stats::uniroot(root_fun, interval = c(0.5, upper_lim),
     tol = 10^(-prec_digits))
 
@@ -25,17 +28,21 @@ adjust_lambda <- function(design, alpha = 0.025, n, epsilon, tau, logbase,
     val <- root_fun(root)
     if (val > 0) {
       # If the rejection prob is greater now than alpha with the rounded-down
-      # lambda, then round lambda down
+      # lambda, then round lambda up
       root <- ceiling(uni_root$root * 10^(prec_digits)) / 10^(prec_digits)
       val <- root_fun(root)
     } else {
       # If the rejection prob is still below alpha, decrease lambda
       repeat {
-        root_temp <- root - 10^(-prec_digits)
-        val_temp <- root_fun(root_temp)
-        if (val_temp > 0) break
-        root <- root_temp
-        val <- val_temp
+        root_old <- root
+        val_old <- val
+        root <- root - 10^(-prec_digits)
+        val <- root_fun(root)
+        if (val > 0) {
+          root <- root_old
+          val <- val_old
+          break
+        }
       }
     }
   }
