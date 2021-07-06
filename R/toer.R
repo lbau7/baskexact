@@ -11,7 +11,7 @@ setMethod("toer", "OneStageBasket",
     }
     if (length(n) != 1) stop("n must have length 1")
     if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
-    if (epsilon < 0) stop("epsilon must be positive")
+    if (epsilon < 0) stop("epsilon must be non-negative")
     if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
     if (logbase <= 0) stop("logbase must be positive")
 
