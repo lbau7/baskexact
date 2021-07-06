@@ -50,3 +50,21 @@ test_that("adjust_lambda works", {
   expect_lte(adj_res3$toer, 0.025)
   expect_gt(toer_high3, 0.025)
 })
+
+test_that("errors in adjust_lambda work", {
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
+    theta1 = c(0.2, 0.5, 0.5))
+
+  expect_error(adjust_lambda(design = design1, n = c(10, 15, 20),
+    lambda = 0.99, epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
+  expect_error(adjust_lambda(design = design1, n = 20, lambda = 1.1,
+    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
+  expect_error(adjust_lambda(design = design1, n = 20, lambda = 0.99,
+    epsilon = -2, tau = 0, logbase = 2, results = "fwer"))
+  expect_error(adjust_lambda(design = design1, n = 20, lambda = 0.99,
+    epsilon = 2, tau = 1, logbase = 2, results = "fwer"))
+  expect_error(adjust_lambda(design = design1, n = 20, lambda = 0.99,
+    epsilon = 2, tau = 0, logbase = -2, results = "fwer"))
+  expect_message(adjust_lambda(design = design2, n = 20, lambda = 0.99,
+    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
+})
