@@ -1,3 +1,4 @@
+# Function that conducts the final test in a one-stage design
 bskt_final <- function(design, n, lambda, r, weight_mat) {
   shape_post <- matrix(c(design@shape1 + r, design@shape2 + n - r),
     byrow = TRUE, ncol = design@k)

@@ -1,3 +1,5 @@
+# Calculates the weight-matrix for all possible outcomes in a single-stage
+# design
 get_weights <- function(design, n, epsilon, tau, logbase) {
   shape1_post <- design@shape1 + c(0:n)
   shape2_post <- design@shape2 + c(n:0)
@@ -32,6 +34,7 @@ get_weights <- function(design, n, epsilon, tau, logbase) {
   weight_mat
 }
 
+# Computes the posterior distribution with borrowing
 beta_borrow <- function(k, r, weight_mat, shape) {
   all_combs <- arrangements::combinations(r, 2) + 1
   weights_vec <- weight_mat[all_combs]
