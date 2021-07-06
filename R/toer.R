@@ -1,3 +1,6 @@
+#' @include generics.R
+NULL
+
 #' @describeIn toer Type 1 error rate for a single-stage design.
 setMethod("toer", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,

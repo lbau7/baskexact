@@ -1,3 +1,6 @@
+#' @include generics.R
+NULL
+
 #' @describeIn check_mon_within Within-trial monotonicity condition for a
 #' single-stage design.
 setMethod("check_mon_within", "OneStageBasket",

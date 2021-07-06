@@ -1,3 +1,6 @@
+#' @include generics.R
+NULL
+
 #' @describeIn pow Power for a single-stage design.
 setMethod("pow", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,

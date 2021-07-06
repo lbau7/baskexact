@@ -1,6 +1,6 @@
 #' Class OneStageBasket
 #'
-#' OneStageBasket is an S4 class. An object of this class conatains the most
+#' OneStageBasket is an S4 class. An object of this class contains the most
 #' important design features of a single-stage basket trial.
 #'
 #' @slot k The number of baskets.

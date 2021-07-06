@@ -22,3 +22,17 @@ Suggests:
     testthat (>= 3.0.0),
     covr
 Config/testthat/edition: 3
+Collate: 
+    'RcppExports.R'
+    'class.R'
+    'generics.R'
+    'adjust_lambda.R'
+    'analysis.R'
+    'baskexact-package.R'
+    'borrowing.R'
+    'helper.R'
+    'monotonicity.R'
+    'pow.R'
+    'rejection_probabilities.R'
+    'toer.R'
+    'validate.R'

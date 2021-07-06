@@ -1,3 +1,6 @@
+#' @include class.R
+NULL
+
 #' Type 1 Error Rate
 #'
 #' Computes the exact family wise type 1 error rate of a basket trial .
