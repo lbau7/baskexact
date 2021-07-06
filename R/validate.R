@@ -7,10 +7,6 @@
 reject_single_loop <- function(design, n, lambda, epsilon, tau,
                                logbase = exp(1), prune = FALSE,
                                prob = c("toer", "pwr")) {
-  if (all(design@theta1 != design@theta0)) {
-    design@theta1 <- rep(design@theta0, design@k)
-  }
-
   targ <- get_targ(design = design, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
