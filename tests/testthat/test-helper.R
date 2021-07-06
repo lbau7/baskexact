@@ -39,6 +39,15 @@ test_that("get_crit_pool works", {
   expect_true(all(post_prob_nocrit <= 0.99))
 })
 
+test_that("get_crit and get_crit_pool are identical with one basket", {
+  design <- setupOneStageBasket(k = 1, shape1 = 1, shape2 = 1, theta0 = 0.2,
+    theta1 = 0.2)
+  crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.99)
+  crit <- get_crit(design = design, n = 20, lambda = 0.99)
+
+  expect_equal(crit_pool, crit)
+})
+
 test_that("get_crit_pool returns NA if sample size is too small", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.8,
     theta1 = c(0.9, 0.9, 0.9))
@@ -71,4 +80,14 @@ test_that("prune_weights works", {
 
   expect_equal(shape_post[, 1:3], shape_borrow[, 1:3])
   expect_false(any(shape_post[, 4:6] == shape_borrow[, 4:6]))
+})
+
+test_that("vectorization of get_prob works", {
+  prob1 <- get_prob(n = 5, r = 2, theta = 0.2)
+  prob2 <- get_prob(n = 10, r = 3, theta = 0.4)
+  prob3 <- get_prob(n = 15, r = 4, theta = 0.5)
+  prob_prod <- prob1 * prob2 * prob3
+  prob_all <- get_prob(n = c(5, 10, 15), r = c(2, 3, 4),
+    theta = c(0.2, 0.4, 0.5))
+  expect_equal(prob_prod, prob_all)
 })

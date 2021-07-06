@@ -20,7 +20,7 @@ test_that("adjust_lambda works", {
   toer_high2 <- toer(design = design, n = 15, lambda = lambda_high2,
     epsilon = 1, tau = 0, logbase = 2, prune = TRUE, results = "fwer")
 
-  # Cases with additional steps after uniroot
+  # Cases with an additional step after uniroot
   adj_res3 <- adjust_lambda(design = design, alpha = 0.025, n = 15,
     epsilon = 4, tau = 0, logbase = 2, prune = FALSE, prec_digits = 4)
   lambda_high3 <- adj_res3$lambda - 0.0001
