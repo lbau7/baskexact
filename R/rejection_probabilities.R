@@ -3,6 +3,7 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
                            prob = c("toer", "pwr")) {
   # Computational shortcuts don't work with unequal priors or n!
   targ <- get_targ(design = design, prob = prob)
+  # Create matrix with all possible outcomes (without permutations)
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
 
   # Remove outcomes when no significant results are possible
@@ -73,6 +74,7 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
 reject_prob_group <- function(design, n, lambda, weight_mat,
   prob = c("toer", "pwr")) {
   targ <- get_targ(design = design, prob = prob)
+  # Create matrix with all possible outcomes
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
 
   # Conduct test for all possible outcomes
