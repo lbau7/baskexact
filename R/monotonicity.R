@@ -20,6 +20,7 @@ setMethod("check_mon_within", "OneStageBasket",
       weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
     }
 
+    # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
     # Discard events where all or no baskets are significanct
     sel_events <- apply(events, 1,
@@ -27,7 +28,7 @@ setMethod("check_mon_within", "OneStageBasket",
     events <- events[!sel_events, ]
 
     # If pruning is used and no list of violating outcomes is desired,
-    # then outcomes with different number of responses in baskets that
+    # then outcomes with a different number of responses in baskets that
     # are pruned can be ignored
     if (prune & !details) {
       events[which(events < crit_pool)] <- 0
@@ -79,22 +80,32 @@ setMethod("check_mon_between", "OneStageBasket",
       weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
     }
 
+    # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
     func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
       r = x, weight_mat = weight_mat)
 
+    # Conduct test for all outcomes
     res <- t(apply(events, 1, func))
+    # Select outcomes with at least one rejected null hypothesis
     res_sig <- apply(res, 1, function(x) any(x == 1))
     res_test <- res_sig
 
     if (details) detlist <- list()
     checkout <- TRUE
-    for (i in 1:length(res_sig)) {
+    # For every outcome with at least one rejected null hypothesis:
+    # check whether there are any outcomes with at least as many responses
+    # in each baskets but no rejected null hypotheses
+    for (i in 1:nrow(events)) {
       if (res_test[i]) {
+        # Check condition
         events_sel <- apply(events, 1, function(x) all(x >= events[i, ]))
         res_sel <- res_sig[events_sel]
         check <- sum(res_sel) == length(res_sel)
         if (check) {
+          # If the condition is fulfilled for this outcome, then it is also
+          # fulfilled for all outcomes with at least as many responses in
+          # each basket
           res_test[events_sel] <- FALSE
         } else {
           if (details) {
