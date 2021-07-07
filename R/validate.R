@@ -79,5 +79,44 @@ mon_within_loop <- function(design, n, lambda, epsilon, tau, logbase = 2,
   }
 }
 
+# Version of check_mon_between without shortcuts
+mon_between_slow <- function(design, n, lambda, epsilon, tau, logbase = 2,
+                             prune, ...) {
+  weights <- get_weights(design = design, n = n, epsilon = epsilon, tau = tau,
+    logbase = logbase)
+
+  if (prune) {
+    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+    weights <- prune_weights(weight_mat = weights, cut = crit_pool)
+  }
+
+  events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
+  func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
+    r = x, weight_mat = weights)
+
+  res <- numeric(nrow(events))
+  for (i in 1:nrow(events)) {
+    res_loop <- func(events[i, ])
+    res[i] <- any(res_loop == 1)
+  }
+
+  viol <- c()
+  for (i in 1:nrow(events)) {
+    #if (all(events[i, ] == c(0,0,1,7))) browser()
+    if (res[i]) {
+      events_sel <- apply(events, 1, function(x) all(x >= events[i, ]))
+      res_sel <- res[events_sel]
+      check <- sum(res_sel) == length(res_sel)
+      if (!check) viol <- rbind(viol, events[i, ])
+    }
+  }
+
+  if (length(viol) == 0) {
+    TRUE
+  } else {
+    viol
+  }
+}
+
 
 
