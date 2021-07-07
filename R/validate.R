@@ -51,4 +51,33 @@ reject_single_loop <- function(design, n, lambda, epsilon, tau,
   }
 }
 
+# Loop-based version of check_mon_within
+mon_within_loop <- function(design, n, lambda, epsilon, tau, logbase = 2,
+                            prune, ...) {
+  weights <- get_weights(design = design, n = n, epsilon = epsilon, tau = tau,
+    logbase = logbase)
+
+  if (prune) {
+    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+    weights <- prune_weights(weight_mat = weights, cut = crit_pool)
+  }
+
+  events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
+  func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
+    r = x, weight_mat = weights)
+
+  viol <- c()
+  for (i in 1:nrow(events)) {
+    res_loop <- func(events[i, ])
+    if (any(res_loop != cummax(res_loop))) viol <- rbind(viol, events[i, ])
+  }
+
+  if (length(viol) == 0) {
+    TRUE
+  } else {
+    viol
+  }
+}
+
+
 
