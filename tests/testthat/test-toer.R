@@ -13,6 +13,20 @@ test_that("toer works without pruning", {
   toer_loop1 <- reject_single_loop(design = design, n = 24, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE, prob = "toer")
 
+  # In Fujikawa et al., based on simulation:
+  # Basketwise 0.019, 0.020, 0.022
+  # Experimentwise: 0.035
+  rej_expect1 <- c(0.02158174, 0.02158174, 0.02158174)
+  fwer_expect1 <- 0.03600149
+
+  expect_equal(toer_group1$rejection_probabilities, rej_expect1,
+    tolerance = 10e-7)
+  expect_equal(toer_fwer1, fwer_expect1, tolerance = 10e-7)
+  expect_equal(toer_fwer1, toer_group1$fwer)
+  expect_equal(toer_fwer1, toer_loop1$fwer)
+  expect_equal(toer_group1$rejection_probabilities,
+    toer_loop1$rejection_probabilities)
+
   # Proposed design (ii) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
@@ -24,24 +38,10 @@ test_that("toer works without pruning", {
     epsilon = 2, tau = 0.5, logbase = exp(1), prune = FALSE, prob = "toer")
 
   # In Fujikawa et al., based on simulation:
-  # Basketwise 0.019, 0.020, 0.022
-  # Experimentwise: 0.035
-  rej_expect1 <- c(0.02158174, 0.02158174, 0.02158174)
-  fwer_expect1 <- 0.03600149
-
-  # In Fujikawa et al., based on simulation:
   # Basketwise: 0.029, 0.032, 0.034
   # Experimentwise: 0.063
   rej_expect2 <- c(0.03239555, 0.03239555, 0.03239555)
   fwer_expect2 <- 0.06315308
-
-  expect_equal(toer_group1$rejection_probabilities, rej_expect1,
-    tolerance = 10e-7)
-  expect_equal(toer_fwer1, fwer_expect1, tolerance = 10e-7)
-  expect_equal(toer_fwer1, toer_group1$fwer)
-  expect_equal(toer_fwer1, toer_loop1$fwer)
-  expect_equal(toer_group1$rejection_probabilities,
-    toer_loop1$rejection_probabilities)
 
   expect_equal(toer_group2$rejection_probabilities, rej_expect2,
     tolerance = 10e-7)

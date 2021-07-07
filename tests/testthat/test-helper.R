@@ -3,6 +3,7 @@ test_that("get_crit works", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = c(0.5, 0.5, 0.2))
   crit <- get_crit(design = design, n = 24, lambda = 0.99)
+
   expect_equal(crit, 10)
 })
 
@@ -10,6 +11,7 @@ test_that("get_crit returns NA if sample size is too small", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.7,
     theta1 = c(0.9, 0.9, 0.7))
   crit <- get_crit(design = design, n = 11, lambda = 0.99)
+
   expect_equal(crit, NA_integer_)
 })
 
@@ -52,6 +54,7 @@ test_that("get_crit_pool returns NA if sample size is too small", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.8,
     theta1 = c(0.9, 0.9, 0.9))
   crit <- get_crit_pool(design = design, n = 10, lambda = 0.99)
+
   expect_true(is.na(crit))
 })
 
@@ -89,5 +92,6 @@ test_that("vectorization of get_prob works", {
   prob_prod <- prob1 * prob2 * prob3
   prob_all <- get_prob(n = c(5, 10, 15), r = c(2, 3, 4),
     theta = c(0.2, 0.4, 0.5))
+
   expect_equal(prob_prod, prob_all)
 })

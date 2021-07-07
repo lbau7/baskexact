@@ -11,6 +11,10 @@ test_that("adjust_lambda works", {
   toer_high1 <- toer(design = design, n = 15, lambda = lambda_high1,
     epsilon = 1, tau = 0, logbase = 2, prune = FALSE, results = "fwer")
 
+  expect_equal(adj_res1$toer, toer_adj1)
+  expect_lte(adj_res1$toer, 0.025)
+  expect_gt(toer_high1, 0.025)
+
   # With Pruning
   adj_res2 <- adjust_lambda(design = design, alpha = 0.025, n = 15,
     epsilon = 1, tau = 0, logbase = 2, prune = TRUE, prec_digits = 4)
@@ -19,6 +23,10 @@ test_that("adjust_lambda works", {
     epsilon = 1, tau = 0, logbase = 2, prune = TRUE, results = "fwer")
   toer_high2 <- toer(design = design, n = 15, lambda = lambda_high2,
     epsilon = 1, tau = 0, logbase = 2, prune = TRUE, results = "fwer")
+
+  expect_equal(adj_res2$toer, toer_adj2)
+  expect_lte(adj_res2$toer, 0.025)
+  expect_gt(toer_high2, 0.025)
 
   # Cases with an additional step after uniroot
   adj_res3 <- adjust_lambda(design = design, alpha = 0.025, n = 15,
@@ -37,12 +45,6 @@ test_that("adjust_lambda works", {
   toer_high4 <- toer(design = design, n = 15, lambda = lambda_high4,
     epsilon = 1, tau = 0.2, logbase = 2, prune = FALSE)
 
-  expect_equal(adj_res1$toer, toer_adj1)
-  expect_lte(adj_res1$toer, 0.025)
-  expect_gt(toer_high1, 0.025)
-  expect_equal(adj_res2$toer, toer_adj2)
-  expect_lte(adj_res2$toer, 0.025)
-  expect_gt(toer_high2, 0.025)
   expect_equal(adj_res3$toer, toer_adj3)
   expect_lte(adj_res3$toer, 0.025)
   expect_gt(toer_high3, 0.025)
@@ -55,16 +57,15 @@ test_that("errors in adjust_lambda work", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = c(0.2, 0.5, 0.5))
 
-  expect_error(adjust_lambda(design = design1, n = c(10, 15, 20),
-    lambda = 0.99, epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(adjust_lambda(design = design1, n = 20, lambda = 1.1,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(adjust_lambda(design = design1, n = 20, lambda = 0.99,
-    epsilon = -2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(adjust_lambda(design = design1, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 1, logbase = 2, results = "fwer"))
-  expect_error(adjust_lambda(design = design1, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = -2, results = "fwer"))
-  expect_message(adjust_lambda(design = design2, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
+  expect_error(adjust_lambda(design = design1, alpha = 1.1, n = 20,
+    epsilon = 2, tau = 0, logbase = 2, prune = TRUE, prec_digits = 3))
+  expect_error(adjust_lambda(design = design1, alpha = 0.025,
+    n = c(20, 10, 10), epsilon = 2, tau = 0, logbase = 2, prune = TRUE,
+    prec_digits = 3))
+  expect_error(adjust_lambda(design = design1, alpha = 0.025, n = 20,
+    epsilon = -2, tau = 0, logbase = 2, prune = TRUE, prec_digits = 3))
+  expect_error(adjust_lambda(design = design1, alpha = 0.025, n = 20,
+    epsilon = 2, tau = 1, logbase = 2, prune = TRUE, prec_digits = 3))
+  expect_error(adjust_lambda(design = design1, alpha = 0.025, n = 20,
+    epsilon = 2, tau = 0, logbase = -0.5, prune = TRUE, prec_digits = 3))
 })
