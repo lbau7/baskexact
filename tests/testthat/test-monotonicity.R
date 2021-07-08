@@ -129,65 +129,70 @@ test_that("check_mon_between works", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = rep(0.5, 3))
 
-  ev <- check_mon_between(design = design, n = 20, lambda = 0.99,
+  ev <- check_mon_between(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = TRUE)
   ev_viol <- t(sapply(ev, function(x) x$Events[1, ]))
 
   # Check results of first violated outcome
   ev1 <- ev[[1]]
-  weights1 <- get_weights(design = design, n = 20, epsilon = 2, tau = 0,
+  weights1 <- get_weights(design = design, n = 15, epsilon = 2, tau = 0,
     logbase = 2)
-  res1 <- bskt_final(design = design, n = 20, lambda = 0.99,
+
+  res1 <- bskt_final(design = design, n = 15, lambda = 0.99,
     r = ev1$Events[1, ], weight_mat = weights1)
-  res2 <- bskt_final(design = design, n = 20, lambda = 0.99,
-    r = ev1$Events[2, ], weight_mat = weights1)
-  res3 <- bskt_final(design = design, n = 20, lambda = 0.99,
-    r = ev1$Events[3, ], weight_mat = weights1)
+  res2 <- t(apply(ev1$Events[-1, ], 1, function(x) bskt_final(design = design,
+    n = 15, lambda = 0.99, r = x, weight_mat = weights1)))
 
   expect_equal(res1, ev1$Results[1, ])
   expect_true(any(res1 == 1))
-  expect_equal(res2, ev1$Results[2, ])
+  expect_equal(res2, ev1$Results[-1, ])
   expect_true(all(res2 == 0))
-  expect_equal(res3, ev1$Results[3, ])
-  expect_true(all(res3 == 0))
+
+  # Check whether there is a significant basket in each violated outcome
+  res3 <- t(apply(ev_viol, 1, function(x) bskt_final(design = design,
+    n = 15, lambda = 0.99, r = x, weight_mat = weights1)))
+  res_sig1 <- apply(res3, 1, function(x) any(x == 1))
+  expect_true(all(res_sig1))
 
   # Check condition with no details
-  res_nodet1 <- check_mon_between(design = design, n = 20, lambda = 0.99,
+  res_nodet1 <- check_mon_between(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = FALSE)
 
   expect_false(res_nodet1)
 
   # Compare with mon_between_slow
-  res_slow1 <- mon_between_slow(design = design, n = 20, lambda = 0.99,
+  res_slow1 <- mon_between_slow(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE)
 
   expect_equal(ev_viol, res_slow1)
 
   ## With Pruning
-  res_nodet2 <- check_mon_between(design = design, n = 20, lambda = 0.99,
+  res_nodet2 <- check_mon_between(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = TRUE, details = FALSE)
 
   expect_true(res_nodet2)
 
   # Check violating outcomes from no-prune analysis
-  crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.99)
+  crit_pool <- get_crit_pool(design = design, n = 15, lambda = 0.99)
   weights2 <- prune_weights(weights1, cut = crit_pool)
-  res3 <- bskt_final(design = design, n = 20, lambda = 0.99,
+  res4 <- bskt_final(design = design, n = 15, lambda = 0.99,
     r = ev1$Events[1, ], weight_mat = weights2)
-  res4 <- bskt_final(design = design, n = 20, lambda = 0.99,
-    r = ev1$Events[2, ], weight_mat = weights2)
+  res5 <- t(apply(ev1$Events[-1, ], 1, function(x) bskt_final(design = design,
+    n = 15, lambda = 0.99, r = x, weight_mat = weights2)))
 
-  expect_true(all(res3 == 0))
-  expect_true(all(res4 == 0))
+  res_sig3 <- any(res4 == 1)
+  res_sig2 <- apply(res5, 1, function(x) any(x == 1))
+
+  expect_equal(res_sig3, all(res_sig2))
 
   # Compare with mon_between_slow
-  res_slow2 <- mon_between_slow(design = design, n = 20, lambda = 0.99,
+  res_slow2 <- mon_between_slow(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
 
-  expect_true(res_nodet2, res_slow2)
+  expect_equal(res_nodet2, res_slow2)
 })
 
-test_that("errors in check_mon_within work", {
+test_that("errors in check_mon_between work", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
     theta1 = c(0.2, 0.5, 0.5))
 
