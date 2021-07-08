@@ -1,7 +1,7 @@
 #' @include generics.R
 NULL
 
-#' @describeIn adjust_lambda Adjust lambda for a single-stage design.
+#' @describeIn OneStageBasket Adjust lambda for a single-stage design.
 setMethod("adjust_lambda", "OneStageBasket",
   function(design, alpha = 0.025, n, epsilon, tau, logbase,
            prune = FALSE, prec_digits, ...) {

@@ -18,15 +18,15 @@ setupOneStageBasket(k, shape1 = 1, shape2 = 1, theta0, theta1)
 \item{theta1}{A probability under the alternative hypothesis for each basket.}
 }
 \value{
-An S4 object of class \code{OneStageBasket}.
+An S4 object of class \code{\link{OneStageBasket}}.
 }
 \description{
-Creates an object of class \code{OneStageBasket}.
+Creates an object of class \code{\link{OneStageBasket}}.
 }
 \details{
-A \code{OneStageBasket} object contains the most important design
-features of a basket trial. Currently only common prior distributions and a
-common null hypothesis are supported.
+A \code{\link{OneStageBasket}} object contains the most important
+design features of a basket trial. Currently only common prior distributions
+and a common null hypothesis are supported.
 }
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))

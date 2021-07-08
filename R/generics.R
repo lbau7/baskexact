@@ -23,30 +23,13 @@ NULL
 #' probabilities correspond to the type 1 error rate for baskets with theta1 =
 #' theta 0 and to the power for baskets with theta1 > theta 0.
 #'
-#' Calculations are based on the design of Fujikawa et al.:
-#' At first separate posterior distributions are calculated for each basket
-#' based on a beta-binomial model. Information is then borrowed between baskets
-#' by calculating weights that reflect the similarity between the basket and
-#' computing posterior distributions for each basket where the parameters
-#' of the beta posterior are calculated as a weighted sum of the individual
-#' posterior distributions. The weight between two baskets i and j is found as
-#' (1 - JSD(i, j))^epsilon where JSD(i, j) is the Jensen-Shannon divergence
-#' between basket i and j. A small value of epsilon results in stronger
-#' borrowing also across baskets with heterogenous results. If epsilon is
-#' large then information is only borrowed between baskets with similar results.
-#' If a weight is smaller than tau it is set to 0, which results in no
-#' borrowing. If for a basket the posterior probability that \eqn{\theta} >
-#' theta0 is greater than lambda, then the null hypothesis is rejected.
-#' @references Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
-#' A Bayesian basket trial design that borrows information across strata based
-#' on the similarity between the posterior distributions of the response
-#' probability. Biometrical Journal, 62(2), 330-338.
-#'
 #' If \code{prune = TRUE} then the baskets with an observed number of baskets
 #' smaller than the pooled critical value are not borrowed from. The
 #' pooled critical value is the smallest integer c for which all null
 #' hypotheses can be rejected if the number of responses is exactly c for
 #' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
 #'
 #' @return If \code{results = "fwer"} then the family wise type 1 error rate is
 #' returned as a numeric value. If \code{results = "group"} then a list with
@@ -87,30 +70,13 @@ setGeneric("toer",
 #' rate for baskets with theta1 = theta 0 and to the power for baskets with
 #' theta1 > theta 0.
 #'
-#' Calculations are based on the design of Fujikawa et al.:
-#' At first separate posterior distributions are calculated for each basket
-#' based on a beta-binomial model. Information is then borrowed between baskets
-#' by calculating weights that reflect the similarity between the basket and
-#' computing posterior distributions for each basket where the parameters
-#' of the beta posterior are calculated as a weighted sum of the individual
-#' posterior distributions. The weight between two baskets i and j is found as
-#' (1 - JSD(i, j))^epsilon where JSD(i, j) is the Jensen-Shannon divergence
-#' between basket i and j. A small value of epsilon results in stronger
-#' borrowing also across baskets with heterogenous results. If epsilon is
-#' large then information is only borrowed between baskets with similar results.
-#' If a weight is smaller than tau it is set to 0, which results in no
-#' borrowing. If for a basket the posterior probability that \eqn{\theta} >
-#' theta0 is greater than lambda, then the null hypothesis is rejected.
-#' @references Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
-#' A Bayesian basket trial design that borrows information across strata based
-#' on the similarity between the posterior distributions of the response
-#' probability. Biometrical Journal, 62(2), 330-338.
-#'
 #' If \code{prune = TRUE} then the baskets with an observed number of baskets
 #' smaller than the pooled critical value are not borrowed from. The
 #' pooled critical value is the smallest integer c for which all null
 #' hypotheses can be rejected if the number of responses is exactly c for
 #' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
 #'
 #' @return If \code{results = "ewp"} then the experimentwise power is
 #' returned as a numeric value. If \code{results = "group"} then a list with
@@ -153,6 +119,8 @@ setGeneric("pow",
 #' hypotheses can be rejected if the number of responses is exactly c for
 #' all baskets.
 #'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
 #' @return If \code{details = FALSE} then only a logical value is returned.
 #' If \code{details = TRUE} then if there are any cases where the
 #' within-trial monotonicity condition is violated, a list of these cases and
@@ -194,6 +162,8 @@ setGeneric("check_mon_within",
 #' hypotheses can be rejected if the number of responses is exactly c for
 #' all baskets.
 #'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
 #' @return If \code{details = FALSE} then only a logical value is returned.
 #' If \code{details = TRUE} then if there are any cases where the
 #' between-trial monotonicity condition is violated, a list of theses cases
@@ -230,10 +200,13 @@ setGeneric("check_mon_between",
 #' function followed by a grid search is used to finde the correct value
 #' for \code{lambda}.
 #'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
 #' @return The greatest value with \code{prec_digits} decimal places for
 #' \code{lambda} which controls the family wise error rate at level
 #' \code{alpha} (one-sided) and the exact family wise error rate for this
 #' value of \code{lambda}.
+#'
 #' @export
 #'
 #' @examples

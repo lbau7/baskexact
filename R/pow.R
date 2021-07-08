@@ -1,7 +1,7 @@
 #' @include generics.R
 NULL
 
-#' @describeIn pow Power for a single-stage design.
+#' @describeIn OneStageBasket Power for a single-stage basket design.
 setMethod("pow", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
            results = c("ewp", "group"), ...) {

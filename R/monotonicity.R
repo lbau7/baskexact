@@ -1,7 +1,7 @@
 #' @include generics.R
 NULL
 
-#' @describeIn check_mon_within Within-trial monotonicity condition for a
+#' @describeIn OneStageBasket Within-trial monotonicity condition for a
 #' single-stage design.
 setMethod("check_mon_within", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
@@ -63,7 +63,7 @@ setMethod("check_mon_within", "OneStageBasket",
     }
   })
 
-#' @describeIn check_mon_between Between-trial monotonicity condition for a
+#' @describeIn OneStageBasket Between-trial monotonicity condition for a
 #' single-stage design.
 setMethod("check_mon_between", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
