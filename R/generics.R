@@ -228,7 +228,7 @@ setGeneric("adjust_lambda",
 #' @template design
 #' @template n
 #' @param r The vector of observed responses.
-##' @template lambda
+#' @template lambda
 #' @template tuning
 #' @template prune
 #' @template dotdotdot
