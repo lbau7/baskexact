@@ -28,6 +28,7 @@ Collate:
     'generics.R'
     'adjust_lambda.R'
     'analysis.R'
+    'basket_test.R'
     'baskexact-package.R'
     'borrowing.R'
     'helper.R'

@@ -219,3 +219,32 @@ setGeneric("adjust_lambda",
            prec_digits, ...)
     standardGeneric("adjust_lambda")
 )
+
+#' Test for the Results of a Basket Trial
+#'
+#' \code{basket_test} evaluates the results of a basket trial and calculates
+#' the posterior distributions with and without borrowing.
+#'
+#' @template design
+#' @template n
+#' @param r The vector of observed responses.
+##' @template lambda
+#' @template tuning
+#' @template prune
+#' @template dotdotdot
+#'
+#' @return A list, including matrices of the weights that are used for
+#' borrowing, posterior distribution parameters for all baskets without and
+#' with borrowing, as well as the posterior probabilities for all baskets
+#' without and with borrowing.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
+#'   theta1 = c(0.2, 0.2, 0.2))
+#' basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
+#'   epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
+setGeneric("basket_test",
+  function(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...)
+    standardGeneric("basket_test")
+)
