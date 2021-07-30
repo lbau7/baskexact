@@ -48,8 +48,8 @@ have to be that borrowing occurs. See details for more information.}
 used to compute the Jensen-Shannon divergence. See details for more
 information.}
 
-\item{prune}{Whether the results should be pruned before the final
-analysis. See details for more information.}
+\item{prune}{Whether baskets with a number of responses below the
+critical pooled value should be pruned before the final analysis.}
 
 \item{details}{Whether the cases where the monotonicity condition is
 violated should be returned, in case there are any.}

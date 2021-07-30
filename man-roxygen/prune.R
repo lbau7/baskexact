@@ -1,2 +1,2 @@
-#' @param prune Whether the results should be pruned before the final
-#'   analysis. See details for more information.
+#' @param prune Whether baskets with a number of responses below the
+#'   critical pooled value should be pruned before the final analysis.
