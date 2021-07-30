@@ -9,7 +9,7 @@ test_that("get_weight works", {
   weights <- as.vector(weight_mat[elmnts])
   weights_exp <- c(0.3206983, 0.7493639, 0.6509846)
 
-  expect_equal(weights, weights_exp, tolerance = 1e-7)
+  expect_equal(weights, weights_exp, tolerance = 10e-7)
 })
 
 test_that("beta_borrow works", {
@@ -26,5 +26,5 @@ test_that("beta_borrow works", {
   shape_expect <- matrix(c(12.9215409, 34.4051363, 6.33262523, 34.1087508,
     14.2283671, 47.5396861), nrow = 2)
 
-  expect_equal(shape_borrow, shape_expect, tolerance = 1e-7)
+  expect_equal(shape_borrow, shape_expect, tolerance = 10e-7)
 })
