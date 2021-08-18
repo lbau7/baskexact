@@ -3,18 +3,17 @@ NULL
 
 #' @describeIn adjust_lambda Adjust lambda for a single-stage design.
 setMethod("adjust_lambda", "OneStageBasket",
-  function(design, alpha = 0.025, n, epsilon, tau, logbase,
+  function(design, alpha = 0.025, theta1 = NULL, n, epsilon, tau, logbase,
            prune = FALSE, prec_digits, ...) {
+    theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
+    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
     if (alpha <= 0 | alpha >= 1) stop("alpha must be between 0 and 1")
     if (length(n) != 1) stop("n must have length 1")
-    if (epsilon < 0) stop("epsilon must be non-negative")
-    if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
-    if (logbase <= 0) stop("logbase must be positive")
 
     upper_lim <- 1 - 10^(-prec_digits)
-    root_fun <- function(x) toer(design = design, n = n, lambda = x,
-      epsilon = epsilon, tau = tau, logbase = logbase, prune = prune,
-      results = "fwer") - alpha
+    root_fun <- function(x) toer(design = design, theta1 = theta1, n = n,
+      lambda = x, epsilon = epsilon, tau = tau, logbase = logbase,
+      prune = prune, results = "fwer") - alpha
 
     # Use uniroot to find lambda close to the smallest lambda that protects
     # the significance level at alpha

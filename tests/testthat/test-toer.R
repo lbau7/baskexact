@@ -1,7 +1,6 @@
 test_that("toer works without pruning", {
   # Compare Fujikawa et al., 2020
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = rep(0.2, 3))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   # Proposed design (i) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
@@ -10,8 +9,9 @@ test_that("toer works without pruning", {
     tau = 0, logbase = exp(1), prune = FALSE, results = "group")
   toer_fwer1 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
     tau = 0, logbase = exp(1), prune = FALSE, results = "fwer")
-  toer_loop1 <- reject_single_loop(design = design, n = 24, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE, prob = "toer")
+  toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
+    n = 24, lambda = 0.99, epsilon = 2, tau = 0, logbase = exp(1),
+    prune = FALSE, prob = "toer")
 
   # In Fujikawa et al., based on simulation:
   # Basketwise 0.019, 0.020, 0.022
@@ -34,8 +34,9 @@ test_that("toer works without pruning", {
     tau = 0.5, logbase = exp(1), prune = FALSE, results = "group")
   toer_fwer2 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
     tau = 0.5, logbase = exp(1), prune = FALSE, results = "fwer")
-  toer_loop2 <- reject_single_loop(design = design, n = 24, lambda = 0.99,
-    epsilon = 2, tau = 0.5, logbase = exp(1), prune = FALSE, prob = "toer")
+  toer_loop2 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
+    n = 24, lambda = 0.99, epsilon = 2, tau = 0.5, logbase = exp(1),
+    prune = FALSE, prob = "toer")
 
   # In Fujikawa et al., based on simulation:
   # Basketwise: 0.029, 0.032, 0.034
@@ -53,8 +54,7 @@ test_that("toer works without pruning", {
 })
 
 test_that("toer works with pruning", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = rep(0.2, 3))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
@@ -62,31 +62,12 @@ test_that("toer works with pruning", {
     tau = 0.2, logbase = 2, prune = TRUE, results = "group")
   toer_fwer1 <- toer(design = design, n = 15, lambda = 0.95, epsilon = 1,
     tau = 0.2, logbase = 2, prune = TRUE, results = "fwer")
-  toer_loop1 <- reject_single_loop(design = design, n = 15, lambda = 0.95,
-    epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE, prob = "toer")
+  toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
+    n = 15, lambda = 0.95, epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE,
+    prob = "toer")
 
   expect_equal(toer_fwer1, toer_group1$fwer)
   expect_equal(toer_fwer1, toer_loop1$fwer)
   expect_equal(toer_group1$rejection_probabilities,
     toer_loop1$rejection_probabilities)
-})
-
-test_that("errors and messages in toer work", {
-  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.2, 0.5, 0.5))
-  design2 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.5, 0.5, 0.5))
-
-  expect_error(toer(design = design1, n = c(10, 15, 20), lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(toer(design = design1, n = 20, lambda = 1.1,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(toer(design = design1, n = 20, lambda = 0.99,
-    epsilon = -2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(toer(design = design1, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 1, logbase = 2, results = "fwer"))
-  expect_error(toer(design = design1, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = -2, results = "fwer"))
-  expect_message(toer(design = design2, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
 })

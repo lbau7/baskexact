@@ -7,6 +7,7 @@
 \usage{
 pow(
   design,
+  theta1,
   n,
   lambda,
   epsilon,
@@ -19,6 +20,7 @@ pow(
 
 \S4method{pow}{OneStageBasket}(
   design,
+  theta1,
   n,
   lambda,
   epsilon,
@@ -32,6 +34,10 @@ pow(
 \arguments{
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
+
+\item{theta1}{Probabilities under the alternative hypothesis. If
+\code{length(theta1) ==  1}, then this is a common probability for all
+baskets.}
 
 \item{n}{The sample size per basket.}
 
@@ -90,6 +96,7 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 }}
 
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
-pow(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
+design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99, epsilon = 2,
+  tau = 0)
 }

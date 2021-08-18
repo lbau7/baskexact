@@ -51,8 +51,7 @@ the posterior distributions with and without borrowing.
 }}
 
 \examples{
-design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-  theta1 = c(0.2, 0.2, 0.2))
+design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
   epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
 }

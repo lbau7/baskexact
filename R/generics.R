@@ -6,6 +6,7 @@ NULL
 #' Computes the exact family wise type 1 error rate of a basket trial .
 #'
 #' @template design
+#' @template theta1_toer
 #' @template n
 #' @template lambda
 #' @template tuning
@@ -42,11 +43,12 @@ NULL
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
+#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 #' toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 setGeneric("toer",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
-           results = c("fwer", "group"), ...) standardGeneric("toer")
+  function(design, theta1 = NULL, n, lambda, epsilon, tau, logbase = 2,
+           prune = FALSE, results = c("fwer", "group"), ...)
+    standardGeneric("toer")
 )
 
 #' Power
@@ -54,6 +56,9 @@ setGeneric("toer",
 #' Computes the exact power for a basket trial.
 #'
 #' @template design
+#' @param theta1 Probabilities under the alternative hypothesis. If
+#'   \code{length(theta1) ==  1}, then this is a common probability for all
+#'   baskets.
 #' @template n
 #' @template lambda
 #' @template tuning
@@ -87,10 +92,11 @@ setGeneric("toer",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
-#' pow(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
+#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99, epsilon = 2,
+#'   tau = 0)
 setGeneric("pow",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
+  function(design, theta1, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
     results = c("ewp", "group"), ...) standardGeneric("pow")
 )
 
@@ -128,8 +134,7 @@ setGeneric("pow",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
-#'   theta1 = c(0.2, 0.5, 0.5, 0.5))
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
 #' check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
 #'   tau = 0, prune = FALSE, details = TRUE)
 setGeneric("check_mon_within",
@@ -171,8 +176,7 @@ setGeneric("check_mon_within",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
-#'   theta1 = c(0.2, 0.5, 0.5, 0.5))
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
 #' check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
 #'   tau = 0, prune = FALSE, details = TRUE)
 setGeneric("check_mon_between",
@@ -187,6 +191,7 @@ setGeneric("check_mon_between",
 #'
 #' @template design
 #' @param alpha The one-sided signifance level.
+#' @template theta1_toer
 #' @template n
 #' @template tuning
 #' @template prune
@@ -210,13 +215,12 @@ setGeneric("check_mon_between",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-#'   theta1 = c(0.2, 0.2, 0.2))
+#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 #' adjust_lambda(design = design, alpha = 0.025, n = 15, epsilon = 1, tau = 0,
 #'   logbase = 2, prune = FALSE, prec_digits = 4)
 setGeneric("adjust_lambda",
-  function(design, alpha = 0.025, n, epsilon, tau, logbase, prune,
-           prec_digits, ...)
+  function(design, alpha = 0.025, theta1 = NULL, n, epsilon, tau, logbase,
+           prune, prec_digits, ...)
     standardGeneric("adjust_lambda")
 )
 
@@ -240,8 +244,7 @@ setGeneric("adjust_lambda",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-#'   theta1 = c(0.2, 0.2, 0.2))
+#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 #' basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
 #'   epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
 setGeneric("basket_test",

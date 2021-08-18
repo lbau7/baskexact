@@ -88,8 +88,7 @@ single-stage design.
 }}
 
 \examples{
-design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
-  theta1 = c(0.2, 0.5, 0.5, 0.5))
+design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
 check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
   tau = 0, prune = FALSE, details = TRUE)
 }

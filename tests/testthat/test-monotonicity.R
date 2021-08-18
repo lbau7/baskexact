@@ -1,7 +1,6 @@
 test_that("check_mon_within works", {
   ## Without Pruning
-  design1 <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = rep(0.5, 4))
+  design1 <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   # One outcome violates the within-trial monotonicity condition
   r1 <- check_mon_within(design = design1, n = 24, lambda = 0.99, epsilon = 0.5,
@@ -94,8 +93,7 @@ test_that("check_mon_within works", {
   expect_true(all(res_loop2 == r$Events))
 
   ## Compare result when condition holds
-  design2 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = rep(0.5, 3))
+  design2 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   res_noviol1 <- check_mon_within(design = design2, n = 20, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = FALSE)
@@ -108,26 +106,9 @@ test_that("check_mon_within works", {
   expect_equal(res_noviol1, res_noviol3)
 })
 
-test_that("errors in check_mon_within work", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.2, 0.5, 0.5))
-
-  expect_error(check_mon_within(design = design, n = c(10, 15, 20),
-    lambda = 0.99, epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(check_mon_within(design = design, n = 20, lambda = -1,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(check_mon_within(design = design, n = 20, lambda = 0.99,
-    epsilon = -2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(check_mon_within(design = design, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 1, logbase = 2, results = "fwer"))
-  expect_error(check_mon_within(design = design, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = -2, results = "fwer"))
-})
-
 test_that("check_mon_between works", {
   ## Without Pruning
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = rep(0.5, 3))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   ev <- check_mon_between(design = design, n = 15, lambda = 0.99,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = TRUE)
@@ -190,20 +171,4 @@ test_that("check_mon_between works", {
     epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
 
   expect_equal(res_nodet2, res_slow2)
-})
-
-test_that("errors in check_mon_between work", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.2, 0.5, 0.5))
-
-  expect_error(check_mon_between(design = design, n = c(10, 15, 20),
-    lambda = 0.99, epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(check_mon_between(design = design, n = 20, lambda = -1,
-    epsilon = 2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(check_mon_between(design = design, n = 20, lambda = 0.99,
-    epsilon = -2, tau = 0, logbase = 2, results = "fwer"))
-  expect_error(check_mon_between(design = design, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 1, logbase = 2, results = "fwer"))
-  expect_error(check_mon_between(design = design, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = -2, results = "fwer"))
 })

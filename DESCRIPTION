@@ -31,6 +31,7 @@ Collate:
     'basket_test.R'
     'baskexact-package.R'
     'borrowing.R'
+    'check.R'
     'helper.R'
     'monotonicity.R'
     'pow.R'

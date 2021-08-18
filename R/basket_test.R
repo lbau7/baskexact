@@ -4,11 +4,9 @@ NULL
 #' @describeIn basket_test Testing for a single-stage basket design.
 setMethod("basket_test", "OneStageBasket",
   function(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...) {
-    if (length(n) != 1) stop("n must have length 1")
+    check_params(n = n, lambda = lambda)
+    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
     if (any(r > n) | any(r < 0)) stop("responses must be between 0 and n")
-    if (epsilon < 0) stop("epsilon must be non-negative")
-    if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
-    if (logbase <= 0) stop("logbase must be positive")
 
     weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
       tau = tau, logbase = logbase)

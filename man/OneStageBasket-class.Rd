@@ -11,7 +11,7 @@ important design features of a single-stage basket trial.
 }
 \details{
 This class implements a single-stage basket trial based on the design
-proposed by Fujikawa et al. In this design, at  first separate posterior
+proposed by Fujikawa et al. In this design, at first separate posterior
 distributions are calculated for each basket based on a beta-binomial model.
 Information is then borrowed between baskets by calculating weights that
 reflect the similarity between the basket and computing posterior
@@ -39,8 +39,6 @@ hypothesis are supported.
 \item{\code{shape2}}{Second common shape parameter of the beta prior.}
 
 \item{\code{theta0}}{A common probability under the null hypothesis.}
-
-\item{\code{theta1}}{A probability under the alternative hypothesis for each basket.}
 }}
 
 \references{

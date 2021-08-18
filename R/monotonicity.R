@@ -6,11 +6,8 @@ NULL
 setMethod("check_mon_within", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
     # Not working with different priors and different n!
-    if (length(n) != 1) stop("n must have length 1")
-    if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
-    if (epsilon < 0) stop("epsilon must non-negative positive")
-    if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
-    if (logbase <= 0) stop("logbase must be positive")
+    check_params(n = n, lambda = lambda)
+    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
 
     crit <- get_crit(design = design, n = n, lambda = lambda)
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
@@ -67,11 +64,8 @@ setMethod("check_mon_within", "OneStageBasket",
 #'   single-stage design.
 setMethod("check_mon_between", "OneStageBasket",
   function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
-    if (length(n) != 1) stop("n must have length 1")
-    if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
-    if (epsilon < 0) stop("epsilon must non-negative positive")
-    if (tau < 0 | tau >= 1) stop("tau must be in [0, 1)")
-    if (logbase <= 0) stop("logbase must be positive")
+    check_params(n = n, lambda = lambda)
+    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
 
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
     weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,

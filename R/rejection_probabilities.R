@@ -1,8 +1,8 @@
 # Calculates the experimentwise rejection probability
-reject_prob_ew <- function(design, n, lambda, weight_mat,
+reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
                            prob = c("toer", "pwr")) {
   # Computational shortcuts don't work with unequal priors or n!
-  targ <- get_targ(design = design, prob = prob)
+  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
   # Create matrix with all possible outcomes (without permutations)
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
 
@@ -33,9 +33,9 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
   )
 
   # If all theta1 are equal each permutation has the same probability
-  if ((sum(targ) == design@k) & (length(unique(design@theta1)) == 1)) {
+  if ((sum(targ) == design@k) & (length(unique(theta1)) == 1)) {
     probs_eff <- apply(events_eff, 1,
-      function(x) get_prob(n = n, r = x, theta = design@theta1))
+      function(x) get_prob(n = n, r = x, theta = theta1))
     # Helper function that calculates the number of permutations
     perm_fun <- function(x) {
       tab <- tabulate(x + 1)
@@ -53,7 +53,7 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
       # has the same probability even when not all theta1 are equal
       if (length(unique(events_eff[i, ])) == 1) {
         rej_prob[i] <- get_prob(n = n, r = events_eff[i, ],
-          theta = design@theta1)
+          theta = theta1)
       } else {
       events_loop <- arrangements::permutations(events_eff[i, ])
       res_loop <- arrangements::permutations(
@@ -62,7 +62,7 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
       eff_loop <- apply(res_loop, 1, function(x) any(x[targ] == 1))
       events_loop <- events_loop[eff_loop, , drop = FALSE]
       rej_prob[i] <- sum(apply(events_loop, 1, function(x) get_prob(n = n,
-        r = x, theta = design@theta1)))
+        r = x, theta = theta1)))
       }
     }
     rej_prob <- sum(rej_prob)
@@ -71,15 +71,15 @@ reject_prob_ew <- function(design, n, lambda, weight_mat,
 }
 
 # Calculates the groupwise rejection probabilities
-reject_prob_group <- function(design, n, lambda, weight_mat,
+reject_prob_group <- function(design, theta1, n, lambda, weight_mat,
   prob = c("toer", "pwr")) {
-  targ <- get_targ(design = design, prob = prob)
+  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
   # Create matrix with all possible outcomes
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
 
   # Conduct test for all possible outcomes
-  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-    r = x, weight_mat = weight_mat)
+  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
+    weight_mat = weight_mat)
   res <- t(apply(events, 1, fun))
 
   eff_vec <- apply(res, 1, function(x) any(x == 1))
@@ -87,7 +87,7 @@ reject_prob_group <- function(design, n, lambda, weight_mat,
   events_eff <- events[eff_vec, ]
   # Calculate probability of ouctomes where any null hypothesis was rejected
   probs_eff <- apply(events_eff, 1,
-    function(x) get_prob(n = n, r = x, theta = design@theta1))
+    function(x) get_prob(n = n, r = x, theta = theta1))
   res_eff <- res[eff_vec,]
   rej <- colSums(apply(res_eff == 1, 2, function(x) x * probs_eff))
   # Use only the probabilities of outcomes with a rejected null hypothesis

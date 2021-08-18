@@ -8,6 +8,7 @@
 adjust_lambda(
   design,
   alpha = 0.025,
+  theta1 = NULL,
   n,
   epsilon,
   tau,
@@ -20,6 +21,7 @@ adjust_lambda(
 \S4method{adjust_lambda}{OneStageBasket}(
   design,
   alpha = 0.025,
+  theta1 = NULL,
   n,
   epsilon,
   tau,
@@ -34,6 +36,11 @@ adjust_lambda(
 \code{setupBasket}.}
 
 \item{alpha}{The one-sided signifance level.}
+
+\item{theta1}{Probabilities under the alternative hypothesis. If
+\code{length(theta1) ==  1}, then this is a common probability for all
+baskets. If \code{is.null(theta1)} then the type 1 error rate under the
+global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
 
@@ -80,8 +87,7 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 }}
 
 \examples{
-design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-  theta1 = c(0.2, 0.2, 0.2))
+design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 adjust_lambda(design = design, alpha = 0.025, n = 15, epsilon = 1, tau = 0,
   logbase = 2, prune = FALSE, prec_digits = 4)
 }

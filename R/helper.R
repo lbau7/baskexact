@@ -19,11 +19,11 @@ get_crit_pool <- function(design, n, lambda) {
 
 # Returns a vector that determines which baskets are of interest
 # to compute the type 1 error rate or the power
-get_targ <- function(design, prob) {
+get_targ <- function(theta0, theta1, prob) {
   if (prob == "toer") {
-    design@theta0 == design@theta1
+    theta0 == theta1
   } else {
-    design@theta0 != design@theta1
+    theta0 != theta1
   }
 }
 

@@ -1,6 +1,5 @@
 test_that("adjust_lambda works", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.2, 0.2, 0.2))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   # Without Pruning
   adj_res1 <- adjust_lambda(design = design, alpha = 0.025, n = 15,
@@ -54,18 +53,11 @@ test_that("adjust_lambda works", {
 })
 
 test_that("errors in adjust_lambda work", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.2, 0.5, 0.5))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   expect_error(adjust_lambda(design = design, alpha = 1.1, n = 20,
     epsilon = 2, tau = 0, logbase = 2, prune = TRUE, prec_digits = 3))
   expect_error(adjust_lambda(design = design, alpha = 0.025,
     n = c(20, 10, 10), epsilon = 2, tau = 0, logbase = 2, prune = TRUE,
     prec_digits = 3))
-  expect_error(adjust_lambda(design = design, alpha = 0.025, n = 20,
-    epsilon = -2, tau = 0, logbase = 2, prune = TRUE, prec_digits = 3))
-  expect_error(adjust_lambda(design = design, alpha = 0.025, n = 20,
-    epsilon = 2, tau = 1, logbase = 2, prune = TRUE, prec_digits = 3))
-  expect_error(adjust_lambda(design = design, alpha = 0.025, n = 20,
-    epsilon = 2, tau = 0, logbase = -0.5, prune = TRUE, prec_digits = 3))
 })

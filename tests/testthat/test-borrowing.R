@@ -1,7 +1,6 @@
 test_that("get_weight works", {
   # Reproduced from Fujikawa et al., 2020, Supplement R code
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.5, 0.5, 0.2))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
   weight_mat <- get_weights(design = design, n = 15, epsilon = 2, tau = 0,
     logbase = exp(1))
   r <- c(5, 1, 3)
@@ -14,8 +13,7 @@ test_that("get_weight works", {
 
 test_that("beta_borrow works", {
   # Reproduced from Fujikawa et al., 2020, Supplement R Code
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2,
-    theta1 = c(0.2, 0.2, 0.2))
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
   weight_mat <- get_weights(design = design, n = 24, epsilon = 2, tau = 0.5,
     logbase = exp(1))
   r <- c(7, 2, 5)

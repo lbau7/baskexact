@@ -7,6 +7,7 @@
 \usage{
 toer(
   design,
+  theta1 = NULL,
   n,
   lambda,
   epsilon,
@@ -19,6 +20,7 @@ toer(
 
 \S4method{toer}{OneStageBasket}(
   design,
+  theta1 = NULL,
   n,
   lambda,
   epsilon,
@@ -32,6 +34,11 @@ toer(
 \arguments{
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
+
+\item{theta1}{Probabilities under the alternative hypothesis. If
+\code{length(theta1) ==  1}, then this is a common probability for all
+baskets. If \code{is.null(theta1)} then the type 1 error rate under the
+global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
 
@@ -93,6 +100,6 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 }}
 
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2, theta1 = c(0.2, 0.5, 0.5))
+design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
 }

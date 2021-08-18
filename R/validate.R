@@ -4,10 +4,10 @@
 
 # Loop-based calculation of the rejection probabilities of a single-stage
 # basket design with 3 baskets
-reject_single_loop <- function(design, n, lambda, epsilon, tau,
+reject_single_loop <- function(design, theta1, n, lambda, epsilon, tau,
                                logbase = exp(1), prune = FALSE,
                                prob = c("toer", "pwr")) {
-  targ <- get_targ(design = design, prob = prob)
+  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
   weights <- get_weights(design = design, n = n, epsilon = epsilon, tau = tau,
@@ -26,7 +26,7 @@ reject_single_loop <- function(design, n, lambda, epsilon, tau,
           weight_mat = weights)
 
         if (any(res == 1)) {
-          prob_temp <- get_prob(n = n, r = events, theta = design@theta1)
+          prob_temp <- get_prob(n = n, r = events, theta = theta1)
           rej_group[which(res == 1)] <- rej_group[which(res == 1)] +
             prob_temp
 
