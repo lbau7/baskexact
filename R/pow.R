@@ -7,9 +7,7 @@ setMethod("pow", "OneStageBasket",
            results = c("ewp", "group"), ...) {
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "pwr")
     check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
-
-    if (length(n) != 1) stop("n must have length 1")
-    if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
+    check_params(n = n, lambda = lambda)
 
     results <- match.arg(results)
     weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
