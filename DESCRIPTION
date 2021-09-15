@@ -9,7 +9,6 @@ Authors@R:
           email = "baumann@imbi.uni-heidelberg.de",
           comment = c(ORCID = "0000-0001-7931-7470")
 		 )
-Maintainer: Lukas Baumann <baumann@imbi.uni-heidelberg.de>
 Description: Calculates the exact operating characteristics of a single-stage
     basket trial with the design of
 	Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020). <doi:10.1002/bimj.201800404>.
