@@ -3,17 +3,11 @@ NULL
 
 #' @describeIn basket_test Testing for a single-stage basket design.
 setMethod("basket_test", "OneStageBasket",
-  function(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...) {
+  function(design, n, r, weight_fun, tuning_params, ...) {
     check_params(n = n, lambda = lambda)
-    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
     if (any(r > n) | any(r < 0)) stop("responses must be between 0 and n")
-
-    weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
-      tau = tau, logbase = logbase)
-    if (prune) {
-      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
-    }
+    weight_mat <- do.call(weights, args = c(tuning_params, design = design,
+      n = n, lambda = lambda))
 
     all_combs <- arrangements::combinations(r, 2) + 1
     weights_vec <- weight_mat[all_combs]

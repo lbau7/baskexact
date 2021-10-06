@@ -4,18 +4,14 @@ NULL
 #' @describeIn check_mon_within Within-trial monotonicity condition for a
 #'   single-stage design.
 setMethod("check_mon_within", "OneStageBasket",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
+  function(design, n, lambda, weight_fun, tuning_params, details, ...) {
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
-    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
 
     crit <- get_crit(design = design, n = n, lambda = lambda)
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
-      tau = tau, logbase = logbase)
-    if (prune) {
-      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
-    }
+    weight_mat <- do.call(weights, args = c(tuning_params, design = design,
+      n = n, lambda = lambda))
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
@@ -63,16 +59,12 @@ setMethod("check_mon_within", "OneStageBasket",
 #' @describeIn check_mon_between Between-trial monotonicity condition for a
 #'   single-stage design.
 setMethod("check_mon_between", "OneStageBasket",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
+  function(design, n, lambda, weight_fun, tuning_params, details, ...) {
     check_params(n = n, lambda = lambda)
-    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
 
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
-      tau = tau, logbase = logbase)
-    if (prune) {
-      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
-    }
+    weight_mat <- do.call(weights, args = c(tuning_params, design = design,
+      n = n, lambda = lambda))
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)

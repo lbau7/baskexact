@@ -36,7 +36,6 @@ Collate:
     'analysis.R'
     'basket_test.R'
     'baskexact-package.R'
-    'borrowing.R'
     'check.R'
     'helper.R'
     'monotonicity.R'
@@ -44,3 +43,4 @@ Collate:
     'rejection_probabilities.R'
     'toer.R'
     'validate.R'
+    'weights.R'

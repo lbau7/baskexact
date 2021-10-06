@@ -23,10 +23,8 @@ toer(
   theta1 = NULL,
   n,
   lambda,
-  epsilon,
-  tau,
-  logbase = 2,
-  prune = FALSE,
+  weights,
+  tuning_params,
   results = c("fwer", "group"),
   ...
 )

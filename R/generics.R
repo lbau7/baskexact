@@ -251,3 +251,8 @@ setGeneric("basket_test",
   function(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...)
     standardGeneric("basket_test")
 )
+
+setGeneric("weights_fujikawa",
+  function(design, n, epsilon, tau, logbase = 2, prune, ...)
+    standardGeneric("weights_fujikawa")
+)

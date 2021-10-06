@@ -45,3 +45,10 @@ prune_weights <- function(weight_mat, cut) {
   weight_mat[, 0:cut] <- 0
   weight_mat
 }
+
+# Computes the posterior distribution with borrowing
+beta_borrow <- function(k, r, weight_mat, shape) {
+  all_combs <- arrangements::combinations(r, 2) + 1
+  weights_vec <- weight_mat[all_combs]
+  weight_beta(k = k, weights = weights_vec, shape = shape)
+}
