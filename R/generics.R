@@ -8,9 +8,7 @@ NULL
 #' @template design
 #' @template theta1_toer
 #' @template n
-#' @template lambda
-#' @template tuning
-#' @template prune
+#' @template weights
 #' @param results Whether only the family wise error rate (option \code{fwer})
 #'   or also the rejection probabilities per group (option \code{group}) should
 #'   be returned.
@@ -44,11 +42,10 @@ NULL
 #'
 #' @examples
 #' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
+#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa,
+#'   tuning_params = list(epsilon = 2, tau = 0))
 setGeneric("toer",
-  function(design, theta1 = NULL, n, lambda, epsilon, tau, logbase = 2,
-           prune = FALSE, results = c("fwer", "group"), ...)
-    standardGeneric("toer")
+  function(design, ...) standardGeneric("toer")
 )
 
 #' Power
@@ -61,8 +58,7 @@ setGeneric("toer",
 #'   baskets.
 #' @template n
 #' @template lambda
-#' @template tuning
-#' @template prune
+#' @template weights
 #' @param results Whether only the experimentwise power (option \code{ewp})
 #'   or also the rejection probabilities per group (option \code{group}) should
 #'   be returned.
@@ -93,11 +89,10 @@ setGeneric("toer",
 #'
 #' @examples
 #' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99, epsilon = 2,
-#'   tau = 0)
+#' pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99,
+#'   weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0))
 setGeneric("pow",
-  function(design, theta1, n, lambda, epsilon, tau, logbase = 2, prune = FALSE,
-    results = c("ewp", "group"), ...) standardGeneric("pow")
+  function(design, ...) standardGeneric("pow")
 )
 
 #' Check Within-Trial Monotonicity
@@ -138,8 +133,7 @@ setGeneric("pow",
 #' check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
 #'   tau = 0, prune = FALSE, details = TRUE)
 setGeneric("check_mon_within",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...)
-    standardGeneric("check_mon_within")
+  function(design, ...) standardGeneric("check_mon_within")
 )
 
 #' Check Between-Trial Monotonicity
@@ -180,8 +174,7 @@ setGeneric("check_mon_within",
 #' check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
 #'   tau = 0, prune = FALSE, details = TRUE)
 setGeneric("check_mon_between",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...)
-    standardGeneric("check_mon_between")
+  function(design, ...) standardGeneric("check_mon_between")
 )
 
 #' Adjust Lambda
@@ -219,9 +212,7 @@ setGeneric("check_mon_between",
 #' adjust_lambda(design = design, alpha = 0.025, n = 15, epsilon = 1, tau = 0,
 #'   logbase = 2, prune = FALSE, prec_digits = 4)
 setGeneric("adjust_lambda",
-  function(design, alpha = 0.025, theta1 = NULL, n, epsilon, tau, logbase,
-           prune, prec_digits, ...)
-    standardGeneric("adjust_lambda")
+  function(design, ...) standardGeneric("adjust_lambda")
 )
 
 #' Test for the Results of a Basket Trial
@@ -248,11 +239,11 @@ setGeneric("adjust_lambda",
 #' basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
 #'   epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
 setGeneric("basket_test",
-  function(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...)
+  function(design, ...)
     standardGeneric("basket_test")
 )
 
 setGeneric("weights_fujikawa",
-  function(design, n, epsilon, tau, logbase = 2, prune, ...)
-    standardGeneric("weights_fujikawa")
+  function(design, ...) standardGeneric("weights_fujikawa")
 )
+

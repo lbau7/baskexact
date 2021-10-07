@@ -4,7 +4,7 @@ NULL
 #' @describeIn weights_fujikawa Fujikawa-weights for a single-stage basket
 #'   design.
 setMethod("weights_fujikawa", "OneStageBasket",
-  function(design, n, lambda, epsilon, tau, logbase, prune) {
+  function(design, n, epsilon, lambda, tau, logbase = 2, prune = FALSE, ...) {
     shape1_post <- design@shape1 + c(0:n)
     shape2_post <- design@shape2 + c(n:0)
     n_sum <- n + 1

@@ -5,13 +5,15 @@
 \alias{basket_test,OneStageBasket-method}
 \title{Test for the Results of a Basket Trial}
 \usage{
-basket_test(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...)
+basket_test(design, ...)
 
-\S4method{basket_test}{OneStageBasket}(design, n, r, lambda, epsilon, tau, logbase = 2, prune, ...)
+\S4method{basket_test}{OneStageBasket}(design, n, r, lambda, weight_fun, tuning_params, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
+
+\item{...}{Further arguments.}
 
 \item{n}{The sample size per basket.}
 
@@ -32,8 +34,6 @@ information.}
 
 \item{prune}{Whether baskets with a number of responses below the
 critical pooled value should be pruned before the final analysis.}
-
-\item{...}{Further arguments.}
 }
 \value{
 A list, including matrices of the weights that are used for

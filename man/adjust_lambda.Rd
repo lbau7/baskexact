@@ -23,10 +23,8 @@ adjust_lambda(
   alpha = 0.025,
   theta1 = NULL,
   n,
-  epsilon,
-  tau,
-  logbase,
-  prune = FALSE,
+  weight_fun,
+  tuning_params,
   prec_digits,
   ...
 )
