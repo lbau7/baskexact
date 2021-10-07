@@ -10,10 +10,8 @@ pow(
   theta1,
   n,
   lambda,
-  epsilon,
-  tau,
-  logbase = 2,
-  prune = FALSE,
+  weight_fun,
+  tuning_params,
   results = c("ewp", "group"),
   ...
 )
@@ -23,10 +21,8 @@ pow(
   theta1,
   n,
   lambda,
-  epsilon,
-  tau,
-  logbase = 2,
-  prune = FALSE,
+  weight_fun,
+  tuning_params,
   results = c("ewp", "group"),
   ...
 )
@@ -44,18 +40,10 @@ baskets.}
 \item{lambda}{The posterior probability threshold. See details for more
 information.}
 
-\item{epsilon}{A tuning parameter that determines the amount of borrowing.
-See details for more information.}
+\item{weight_fun}{Which function should be used to calculate the weights.}
 
-\item{tau}{A tuning parameter that determines how similar the baskets
-have to be that borrowing occurs. See details for more information.}
-
-\item{logbase}{A tuning parameter that determines which logarithm base is
-used to compute the Jensen-Shannon divergence. See details for more
-information.}
-
-\item{prune}{Whether baskets with a number of responses below the
-critical pooled value should be pruned before the final analysis.}
+\item{tuning_params}{A list of tuning parameters specific to
+\code{weight_fun}.}
 
 \item{results}{Whether only the experimentwise power (option \code{ewp})
 or also the rejection probabilities per group (option \code{group}) should
@@ -97,6 +85,6 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99, epsilon = 2,
-  tau = 0)
+pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99,
+  weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0))
 }

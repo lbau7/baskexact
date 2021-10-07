@@ -17,17 +17,7 @@ check_mon_between(
   ...
 )
 
-\S4method{check_mon_between}{OneStageBasket}(
-  design,
-  n,
-  lambda,
-  epsilon,
-  tau,
-  logbase = 2,
-  prune,
-  details,
-  ...
-)
+\S4method{check_mon_between}{OneStageBasket}(design, n, lambda, weight_fun, tuning_params, details, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by

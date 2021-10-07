@@ -5,25 +5,14 @@
 \alias{toer,OneStageBasket-method}
 \title{Type 1 Error Rate}
 \usage{
-toer(
-  design,
-  theta1 = NULL,
-  n,
-  lambda,
-  epsilon,
-  tau,
-  logbase = 2,
-  prune = FALSE,
-  results = c("fwer", "group"),
-  ...
-)
+toer(design, ...)
 
 \S4method{toer}{OneStageBasket}(
   design,
   theta1 = NULL,
   n,
   lambda,
-  weights,
+  weight_fun,
   tuning_params,
   results = c("fwer", "group"),
   ...
@@ -33,6 +22,8 @@ toer(
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
 
+\item{...}{Further arguments.}
+
 \item{theta1}{Probabilities under the alternative hypothesis. If
 \code{length(theta1) ==  1}, then this is a common probability for all
 baskets. If \code{is.null(theta1)} then the type 1 error rate under the
@@ -40,27 +31,14 @@ global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
 
-\item{lambda}{The posterior probability threshold. See details for more
-information.}
+\item{weight_fun}{Which function should be used to calculate the weights.}
 
-\item{epsilon}{A tuning parameter that determines the amount of borrowing.
-See details for more information.}
-
-\item{tau}{A tuning parameter that determines how similar the baskets
-have to be that borrowing occurs. See details for more information.}
-
-\item{logbase}{A tuning parameter that determines which logarithm base is
-used to compute the Jensen-Shannon divergence. See details for more
-information.}
-
-\item{prune}{Whether baskets with a number of responses below the
-critical pooled value should be pruned before the final analysis.}
+\item{tuning_params}{A list of tuning parameters specific to
+\code{weight_fun}.}
 
 \item{results}{Whether only the family wise error rate (option \code{fwer})
 or also the rejection probabilities per group (option \code{group}) should
 be returned.}
-
-\item{...}{Further arguments.}
 }
 \value{
 If \code{results = "fwer"} then the family wise type 1 error rate is
@@ -99,5 +77,6 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-toer(design, n = 15, lambda = 0.99, epsilon = 2, tau = 0)
+toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa,
+  tuning_params = list(epsilon = 2, tau = 0))
 }

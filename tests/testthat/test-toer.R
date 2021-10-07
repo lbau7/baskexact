@@ -5,13 +5,16 @@ test_that("toer works without pruning", {
   # Proposed design (i) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
-  toer_group1 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
-    tau = 0, logbase = exp(1), prune = FALSE, results = "group")
-  toer_fwer1 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
-    tau = 0, logbase = exp(1), prune = FALSE, results = "fwer")
+  toer_group1 <- toer(design = design, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = exp(1), prune = FALSE), results = "group")
+  toer_fwer1 <- toer(design = design, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = exp(1), prune = FALSE), results = "fwer")
   toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
-    n = 24, lambda = 0.99, epsilon = 2, tau = 0, logbase = exp(1),
-    prune = FALSE, prob = "toer")
+    n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
+    tuning_params = list(epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE),
+    prob = "toer")
 
   # In Fujikawa et al., based on simulation:
   # Basketwise 0.019, 0.020, 0.022
@@ -30,13 +33,16 @@ test_that("toer works without pruning", {
   # Proposed design (ii) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
-  toer_group2 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
-    tau = 0.5, logbase = exp(1), prune = FALSE, results = "group")
-  toer_fwer2 <- toer(design = design, n = 24, lambda = 0.99, epsilon = 2,
-    tau = 0.5, logbase = exp(1), prune = FALSE, results = "fwer")
+  toer_group2 <- toer(design = design, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0.5,
+      logbase = exp(1), prune = FALSE), results = "group")
+  toer_fwer2 <- toer(design = design, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0.5,
+      logbase = exp(1), prune = FALSE), results = "fwer")
   toer_loop2 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
-    n = 24, lambda = 0.99, epsilon = 2, tau = 0.5, logbase = exp(1),
-    prune = FALSE, prob = "toer")
+    n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
+    tuning_params = list(epsilon = 2, tau = 0.5, logbase = exp(1),
+    prune = FALSE), prob = "toer")
 
   # In Fujikawa et al., based on simulation:
   # Basketwise: 0.029, 0.032, 0.034
@@ -58,12 +64,15 @@ test_that("toer works with pruning", {
 
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
-  toer_group1 <- toer(design = design, n = 15, lambda = 0.95, epsilon = 1,
-    tau = 0.2, logbase = 2, prune = TRUE, results = "group")
-  toer_fwer1 <- toer(design = design, n = 15, lambda = 0.95, epsilon = 1,
-    tau = 0.2, logbase = 2, prune = TRUE, results = "fwer")
+  toer_group1 <- toer(design = design, n = 15, lambda = 0.95,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 1, tau = 0.2,
+      logbase = 2, prune = TRUE), results = "group")
+  toer_fwer1 <- toer(design = design, n = 15, lambda = 0.95,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 1, tau = 0.2,
+      logbase = 2, prune = TRUE), results = "fwer")
   toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
-    n = 15, lambda = 0.95, epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE,
+    n = 15, lambda = 0.95, weight_fun = weights_fujikawa,
+    tuning_params = list(epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE),
     prob = "toer")
 
   expect_equal(toer_fwer1, toer_group1$fwer)
