@@ -5,18 +5,7 @@
 \alias{adjust_lambda,OneStageBasket-method}
 \title{Adjust Lambda}
 \usage{
-adjust_lambda(
-  design,
-  alpha = 0.025,
-  theta1 = NULL,
-  n,
-  epsilon,
-  tau,
-  logbase,
-  prune,
-  prec_digits,
-  ...
-)
+adjust_lambda(design, ...)
 
 \S4method{adjust_lambda}{OneStageBasket}(
   design,
@@ -33,6 +22,8 @@ adjust_lambda(
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
 
+\item{...}{Further arguments.}
+
 \item{alpha}{The one-sided signifance level.}
 
 \item{theta1}{Probabilities under the alternative hypothesis. If
@@ -41,6 +32,9 @@ baskets. If \code{is.null(theta1)} then the type 1 error rate under the
 global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
+
+\item{prec_digits}{Number of decimal places that are considered when
+adjusting lambda}
 
 \item{epsilon}{A tuning parameter that determines the amount of borrowing.
 See details for more information.}
@@ -54,11 +48,6 @@ information.}
 
 \item{prune}{Whether baskets with a number of responses below the
 critical pooled value should be pruned before the final analysis.}
-
-\item{prec_digits}{Number of decimal places that are considered when
-adjusting lambda}
-
-\item{...}{Further arguments.}
 }
 \value{
 The greatest value with \code{prec_digits} decimal places for

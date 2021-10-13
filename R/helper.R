@@ -52,3 +52,14 @@ beta_borrow <- function(k, r, weight_mat, shape) {
   weights_vec <- weight_mat[all_combs]
   weight_beta(k = k, weights = weights_vec, shape = shape)
 }
+
+# Computes the posterior predictive probability
+post_pred <- function(n, n1, r1, shape, crit) {
+  extraDistr::pbbinom(
+    q = crit - r1 - 1,
+    size = n - n1,
+    alpha = shape[1, ],
+    beta = shape[2, ],
+    lower.tail = FALSE
+  )
+}

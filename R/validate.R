@@ -46,15 +46,9 @@ reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
 }
 
 # Loop-based version of check_mon_within
-mon_within_loop <- function(design, n, lambda, epsilon, tau, logbase = 2,
-                            prune, ...) {
-  weights <- get_weights(design = design, n = n, epsilon = epsilon, tau = tau,
-    logbase = logbase)
-
-  if (prune) {
-    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weights <- prune_weights(weight_mat = weights, cut = crit_pool)
-  }
+mon_within_loop <- function(design, n, lambda, weight_fun, tuning_params) {
+  weights <- do.call(weight_fun, args = c(tuning_params, design = design,
+    n = n, lambda = lambda))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
   func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
@@ -74,15 +68,9 @@ mon_within_loop <- function(design, n, lambda, epsilon, tau, logbase = 2,
 }
 
 # Version of check_mon_between without shortcuts
-mon_between_slow <- function(design, n, lambda, epsilon, tau, logbase = 2,
-                             prune, ...) {
-  weights <- get_weights(design = design, n = n, epsilon = epsilon, tau = tau,
-    logbase = logbase)
-
-  if (prune) {
-    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weights <- prune_weights(weight_mat = weights, cut = crit_pool)
-  }
+mon_between_loop <- function(design, n, lambda, weight_fun, tuning_params) {
+  weights <- do.call(weight_fun, args = c(tuning_params, design = design,
+    n = n, lambda = lambda))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
   func <- function(x) bskt_final(design = design, n = n, lambda = lambda,

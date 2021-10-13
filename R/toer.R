@@ -2,6 +2,13 @@
 NULL
 
 #' @describeIn toer Type 1 error rate for a single-stage basket design.
+#' @template theta1_toer
+#' @template n
+#' @template weights
+#' @param results Whether only the family wise error rate (option \code{fwer})
+#'   or also the rejection probabilities per group (option \code{group}) should
+#'   be returned.
+#' @template dotdotdot
 setMethod("toer", "OneStageBasket",
   function(design, theta1 = NULL, n, lambda, weight_fun, tuning_params,
            results = c("fwer", "group"), ...) {
@@ -19,4 +26,15 @@ setMethod("toer", "OneStageBasket",
       reject_prob_group(design = design, theta1 = theta1, n = n,
         lambda = lambda, weight_mat = weight_mat, prob = "toer")
     }
+  })
+
+#' @describeIn toer Type 1 error rate for two-stage basket design.
+setMethod("toer", "TwoStageBasket",
+  function(design, theta1 = NULL, n, n1, lambda, interim_fun, interim_params,
+           weight_fun, tuning_params, results = c("fwer", "group"), ...)  {
+    results <- match.arg(results)
+    weight_mat <- do.call(weight_fun, args = c(tuning_params, design = design,
+      n = n, n1, lambda = lambda))
+
+
   })

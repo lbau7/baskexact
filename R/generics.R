@@ -6,13 +6,6 @@ NULL
 #' Computes the exact family wise type 1 error rate of a basket trial .
 #'
 #' @template design
-#' @template theta1_toer
-#' @template n
-#' @template weights
-#' @param results Whether only the family wise error rate (option \code{fwer})
-#'   or also the rejection probabilities per group (option \code{group}) should
-#'   be returned.
-#' @template dotdotdot
 #'
 #' @details \code{toer} computes the exact family wise type 1 error rate and the
 #' exact rejection probabilities per group. The family wise type 1 error rate
@@ -243,7 +236,12 @@ setGeneric("basket_test",
     standardGeneric("basket_test")
 )
 
+#' Weights Based on Fujikawa et al.'s Design
 setGeneric("weights_fujikawa",
   function(design, ...) standardGeneric("weights_fujikawa")
 )
 
+#' Interim Analysis Based on the Posterior Predictive Probability
+setGeneric("interim_postpred",
+  function(design, ...) standardGeneric("interim_postpred")
+)
