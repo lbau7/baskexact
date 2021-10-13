@@ -18,8 +18,8 @@ test_that("get_crit_pool works", {
   n <- 20
   crit <- get_crit_pool(design = design, n = n, lambda = 0.99)
   nocrit <- crit - 1
-  weight_mat <- get_weights(design = design, n = n, epsilon = 2, tau = 0,
-    logbase = 2)
+  weight_mat <- weights_fujikawa(design = design, n = n, epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE)
 
   shape_crit <- matrix(c(design@shape1 + rep(crit, design@k),
     design@shape2 + n - rep(crit, design@k)), byrow = TRUE, ncol = design@k)
@@ -63,8 +63,8 @@ test_that("get_targ works", {
 
 test_that("prune_weights works", {
   design <- setupOneStageBasket(k = 6, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  weight_mat <- get_weights(design = design, n = 15, epsilon = 2, tau = 0,
-    logbase = 2)
+  weight_mat <- weights_fujikawa(design = design, n = 15, epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE)
   weight_mat <- prune_weights(weight_mat, cut = 8)
 
   r <- c(5, 6, 7, 8, 9, 10)
@@ -91,8 +91,8 @@ test_that("vectorization of get_prob works", {
 test_that("beta_borrow works", {
   # Reproduced from Fujikawa et al., 2020, Supplement R Code
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  weight_mat <- get_weights(design = design, n = 24, epsilon = 2, tau = 0.5,
-    logbase = exp(1))
+  weight_mat <- weights_fujikawa(design = design, n = 24, epsilon = 2,
+    tau = 0.5, logbase = exp(1), prune = FALSE)
   r <- c(7, 2, 5)
   shape_post <- matrix(c(design@shape1 + r, design@shape2 + 24 - r),
     byrow = TRUE, ncol = design@k)

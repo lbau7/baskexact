@@ -3,8 +3,9 @@ test_that("check_mon_within works", {
   design1 <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   # One outcome violates the within-trial monotonicity condition
-  r1 <- check_mon_within(design = design1, n = 24, lambda = 0.99, epsilon = 0.5,
-    tau = 0, logbase = 2, prune = FALSE, details = TRUE)$Events
+  r1 <- check_mon_within(design = design1, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 0.5, tau = 0,
+    logbase = 2, prune = FALSE), details = TRUE)$Events
 
   # Investigate outcomes with similar responses
   r2 <- r3 <- r4 <- r5 <- r1
@@ -13,8 +14,8 @@ test_that("check_mon_within works", {
   r4[3] <- r4[3] - 1
   r5[4] <- r5[4] + 1
 
-  weights1 <- get_weights(design = design1, n = 24, epsilon = 0.5, tau = 0,
-    logbase = 2)
+  weights1 <- weights_fujikawa(design = design1, n = 24, epsilon = 0.5,
+    tau = 0, logbase = 2, prune = FALSE)
   res1 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r1,
     weight_mat = weights1)
   res2 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r2,
@@ -34,19 +35,22 @@ test_that("check_mon_within works", {
 
   # Check condition with no details
   res_nodet1 <- check_mon_within(design = design1, n = 24, lambda = 0.99,
-    epsilon = 0.5, tau = 0, logbase = 2, prune = FALSE, details = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 0.5, tau = 0,
+    logbase = 2, prune = FALSE), details = FALSE)
 
   expect_false(res_nodet1)
 
   # Compare with mon_within_loop
   res_loop1 <- mon_within_loop(design = design1, n = 24, lambda = 0.99,
-    epsilon = 0.5, tau = 0, logabse = 2, prune = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 0.5, tau = 0,
+    logbase = 2, prune = FALSE))
 
   expect_true(all(r1 == res_loop1))
 
   ## With Pruning
-  r <- check_mon_within(design = design1, n = 24, lambda = 0.99, epsilon = 7,
-    tau = 0, logbase = 2, prune = TRUE, details = TRUE)
+  r <- check_mon_within(design = design1, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 7, tau = 0,
+    logbase = 2, prune = TRUE), details = TRUE)
 
   # Investigate outcomes with similar responses to first violating outcome
   r6 <- r$Events[1, ]
@@ -55,8 +59,8 @@ test_that("check_mon_within works", {
   r8[4] <- r8[4] - 1
   r9[4] <- r9[4] + 1
 
-  weights2 <- get_weights(design = design1, n = 24, epsilon = 7, tau = 0,
-    logbase = 2)
+  weights2 <- weights_fujikawa(design = design1, n = 24, epsilon = 7, tau = 0,
+    logbase = 2, prune = FALSE)
   crit_pool <- get_crit_pool(design = design1, n = 24, lambda = 0.99)
   weights2 <- prune_weights(weights2, cut = crit_pool)
 
@@ -82,13 +86,15 @@ test_that("check_mon_within works", {
 
   # Check condition with no details
   res_nodet2 <- check_mon_within(design = design1, n = 24, lambda = 0.99,
-    epsilon = 7, tau = 0, logbase = 2, prune = TRUE, details = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 7, tau = 0,
+    logbase = 2, prune = TRUE), details = FALSE)
 
   expect_false(res_nodet2)
 
   # Compare with mon_within_loop
   res_loop2 <- mon_within_loop(design = design1, n = 24, lambda = 0.99,
-    epsilon = 7, tau = 0, logabse = 2, prune = TRUE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 7, tau = 0,
+    logbase = 2, prune = TRUE))
 
   expect_true(all(res_loop2 == r$Events))
 
@@ -96,11 +102,14 @@ test_that("check_mon_within works", {
   design2 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   res_noviol1 <- check_mon_within(design = design2, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE), details = FALSE)
   res_noviol2 <- check_mon_within(design = design2, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = TRUE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE), details = TRUE)
   res_noviol3 <- mon_within_loop(design = design2, n = 20, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE))
 
   expect_equal(res_noviol1, res_noviol2)
   expect_equal(res_noviol1, res_noviol3)
@@ -111,13 +120,14 @@ test_that("check_mon_between works", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   ev <- check_mon_between(design = design, n = 15, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = TRUE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE), details = TRUE)
   ev_viol <- t(sapply(ev, function(x) x$Events[1, ]))
 
   # Check results of first violated outcome
   ev1 <- ev[[1]]
-  weights1 <- get_weights(design = design, n = 15, epsilon = 2, tau = 0,
-    logbase = 2)
+  weights1 <- weights_fujikawa(design = design, n = 15, epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE)
 
   res1 <- bskt_final(design = design, n = 15, lambda = 0.99,
     r = ev1$Events[1, ], weight_mat = weights1)
@@ -137,19 +147,22 @@ test_that("check_mon_between works", {
 
   # Check condition with no details
   res_nodet1 <- check_mon_between(design = design, n = 15, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = FALSE, details = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE), details = FALSE)
 
   expect_false(res_nodet1)
 
-  # Compare with mon_between_slow
-  res_slow1 <- mon_between_slow(design = design, n = 15, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = FALSE)
+  # Compare with mon_between_loop
+  res_slow1 <- mon_between_loop(design = design, n = 15, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE))
 
   expect_equal(ev_viol, res_slow1)
 
   ## With Pruning
   res_nodet2 <- check_mon_between(design = design, n = 15, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = TRUE, details = FALSE)
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = TRUE), details = FALSE)
 
   expect_true(res_nodet2)
 
@@ -167,8 +180,9 @@ test_that("check_mon_between works", {
   expect_equal(res_sig3, all(res_sig2))
 
   # Compare with mon_between_slow
-  res_slow2 <- mon_between_slow(design = design, n = 15, lambda = 0.99,
-    epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
+  res_slow2 <- mon_between_loop(design = design, n = 15, lambda = 0.99,
+    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    logbase = 2, prune = TRUE))
 
   expect_equal(res_nodet2, res_slow2)
 })
