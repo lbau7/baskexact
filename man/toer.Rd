@@ -3,6 +3,7 @@
 \name{toer}
 \alias{toer}
 \alias{toer,OneStageBasket-method}
+\alias{toer,TwoStageBasket-method}
 \title{Type 1 Error Rate}
 \usage{
 toer(design, ...)
@@ -12,6 +13,20 @@ toer(design, ...)
   theta1 = NULL,
   n,
   lambda,
+  weight_fun,
+  tuning_params,
+  results = c("fwer", "group"),
+  ...
+)
+
+\S4method{toer}{TwoStageBasket}(
+  design,
+  theta1 = NULL,
+  n,
+  n1,
+  lambda,
+  interim_fun,
+  interim_params,
   weight_fun,
   tuning_params,
   results = c("fwer", "group"),
@@ -73,6 +88,8 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 \section{Methods (by class)}{
 \itemize{
 \item \code{OneStageBasket}: Type 1 error rate for a single-stage basket design.
+
+\item \code{TwoStageBasket}: Type 1 error rate for two-stage basket design.
 }}
 
 \examples{

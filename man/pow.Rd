@@ -5,16 +5,7 @@
 \alias{pow,OneStageBasket-method}
 \title{Power}
 \usage{
-pow(
-  design,
-  theta1,
-  n,
-  lambda,
-  weight_fun,
-  tuning_params,
-  results = c("ewp", "group"),
-  ...
-)
+pow(design, ...)
 
 \S4method{pow}{OneStageBasket}(
   design,
@@ -30,6 +21,8 @@ pow(
 \arguments{
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
+
+\item{...}{Further arguments.}
 
 \item{theta1}{Probabilities under the alternative hypothesis. If
 \code{length(theta1) ==  1}, then this is a common probability for all
@@ -48,8 +41,6 @@ information.}
 \item{results}{Whether only the experimentwise power (option \code{ewp})
 or also the rejection probabilities per group (option \code{group}) should
 be returned.}
-
-\item{...}{Further arguments.}
 }
 \value{
 If \code{results = "ewp"} then the experimentwise power is

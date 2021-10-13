@@ -5,17 +5,7 @@
 \alias{check_mon_within,OneStageBasket-method}
 \title{Check Within-Trial Monotonicity}
 \usage{
-check_mon_within(
-  design,
-  n,
-  lambda,
-  epsilon,
-  tau,
-  logbase = 2,
-  prune,
-  details,
-  ...
-)
+check_mon_within(design, ...)
 
 \S4method{check_mon_within}{OneStageBasket}(design, n, lambda, weight_fun, tuning_params, details, ...)
 }
@@ -23,10 +13,15 @@ check_mon_within(
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
 
+\item{...}{Further arguments.}
+
 \item{n}{The sample size per basket.}
 
 \item{lambda}{The posterior probability threshold. See details for more
 information.}
+
+\item{details}{Whether the cases where the monotonicity condition is
+violated should be returned, in case there are any.}
 
 \item{epsilon}{A tuning parameter that determines the amount of borrowing.
 See details for more information.}
@@ -40,11 +35,6 @@ information.}
 
 \item{prune}{Whether baskets with a number of responses below the
 critical pooled value should be pruned before the final analysis.}
-
-\item{details}{Whether the cases where the monotonicity condition is
-violated should be returned, in case there are any.}
-
-\item{...}{Further arguments.}
 }
 \value{
 If \code{details = FALSE} then only a logical value is returned.
