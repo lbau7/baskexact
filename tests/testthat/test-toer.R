@@ -57,6 +57,26 @@ test_that("toer works without pruning", {
   expect_equal(toer_fwer2, toer_loop2$fwer)
   expect_equal(toer_group2$rejection_probabilities,
     toer_loop2$rejection_probabilities)
+
+  # Compare the results of "fwer" and "group" when null hypothesis is not
+  # global null
+  toer_group3 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 24,
+    lambda = 0.99, weight_fun = weights_fujikawa,
+    tuning_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
+    results = "group")
+  toer_fwer3 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 24,
+    lambda = 0.99, weight_fun = weights_fujikawa,
+    tuning_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
+    results = "fwer")
+  toer_loop3 <- reject_single_loop(design = design, theta1 = c(0.2, 0.4, 0.5),
+    n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
+    tuning_params = list(epsilon = 1, tau = 0, logbase = 2,
+    prune = FALSE), prob = "toer")
+
+  expect_equal(toer_fwer3, toer_group3$fwer)
+  expect_equal(toer_fwer3, toer_loop3$fwer)
+  expect_equal(toer_group3$rejection_probabilities,
+    toer_loop3$rejection_probabilities)
 })
 
 test_that("toer works with pruning", {
