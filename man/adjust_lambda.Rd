@@ -3,6 +3,7 @@
 \name{adjust_lambda}
 \alias{adjust_lambda}
 \alias{adjust_lambda,OneStageBasket-method}
+\alias{adjust_lambda,TwoStageBasket-method}
 \title{Adjust Lambda}
 \usage{
 adjust_lambda(design, ...)
@@ -13,7 +14,21 @@ adjust_lambda(design, ...)
   theta1 = NULL,
   n,
   weight_fun,
-  tuning_params,
+  weight_params,
+  prec_digits,
+  ...
+)
+
+\S4method{adjust_lambda}{TwoStageBasket}(
+  design,
+  alpha = 0.025,
+  theta1 = NULL,
+  n,
+  n1,
+  interim_fun,
+  interim_params = list(),
+  weight_fun,
+  weight_params = list(),
   prec_digits,
   ...
 )
@@ -33,21 +48,22 @@ global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
 
+\item{weight_fun}{Which function should be used to calculate the weights.}
+
+\item{weight_params}{A list of tuning parameters specific to
+\code{weight_fun}.}
+
 \item{prec_digits}{Number of decimal places that are considered when
-adjusting lambda}
+adjusting lambda.}
 
-\item{epsilon}{A tuning parameter that determines the amount of borrowing.
-See details for more information.}
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
 
-\item{tau}{A tuning parameter that determines how similar the baskets
-have to be that borrowing occurs. See details for more information.}
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
 
-\item{logbase}{A tuning parameter that determines which logarithm base is
-used to compute the Jensen-Shannon divergence. See details for more
-information.}
-
-\item{prune}{Whether baskets with a number of responses below the
-critical pooled value should be pruned before the final analysis.}
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
 }
 \value{
 The greatest value with \code{prec_digits} decimal places for
@@ -71,6 +87,8 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 \section{Methods (by class)}{
 \itemize{
 \item \code{OneStageBasket}: Adjust lambda for a single-stage design.
+
+\item \code{TwoStageBasket}: Adjust lambda for a two-stage design.
 }}
 
 \examples{

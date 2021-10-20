@@ -7,7 +7,7 @@
 \usage{
 check_mon_within(design, ...)
 
-\S4method{check_mon_within}{OneStageBasket}(design, n, lambda, weight_fun, tuning_params, details, ...)
+\S4method{check_mon_within}{OneStageBasket}(design, n, lambda, weight_fun, weight_params, details, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by

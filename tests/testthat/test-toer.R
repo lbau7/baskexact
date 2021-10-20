@@ -6,14 +6,14 @@ test_that("toer works without pruning", {
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
   toer_group1 <- toer(design = design, n = 24, lambda = 0.99,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = FALSE), results = "group")
   toer_fwer1 <- toer(design = design, n = 24, lambda = 0.99,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = FALSE), results = "fwer")
   toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
     n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
-    tuning_params = list(epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE),
+    weight_params = list(epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE),
     prob = "toer")
 
   # In Fujikawa et al., based on simulation:
@@ -34,14 +34,14 @@ test_that("toer works without pruning", {
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
   toer_group2 <- toer(design = design, n = 24, lambda = 0.99,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0.5,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0.5,
       logbase = exp(1), prune = FALSE), results = "group")
   toer_fwer2 <- toer(design = design, n = 24, lambda = 0.99,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0.5,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0.5,
       logbase = exp(1), prune = FALSE), results = "fwer")
   toer_loop2 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
     n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
-    tuning_params = list(epsilon = 2, tau = 0.5, logbase = exp(1),
+    weight_params = list(epsilon = 2, tau = 0.5, logbase = exp(1),
     prune = FALSE), prob = "toer")
 
   # In Fujikawa et al., based on simulation:
@@ -62,15 +62,15 @@ test_that("toer works without pruning", {
   # global null
   toer_group3 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
-    tuning_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
     results = "group")
   toer_fwer3 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
-    tuning_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
     results = "fwer")
   toer_loop3 <- reject_single_loop(design = design, theta1 = c(0.2, 0.4, 0.5),
     n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
-    tuning_params = list(epsilon = 1, tau = 0, logbase = 2,
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2,
     prune = FALSE), prob = "toer")
 
   expect_equal(toer_fwer3, toer_group3$fwer)
@@ -85,14 +85,14 @@ test_that("toer works with pruning", {
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
   toer_group1 <- toer(design = design, n = 15, lambda = 0.95,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 1, tau = 0.2,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
       logbase = 2, prune = TRUE), results = "group")
   toer_fwer1 <- toer(design = design, n = 15, lambda = 0.95,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 1, tau = 0.2,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
       logbase = 2, prune = TRUE), results = "fwer")
   toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
     n = 15, lambda = 0.95, weight_fun = weights_fujikawa,
-    tuning_params = list(epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE),
+    weight_params = list(epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE),
     prob = "toer")
 
   expect_equal(toer_fwer1, toer_group1$fwer)

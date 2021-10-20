@@ -2,21 +2,22 @@
 NULL
 
 #' @describeIn toer Type 1 error rate for a single-stage basket design.
+#'
+#' @template design
 #' @template theta1_toer
 #' @template n
+#' @template lambda
 #' @template weights
-#' @param results Whether only the family wise error rate (option \code{fwer})
-#'   or also the rejection probabilities per group (option \code{group}) should
-#'   be returned.
+#' @template results_toer
 #' @template dotdotdot
 setMethod("toer", "OneStageBasket",
-  function(design, theta1 = NULL, n, lambda, weight_fun, tuning_params,
+  function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),
            results = c("fwer", "group"), ...) {
     check_params(n = n, lambda = lambda)
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
 
     results <- match.arg(results)
-    weight_mat <- do.call(weight_fun, args = c(tuning_params, design = design,
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda))
 
     if (results == "fwer") {
@@ -29,14 +30,24 @@ setMethod("toer", "OneStageBasket",
   })
 
 #' @describeIn toer Type 1 error rate for two-stage basket design.
+#'
+#' @template design
+#' @template theta1_toer
+#' @template n
+#' @template n1
+#' @template lambda
+#' @template interim
+#' @template weights
+#' @template results_toer
+#' @template dotdotdot
 setMethod("toer", "TwoStageBasket",
   function(design, theta1 = NULL, n, n1, lambda, interim_fun,
-           interim_params = list(), weight_fun, tuning_params = list(),
+           interim_params = list(), weight_fun, weight_params = list(),
            results = c("fwer", "group"), ...)  {
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
 
     results <- match.arg(results)
-    weight_mat <- do.call(weight_fun, args = c(tuning_params, design = design,
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, n1, lambda = lambda))
 
     if (results == "fwer") {

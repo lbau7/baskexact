@@ -3,6 +3,7 @@
 \name{pow}
 \alias{pow}
 \alias{pow,OneStageBasket-method}
+\alias{pow,TwoStageBasket-method}
 \title{Power}
 \usage{
 pow(design, ...)
@@ -13,7 +14,21 @@ pow(design, ...)
   n,
   lambda,
   weight_fun,
-  tuning_params,
+  weight_params,
+  results = c("ewp", "group"),
+  ...
+)
+
+\S4method{pow}{TwoStageBasket}(
+  design,
+  theta1,
+  n,
+  n1,
+  lambda,
+  interim_fun,
+  interim_params = list(),
+  weight_fun,
+  weight_params = list(),
   results = c("ewp", "group"),
   ...
 )
@@ -35,12 +50,21 @@ information.}
 
 \item{weight_fun}{Which function should be used to calculate the weights.}
 
-\item{tuning_params}{A list of tuning parameters specific to
+\item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}
 
 \item{results}{Whether only the experimentwise power (option \code{ewp})
 or also the rejection probabilities per group (option \code{group}) should
 be returned.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
+
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
 }
 \value{
 If \code{results = "ewp"} then the experimentwise power is
@@ -72,10 +96,12 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 \section{Methods (by class)}{
 \itemize{
 \item \code{OneStageBasket}: Power for a single-stage basket design.
+
+\item \code{TwoStageBasket}: Power for a two-stage basket design.
 }}
 
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99,
-  weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0))
+  weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0))
 }

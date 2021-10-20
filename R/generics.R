@@ -6,6 +6,7 @@ NULL
 #' Computes the exact family wise type 1 error rate of a basket trial .
 #'
 #' @template design
+#' @template dotdotdot
 #'
 #' @details \code{toer} computes the exact family wise type 1 error rate and the
 #' exact rejection probabilities per group. The family wise type 1 error rate
@@ -36,7 +37,7 @@ NULL
 #' @examples
 #' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 #' toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa,
-#'   tuning_params = list(epsilon = 2, tau = 0))
+#'   weight_params = list(epsilon = 2, tau = 0))
 setGeneric("toer",
   function(design, ...) standardGeneric("toer")
 )
@@ -46,15 +47,6 @@ setGeneric("toer",
 #' Computes the exact power for a basket trial.
 #'
 #' @template design
-#' @param theta1 Probabilities under the alternative hypothesis. If
-#'   \code{length(theta1) ==  1}, then this is a common probability for all
-#'   baskets.
-#' @template n
-#' @template lambda
-#' @template weights
-#' @param results Whether only the experimentwise power (option \code{ewp})
-#'   or also the rejection probabilities per group (option \code{group}) should
-#'   be returned.
 #' @template dotdotdot
 #'
 #' @details \code{pow} computes the exact experimentwise power and the
@@ -83,7 +75,7 @@ setGeneric("toer",
 #' @examples
 #' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 #' pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99,
-#'   weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0))
+#'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0))
 setGeneric("pow",
   function(design, ...) standardGeneric("pow")
 )
@@ -93,11 +85,6 @@ setGeneric("pow",
 #' Checks whether the within-trial monotonicity condition holds.
 #'
 #' @template design
-#' @template n
-#' @template lambda
-#' @template tuning
-#' @template prune
-#' @template details
 #' @template dotdotdot
 #'
 #' @details \code{check_mon_within} checks whether the within-trial
@@ -134,11 +121,6 @@ setGeneric("check_mon_within",
 #' Checks whether the between-trial monotonicity condition holds.
 #'
 #' @template design
-#' @template n
-#' @template lambda
-#' @template tuning
-#' @template prune
-#' @template details
 #' @template dotdotdot
 #'
 #' @details \code{check_mon_between} checks whether the between-trial
@@ -176,13 +158,6 @@ setGeneric("check_mon_between",
 #' rate is protected at level \code{alpha}.
 #'
 #' @template design
-#' @param alpha The one-sided signifance level.
-#' @template theta1_toer
-#' @template n
-#' @template tuning
-#' @template prune
-#' @param prec_digits Number of decimal places that are considered when
-#'   adjusting lambda
 #' @template dotdotdot
 #'
 #' @details \code{adjust_alpha} finds the greatest value with
@@ -197,7 +172,6 @@ setGeneric("check_mon_between",
 #' \code{lambda} which controls the family wise error rate at level
 #' \code{alpha} (one-sided) and the exact family wise error rate for this
 #' value of \code{lambda}.
-#'
 #' @export
 #'
 #' @examples

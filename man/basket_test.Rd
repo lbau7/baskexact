@@ -7,7 +7,7 @@
 \usage{
 basket_test(design, ...)
 
-\S4method{basket_test}{OneStageBasket}(design, n, r, lambda, weight_fun, tuning_params, ...)
+\S4method{basket_test}{OneStageBasket}(design, n, r, lambda, weight_fun, weight_params, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by

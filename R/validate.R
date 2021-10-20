@@ -5,11 +5,11 @@
 # Loop-based calculation of the rejection probabilities of a single-stage
 # basket design with 3 baskets
 reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
-                               tuning_params, prob = c("toer", "pwr")) {
+                               weight_params, prob = c("toer", "pwr")) {
   targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
-  weights <- do.call(weight_fun, args = c(tuning_params, design = design,
+  weights <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
 
   for (i1 in 0:n) {
@@ -46,8 +46,8 @@ reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
 }
 
 # Loop-based version of check_mon_within
-mon_within_loop <- function(design, n, lambda, weight_fun, tuning_params) {
-  weights <- do.call(weight_fun, args = c(tuning_params, design = design,
+mon_within_loop <- function(design, n, lambda, weight_fun, weight_params) {
+  weights <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
@@ -68,8 +68,8 @@ mon_within_loop <- function(design, n, lambda, weight_fun, tuning_params) {
 }
 
 # Version of check_mon_between without shortcuts
-mon_between_loop <- function(design, n, lambda, weight_fun, tuning_params) {
-  weights <- do.call(weight_fun, args = c(tuning_params, design = design,
+mon_between_loop <- function(design, n, lambda, weight_fun, weight_params) {
+  weights <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)

@@ -2,7 +2,7 @@ test_that("test works", {
   ## Without Pruning
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
   res1 <- basket_test(design = design, n = 24, r = c(5, 6, 9), lambda = 0.99,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = FALSE))
 
   # Test if weights are correct
@@ -24,7 +24,7 @@ test_that("test works", {
   ## With Pruning
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
   res2 <- basket_test(design = design, n = 24, r = c(4, 4, 5), lambda = 0.99,
-    weight_fun = weights_fujikawa, tuning_params = list(epsilon = 2, tau = 0,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = TRUE))
 
   # Results are Equal when all Baskets are Pruned
@@ -36,10 +36,10 @@ test_that("errors in basket_test work", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   expect_error(basket_test(design = design, n = 20, r = c(-1, 10, 10),
-    lambda = 0.99, weight_fun = weights_fujikawa, tuning_params = list(
+    lambda = 0.99, weight_fun = weights_fujikawa, weight_params = list(
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE)))
   expect_error(basket_test(design = design, n = 20, r = c(1, 25, 10),
-    lambda = 0.99, weight_fun = weights_fujikawa, tuning_params = list(
+    lambda = 0.99, weight_fun = weights_fujikawa, weight_params = list(
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE)))
 
 })

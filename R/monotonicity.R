@@ -3,14 +3,22 @@ NULL
 
 #' @describeIn check_mon_within Within-trial monotonicity condition for a
 #'   single-stage design.
+#'
+#' @template design
+#' @template n
+#' @template lambda
+#' @template tuning
+#' @template prune
+#' @template details
+#' @template dotdotdot
 setMethod("check_mon_within", "OneStageBasket",
-  function(design, n, lambda, weight_fun, tuning_params, details, ...) {
+  function(design, n, lambda, weight_fun, weight_params, details, ...) {
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
 
     crit <- get_crit(design = design, n = n, lambda = lambda)
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weight_mat <- do.call(weight_fun, args = c(tuning_params, design = design,
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda))
 
     # Create matrix with all possible outcomes (without permutations)
@@ -59,12 +67,20 @@ setMethod("check_mon_within", "OneStageBasket",
 
 #' @describeIn check_mon_between Between-trial monotonicity condition for a
 #'   single-stage design.
+#'
+#' @template design
+#' @template n
+#' @template lambda
+#' @template tuning
+#' @template prune
+#' @template details
+#' @template dotdotdot
 setMethod("check_mon_between", "OneStageBasket",
-  function(design, n, lambda, weight_fun, tuning_params, details, ...) {
+  function(design, n, lambda, weight_fun, weight_params, details, ...) {
     check_params(n = n, lambda = lambda)
 
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weight_mat <- do.call(weight_fun, args = c(tuning_params, design = design,
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda))
 
     # Create matrix with all possible outcomes (without permutations)

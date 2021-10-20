@@ -11,9 +11,9 @@ weights_fujikawa(design, ...)
 \S4method{weights_fujikawa}{OneStageBasket}(
   design,
   n,
-  epsilon,
   lambda,
-  tau,
+  epsilon = 1.25,
+  tau = 0.5,
   logbase = 2,
   prune = FALSE,
   ...
@@ -23,9 +23,9 @@ weights_fujikawa(design, ...)
   design,
   n,
   n1,
-  epsilon,
   lambda,
-  tau,
+  epsilon = 1.25,
+  tau = 0,
   logbase = 2,
   prune = FALSE,
   ...

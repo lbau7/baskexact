@@ -14,7 +14,7 @@ toer(design, ...)
   n,
   lambda,
   weight_fun,
-  tuning_params,
+  weight_params = list(),
   results = c("fwer", "group"),
   ...
 )
@@ -26,9 +26,9 @@ toer(design, ...)
   n1,
   lambda,
   interim_fun,
-  interim_params,
+  interim_params = list(),
   weight_fun,
-  tuning_params,
+  weight_params = list(),
   results = c("fwer", "group"),
   ...
 )
@@ -46,14 +46,26 @@ global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
 
+\item{lambda}{The posterior probability threshold. See details for more
+information.}
+
 \item{weight_fun}{Which function should be used to calculate the weights.}
 
-\item{tuning_params}{A list of tuning parameters specific to
+\item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}
 
 \item{results}{Whether only the family wise error rate (option \code{fwer})
 or also the rejection probabilities per group (option \code{group}) should
 be returned.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
+
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
 }
 \value{
 If \code{results = "fwer"} then the family wise type 1 error rate is
@@ -95,5 +107,5 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa,
-  tuning_params = list(epsilon = 2, tau = 0))
+  weight_params = list(epsilon = 2, tau = 0))
 }

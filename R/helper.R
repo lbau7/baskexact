@@ -63,3 +63,11 @@ post_pred <- function(n, n1, r1, shape, crit) {
     lower.tail = FALSE
   )
 }
+
+# Calculates the number of permutations of results
+get_permutations <- function(x) {
+  tab <- tabulate(x + 1)
+  tab <- tab[tab != 0]
+  ifelse(length(unique(x)) == 1, 1,
+    arrangements::npermutations(x = unique(x), freq = tab))
+}

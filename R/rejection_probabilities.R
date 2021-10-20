@@ -36,21 +36,14 @@ reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
   if ((sum(targ) == design@k) & (length(unique(theta1)) == 1)) {
     probs_eff <- apply(events_eff, 1,
       function(x) get_prob(n = n, r = x, theta = theta1))
-    # Helper function that calculates the number of permutations
-    perm_fun <- function(x) {
-      tab <- tabulate(x + 1)
-      tab <- tab[tab != 0]
-      ifelse(length(unique(x)) == 1, 1,
-        arrangements::npermutations(x = unique(x), freq = tab))
-    }
-    eff_perm <- apply(events_eff, 1, perm_fun)
+    eff_perm <- apply(events_eff, 1, get_permutations)
     rej_prob <- sum(probs_eff * eff_perm)
   } else {
     # If not all theta1 are equal calculate probability for each permutation
     rej_prob <- numeric(nrow(res_eff))
     for (i in 1:nrow(res_eff)) {
-      # If number of responses is equal in each basket, each permutation
-      # has the same probability even when not all theta1 are equal
+      # If number of responses is equal in each basket, there is only
+      # one permutation (when n is equal)
       if (length(unique(events_eff[i, ])) == 1) {
         rej_prob[i] <- get_prob(n = n, r = events_eff[i, ],
           theta = theta1)
@@ -113,7 +106,6 @@ reject_prob_ew2 <- function(design, theta1, n, n1, lambda, interim_fun,
                             interim_params, weight_mat,
                             prob = c("toer", "pwr")) {
   targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
-  #browser()
 
   # Überprüfen, ob diese Unterscheidung notwendig ist
   if (sum(targ) == design@k) {
@@ -137,9 +129,7 @@ reject_prob_ew2 <- function(design, theta1, n, n1, lambda, interim_fun,
 
   if (sum(targ) == design@k) {
     # Multiply probability by number of permutations for each row
-    perm_fun <- function(x) ifelse(length(unique(x)) == 1, 1,
-      arrangements::npermutations(x = unique(x), freq = table(x)))
-    eff_perm <- apply(events_eff, 1, perm_fun)
+    eff_perm <- apply(events_eff, 1, get_permutations)
     rej_prob <- sum(probs_eff * eff_perm)
   } else {
     rej_prob <- sum(probs_eff)
