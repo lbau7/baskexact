@@ -1,5 +1,41 @@
-#' @include generics.R
+#' @include class.R
 NULL
+
+#' Check Within-Trial Monotonicity
+#'
+#' Checks whether the within-trial monotonicity condition holds.
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details \code{check_mon_within} checks whether the within-trial
+#' monotonicity condition holds. For a single-stage design with equal
+#' prior distributions and equal sample sizes for each basket this condition
+#' states that there are no cases where the null hypothesis of a basket is
+#' rejected when there is at least one other basket with more observed
+#' responses for which the null hypothesis cannot be rejected.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
+#' @return If \code{details = FALSE} then only a logical value is returned.
+#' If \code{details = TRUE} then if there are any cases where the
+#' within-trial monotonicity condition is violated, a list of these cases and
+#' their results are returned.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
+#'   tau = 0, prune = FALSE, details = TRUE)
+setGeneric("check_mon_within",
+  function(design, ...) standardGeneric("check_mon_within")
+)
 
 #' @describeIn check_mon_within Within-trial monotonicity condition for a
 #'   single-stage design.
@@ -64,6 +100,42 @@ setMethod("check_mon_within", "OneStageBasket",
       }
     }
   })
+
+#' Check Between-Trial Monotonicity
+#'
+#' Checks whether the between-trial monotonicity condition holds.
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details \code{check_mon_between} checks whether the between-trial
+#' monotonicity condition holds. For a single-stage design with equal prior
+#' distributions and equal sample sizes for each basket this condition states
+#' that there are no cases where at least one null hypothesis is rejected when
+#' when there is a case with an equal or higher number of responses in each
+#' basket for which no null hypothesis is rejected.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
+#' @return If \code{details = FALSE} then only a logical value is returned.
+#' If \code{details = TRUE} then if there are any cases where the
+#' between-trial monotonicity condition is violated, a list of theses cases
+#' and their results are returned.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
+#'   tau = 0, prune = FALSE, details = TRUE)
+setGeneric("check_mon_between",
+  function(design, ...) standardGeneric("check_mon_between")
+)
 
 #' @describeIn check_mon_between Between-trial monotonicity condition for a
 #'   single-stage design.

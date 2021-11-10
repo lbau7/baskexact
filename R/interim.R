@@ -1,3 +1,13 @@
+#' @include class.R
+NULL
+
+#' Interim Analysis Based on the Posterior Predictive Probability
+setGeneric("interim_postpred",
+  function(design, ...) standardGeneric("interim_postpred")
+)
+
+#' @describeIn interim_postpred Interim analysis based on the posterior
+#'   predictive probabilty for two-stage basket designs.
 setMethod("interim_postpred", "TwoStageBasket",
   function(design, n, n1, r1, lambda, weight_mat, prob_futstop = 0.1,
            prob_effstop = 0.9, ...) {

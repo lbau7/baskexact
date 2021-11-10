@@ -1,5 +1,33 @@
-#' @include generics.R
+#' @include class.R
 NULL
+
+#' Test for the Results of a Basket Trial
+#'
+#' \code{basket_test} evaluates the results of a basket trial and calculates
+#' the posterior distributions with and without borrowing.
+#'
+#' @template design
+#' @template n
+#' @param r The vector of observed responses.
+#' @template lambda
+#' @template tuning
+#' @template prune
+#' @template dotdotdot
+#'
+#' @return A list, including matrices of the weights that are used for
+#' borrowing, posterior distribution parameters for all baskets without and
+#' with borrowing, as well as the posterior probabilities for all baskets
+#' without and with borrowing.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
+#'   epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
+setGeneric("basket_test",
+  function(design, ...)
+    standardGeneric("basket_test")
+)
 
 #' @describeIn basket_test Testing for a single-stage basket design.
 setMethod("basket_test", "OneStageBasket",
@@ -26,8 +54,8 @@ setMethod("basket_test", "OneStageBasket",
       c("shape1", "shape2"),
       sapply(1:design@k, function(x) paste("Basket", x))
     )
-    shape_borrow <- beta_borrow(k = design@k, r = r, weight_mat = weight_mat,
-      shape = shape_post)
+    shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design,
+      n = n, r = r)
     dimnames(shape_borrow) <- list(
       c("shape1", "shape2"),
       sapply(1:design@k, function(x) paste("Basket", x))

@@ -1,5 +1,10 @@
-#' @include generics.R
+#' @include class.R
 NULL
+
+#' Weights Based on Fujikawa et al.'s Design
+setGeneric("weights_fujikawa",
+  function(design, ...) standardGeneric("weights_fujikawa")
+)
 
 #' @describeIn weights_fujikawa Fujikawa-weights for a single-stage basket
 #'   design.
@@ -42,6 +47,7 @@ setMethod("weights_fujikawa", "OneStageBasket",
       weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
     }
 
+    class(weight_mat) <- "fujikawa"
     weight_mat
   })
 
@@ -82,5 +88,51 @@ setMethod("weights_fujikawa", "TwoStageBasket",
     weight_mat <- (1 - jsd_mat)^epsilon
     weight_mat[weight_mat <= tau] <- 0
 
+    class(weight_mat) <- "fujikawa"
     weight_mat
   })
+
+#' Weights Based on Maximising the Marginal Likelihood
+setGeneric("weights_mml",
+  function(design, ...) standardGeneric("weights_mml")
+)
+
+#' @describeIn weights_mml Maximum marginal likelihood weights for a
+#'   single-stage basket design.
+setMethod("weights_mml", "OneStageBasket",
+  function(design, n, lambda, prune = FALSE, ...) {
+    x1 <- x2 <- c(0:n)
+    n_sum <- n + 1
+
+    l_marg <- function(delta) {
+      a <- integrate(function(x) l_xs(x) * l_x0(x)^delta * prior(x), 0, 1)$value
+      b <- integrate(function(x) l_x0(x)^delta * prior(x), 0, 1)$value
+      - a / b
+    }
+
+    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    for (i in 1:n_sum) {
+      for (j in i:n_sum) {
+        if (i == j) {
+          next
+        } else {
+          l_x1 <- function(x) dbinom(x1[i], n, prob = x)
+          l_x2 <- function(x) dbinom(x2[j], n, prob = x)
+          prior <- function(x) dbeta(x = x, shape1 = design@shape1,
+            shape2 = design@shape2)
+          l_marg <- function(delta) {
+            a <- integrate(function(x) l_x1(x) * l_x2(x)^delta * prior(x),
+              lower = 0, upper = 1)$value
+            b <- integrate(function(x) l_x1(x)^delta * prior(x),
+              lower = 0, upper = 1)$value
+            - a / b
+          }
+          weight_mat[i, j] <- optim(0.5, l_marg, method = "Brent", lower = 0,
+            upper = 1)$par
+        }
+      }
+    }
+    # Achtung: Borrowing funktioniert anders als mit Fujikawa
+    weight_mat + t(weight_mat)
+  })
+

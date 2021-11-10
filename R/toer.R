@@ -1,5 +1,46 @@
-#' @include generics.R
+#' @include class.R
 NULL
+
+#' Type 1 Error Rate
+#'
+#' Computes the exact family wise type 1 error rate of a basket trial .
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details \code{toer} computes the exact family wise type 1 error rate and the
+#' exact rejection probabilities per group. The family wise type 1 error rate
+#' is the probability to reject at least one null hypothesis for a basket with
+#' theta1 = theta0. If all theta1 > theta0 then the family wise type 1 error
+#' rate under the global null hypothesis is computed. The rejection
+#' probabilities correspond to the type 1 error rate for baskets with theta1 =
+#' theta 0 and to the power for baskets with theta1 > theta 0.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
+#' @return If \code{results = "fwer"} then the family wise type 1 error rate is
+#' returned as a numeric value. If \code{results = "group"} then a list with
+#' the rejection probabilities per group and the family wise type 1 error rate
+#' is returned. If all theta1 > theta0 then the family wise type 1 error rate
+#' is calculated under the global null hypothesis. For baskets with theta1 =
+#' theta0 the rejection probabilities corresponds to the type 1 error rate, for
+#' baskets with theta1 > theta0 the rejection probabilities corresponds to the
+#' power.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa,
+#'   weight_params = list(epsilon = 2, tau = 0))
+setGeneric("toer",
+  function(design, ...) standardGeneric("toer")
+)
 
 #' @describeIn toer Type 1 error rate for a single-stage basket design.
 #'

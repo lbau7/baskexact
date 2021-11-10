@@ -46,13 +46,6 @@ prune_weights <- function(weight_mat, cut) {
   weight_mat
 }
 
-# Computes the posterior distribution with borrowing
-beta_borrow <- function(k, r, weight_mat, shape) {
-  all_combs <- arrangements::combinations(r, 2) + 1
-  weights_vec <- weight_mat[all_combs]
-  weight_beta(k = k, weights = weights_vec, shape = shape)
-}
-
 # Computes the posterior predictive probability
 post_pred <- function(n, n1, r1, shape, crit) {
   extraDistr::pbbinom(

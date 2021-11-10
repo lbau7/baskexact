@@ -26,10 +26,10 @@ test_that("get_crit_pool works", {
   shape_nocrit <- matrix(c(design@shape1 + rep(nocrit, design@k),
     design@shape2 + n - rep(nocrit, design@k)), byrow = TRUE, ncol = design@k)
 
-  shape_crit <- beta_borrow(k = design@k, r = rep(crit, design@k),
-    weight_mat = weight_mat, shape = shape_crit)
-  shape_nocrit <- beta_borrow(k = design@k, r = rep(crit, design@k),
-    weight_mat = weight_mat, shape = shape_nocrit)
+  shape_crit <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
+    r = rep(crit, design@k))
+  shape_nocrit <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
+    r = rep(nocrit, design@k))
 
   post_prob_crit <- post_beta(shape = shape_crit, theta0 = design@theta0)
   post_prob_nocrit <- post_beta(shape = shape_nocrit, theta0 = design@theta0)
@@ -70,8 +70,8 @@ test_that("prune_weights works", {
   r <- c(5, 6, 7, 8, 9, 10)
   shape_post <- matrix(c(design@shape1 + r, design@shape2 + 15 - r),
     byrow = TRUE, ncol = design@k)
-  shape_borrow <- beta_borrow(k = design@k, r = r, weight_mat = weight_mat,
-    shape = shape_post)
+  shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = 15,
+    r = r)
 
   expect_equal(shape_post[, 1:3], shape_borrow[, 1:3])
   expect_false(any(shape_post[, 4:6] == shape_borrow[, 4:6]))
@@ -94,10 +94,8 @@ test_that("beta_borrow works", {
   weight_mat <- weights_fujikawa(design = design, n = 24, epsilon = 2,
     tau = 0.5, logbase = exp(1), prune = FALSE)
   r <- c(7, 2, 5)
-  shape_post <- matrix(c(design@shape1 + r, design@shape2 + 24 - r),
-    byrow = TRUE, ncol = design@k)
-  shape_borrow <- beta_borrow(k = 3, r = r, weight_mat = weight_mat,
-    shape = shape_post)
+  shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = 24,
+    r = r)
   shape_expect <- matrix(c(12.9215409, 34.4051363, 6.33262523, 34.1087508,
     14.2283671, 47.5396861), nrow = 2)
 
