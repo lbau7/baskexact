@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // weight_beta
 arma::mat weight_beta(const int& k, const arma::vec& weights, const arma::mat& shape);
 RcppExport SEXP _baskexact_weight_beta(SEXP kSEXP, SEXP weightsSEXP, SEXP shapeSEXP) {
