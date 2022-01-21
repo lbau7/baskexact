@@ -37,11 +37,12 @@ beta_borrow_int <- function(weight_mat, ...) {
 # Borrowing method for Fujikawa's design, where the prior information is also
 # shared
 #' @export
-beta_borrow_int.fujikawa <- function(weight_mat, design, n1, r, res_int) {
+beta_borrow_int.fujikawa <- function(weight_mat, design, n, n1, r, res_int) {
   r_temp <- get_r_temp(n1 = n1, r = r, res_int = res_int)
   all_combs <- arrangements::combinations(r_temp, 2)
   weights_vec <- weight_mat[all_combs]
-  shape <- matrix(c(design@shape1 + r, design@shape2 + n - r),
+  n_vec <- get_n_vec(n = n, n1 = n1, res_int = res_int)
+  shape <- matrix(c(design@shape1 + r, design@shape2 + n_vec - r),
     byrow = TRUE, ncol = design@k)
   weight_beta(k = design@k, weights = weights_vec, shape = shape)
 }
@@ -49,11 +50,12 @@ beta_borrow_int.fujikawa <- function(weight_mat, design, n1, r, res_int) {
 # Borrowing method for Power Prior design, where only the observed information
 # is shared
 #' @export
-beta_borrow_int.pp <- function(weight_mat, design, n1, r, res_int) {
+beta_borrow_int.pp <- function(weight_mat, design, n, n1, r, res_int) {
   r_temp <- get_r_temp(n1 = n1, r = r, res_int = res_int)
   all_combs <- arrangements::combinations(r_temp, 2)
   weights_vec <- weight_mat[all_combs]
-  shape <- matrix(c(r, n - r), byrow = TRUE, ncol = design@k)
+  n_vec <- get_n_vec(n = n, n1 = n1, res_int = res_int)
+  shape <- matrix(c(r, n_vec - r), byrow = TRUE, ncol = design@k)
   shape_post <- weight_beta(k = design@k, weights = weights_vec, shape = shape)
   shape_post[1, ] <- shape_post[1, ] + design@shape1
   shape_post[2, ] <- shape_post[2, ] + design@shape2
