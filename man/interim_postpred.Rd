@@ -3,7 +3,7 @@
 \name{interim_postpred}
 \alias{interim_postpred}
 \alias{interim_postpred,TwoStageBasket-method}
-\title{Interim Analysis Based on the Posterior Predictive Probability}
+\title{Interim analysis based on the posterior predictive probability}
 \usage{
 interim_postpred(design, ...)
 
@@ -20,7 +20,7 @@ interim_postpred(design, ...)
 )
 }
 \description{
-Interim Analysis Based on the Posterior Predictive Probability
+Interim analysis based on the posterior predictive probability
 }
 \section{Methods (by class)}{
 \itemize{
