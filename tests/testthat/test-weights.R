@@ -1,4 +1,4 @@
-test_that("get_weight works", {
+test_that("weight_fujikawa works", {
   # Reproduced from Fujikawa et al., 2020, Supplement R code
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
   weight_mat <- weights_fujikawa(design = design, n = 15, epsilon = 2, tau = 0,
@@ -10,4 +10,3 @@ test_that("get_weight works", {
 
   expect_equal(weights, weights_exp, tolerance = 10e-7)
 })
-
