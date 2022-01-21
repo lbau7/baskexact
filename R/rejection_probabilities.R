@@ -1,3 +1,78 @@
+# Calculates expected number of correct decisions for a single-stage design
+ecd_calc <- function(design, theta1, n, lambda, weight_mat) {
+  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = "pwr")
+  # Create matrix with all possible outcomes (without permutations)
+  events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
+
+  # Remove outcomes when no significant results are possible
+  crit <- get_crit(design = design, n = n, lambda = lambda)
+  crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+  sel_nosig <- apply(events, 1, function(x) all(x < crit_pool))
+  events_nosig <- events[sel_nosig, ]
+  events_sel <- events[!sel_nosig, ]
+
+  # Remove outcomes where all results are significant and calculate the
+  # probabilities later
+  sel_sig <- apply(events_sel, 1, function(x) all(x >= crit))
+  events_sig <- events_sel[sel_sig, ]
+  events_sel <- events_sel[!sel_sig, ]
+
+  # Conduct test for the remaining outcomes
+  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
+    weight_mat = weight_mat)
+  res_sel <- t(apply(events_sel, 1, fun))
+
+  # Add results for outcomes with all or no significant baskets
+  res_nosig <- matrix(rep(0, times = design@k * sum(sel_nosig)),
+    ncol = design@k)
+  res_allsig <- matrix(rep(1, times = design@k * sum(sel_sig)),
+    ncol = design@k)
+  res <- rbind(res_nosig, res_sel, res_allsig)
+
+  # Reorder events to allign with res
+  events <- rbind(events_nosig, events_sel, events_sig)
+
+  # If all theta1 are equal each permutation has the same probability
+  if (length(unique(theta1)) == 1) {
+    # Compute number of correct decisions for all outcomes
+    cd <- apply(res_sel, 1, function(x) sum(x == targ))
+
+    # Add number of correct decisions for outcomes with no or all significant
+    cd_nosig <- sum(rep(0, times = design@k) == targ)
+    cd_allsig <- sum(rep(1, times = design@k) == targ)
+    cd <- c(rep(cd_nosig, times = sum(sel_nosig)), cd, rep(cd_allsig,
+      times = sum(sel_sig)))
+
+    probs <- apply(events, 1,
+      function(x) get_prob(n = n, r = x, theta = theta1))
+    nperm <- apply(events, 1, get_permutations)
+    exp_cd <- sum(cd * probs * nperm)
+  } else {
+    # If not all theta1 are equal calculate probability for each permutation
+    exp_cd <- numeric(nrow(events))
+    for (i in 1:nrow(events)) {
+      # If number of responses is equal in each basket, there is only
+      # one permutation (when n is equal)
+      if (length(unique(events[i, ])) == 1) {
+        probs_loop <- get_prob(n = n, r = events[i, ], theta = theta1)
+        cd_loop <- sum(res[i, ] == targ)
+        exp_cd[i] <- cd_loop * probs_loop
+      } else {
+        events_loop <- arrangements::permutations(events[i, ])
+        res_loop <- arrangements::permutations(
+          res[i, ])[!duplicated(events_loop), ]
+        events_loop <- events_loop[!duplicated(events_loop), ]
+        probs_loop <- apply(events_loop, 1, function(x) get_prob(n = n,
+          r = x, theta = theta1))
+        cd_loop <- apply(res_loop, 1, function(x) sum(x == targ))
+        exp_cd[i] <- sum(cd_loop * probs_loop)
+      }
+    }
+    exp_cd <- sum(exp_cd)
+  }
+  exp_cd
+}
+
 # Calculates the experimentwise rejection probability for a single-stage design
 reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
                            prob = c("toer", "pwr")) {

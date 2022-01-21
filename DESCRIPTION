@@ -16,7 +16,7 @@ License: GPL-3
 URL: https://github.com/lbau7/baskexact
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 LinkingTo: 
     Rcpp,
     RcppArmadillo
@@ -26,7 +26,9 @@ Imports:
 	methods
 Suggests: 
     testthat (>= 3.0.0),
-    covr
+    covr,
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
 Collate: 
     'RcppExports.R'
@@ -37,6 +39,7 @@ Collate:
     'baskexact-package.R'
     'borrowing.R'
     'check.R'
+    'ecd.R'
     'ess.R'
     'helper.R'
     'interim.R'
@@ -46,3 +49,4 @@ Collate:
     'toer.R'
     'validate.R'
     'weights.R'
+VignetteBuilder: knitr

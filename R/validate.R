@@ -67,7 +67,7 @@ mon_within_loop <- function(design, n, lambda, weight_fun, weight_params) {
   }
 }
 
-# Version of check_mon_between without shortcuts
+# Loop-based version of check_mon_between without shortcuts
 mon_between_loop <- function(design, n, lambda, weight_fun, weight_params) {
   weights <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
@@ -84,7 +84,6 @@ mon_between_loop <- function(design, n, lambda, weight_fun, weight_params) {
 
   viol <- c()
   for (i in 1:nrow(events)) {
-    #if (all(events[i, ] == c(0,0,1,7))) browser()
     if (res[i]) {
       events_sel <- apply(events, 1, function(x) all(x >= events[i, ]))
       res_sel <- res[events_sel]
@@ -99,6 +98,28 @@ mon_between_loop <- function(design, n, lambda, weight_fun, weight_params) {
     viol
   }
 }
+
+# Loop-based version of ecd
+ecd_loop <- function(design, theta1 = NULL, n, lambda, weight_fun,
+                     weight_params = list()) {
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, lambda = lambda))
+  events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
+  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = "pwr")
+
+  cd <- prob <- numeric(nrow(events))
+  for (i in 1:nrow(events)) {
+    res_loop <- bskt_final(design = design, n = n, lambda = lambda,
+      r = events[i, ], weight_mat = weight_mat)
+    cd[i] <- sum(res_loop == targ)
+    prob[i] <- get_prob(n = n, r = events[i, ], theta = theta1)
+  }
+
+  sum(cd * prob)
+}
+
+
+
 
 
 
