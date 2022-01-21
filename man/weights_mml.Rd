@@ -3,11 +3,14 @@
 \name{weights_mml}
 \alias{weights_mml}
 \alias{weights_mml,OneStageBasket-method}
+\alias{weights_mml,TwoStageBasket-method}
 \title{Weights Based on Maximising the Marginal Likelihood}
 \usage{
 weights_mml(design, ...)
 
 \S4method{weights_mml}{OneStageBasket}(design, n, lambda, prune = FALSE, ...)
+
+\S4method{weights_mml}{TwoStageBasket}(design, n, n1, lambda, prune = FALSE, ...)
 }
 \description{
 Weights Based on Maximising the Marginal Likelihood
@@ -16,5 +19,8 @@ Weights Based on Maximising the Marginal Likelihood
 \itemize{
 \item \code{OneStageBasket}: Maximum marginal likelihood weights for a
 single-stage basket design.
+
+\item \code{TwoStageBasket}: Maximum marginal likelihood weights for a
+two-stage basket design.
 }}
 

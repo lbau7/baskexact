@@ -114,6 +114,47 @@ setMethod("weights_mml", "OneStageBasket",
     for (i in 1:n_sum) {
       for (j in i:n_sum) {
         if (i == j) {
+        } else {
+          l_x1 <- function(x) dbinom(x1[i], n, prob = x)
+          l_x2 <- function(x) dbinom(x2[j], n, prob = x)
+          prior <- function(x) dbeta(x = x, shape1 = design@shape1,
+            shape2 = design@shape2)
+          l_marg <- function(delta) {
+            a <- integrate(function(x) l_x1(x) * l_x2(x)^delta * prior(x),
+              lower = 0, upper = 1)$value
+            b <- integrate(function(x) l_x1(x)^delta * prior(x),
+              lower = 0, upper = 1)$value
+            - a / b
+          }
+          weight_mat[i, j] <- optim(0.5, l_marg, method = "Brent", lower = 0,
+            upper = 1)$par
+        }
+      }
+    }
+    # Achtung: Borrowing funktioniert anders als mit Fujikawa
+    weight_mat <- weight_mat + t(weight_mat)
+    diag(weight_mat) <- 1
+    class(weight_mat) <- "pp"
+    weight_mat
+  })
+
+#' @describeIn weights_mml Maximum marginal likelihood weights for a
+#'   two-stage basket design.
+setMethod("weights_mml", "TwoStageBasket",
+  function(design, n, n1, lambda, prune = FALSE, ...) {
+    x1 <- x2 <- c(0:n1, 0:n)
+    n_sum <- n + n1 + 2
+
+    l_marg <- function(delta) {
+      a <- integrate(function(x) l_xs(x) * l_x0(x)^delta * prior(x), 0, 1)$value
+      b <- integrate(function(x) l_x0(x)^delta * prior(x), 0, 1)$value
+      - a / b
+    }
+
+    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    for (i in 1:n_sum) {
+      for (j in i:n_sum) {
+        if (i == j) {
           next
         } else {
           l_x1 <- function(x) dbinom(x1[i], n, prob = x)
@@ -133,6 +174,8 @@ setMethod("weights_mml", "OneStageBasket",
       }
     }
     # Achtung: Borrowing funktioniert anders als mit Fujikawa
-    weight_mat + t(weight_mat)
+    weight_mat <- weight_mat + t(weight_mat)
+    diag(weight_mat) <- 1
+    class(weight_mat) <- "pp"
+    weight_mat
   })
-
