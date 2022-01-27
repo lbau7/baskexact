@@ -173,22 +173,34 @@ test_that("toer works for a two-stage design", {
 
   # Compare the results of "fwer" and "group" when null hypothesis is not
   # global null
-  toer_group3 <- toer(design = design, theta1 = c(0.2, 0.3, 0.4), n = 20,
-    n1 = 12, lambda = 0.95, interim_fun = interim_postpred,
-    interim_params = list(prob_futstop = 0.15, prob_effstop = 0.85),
-    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
-      logbase = 2), results = "group")
-  toer_fwer3 <- toer(design = design, theta1 = c(0.2, 0.3, 0.4), n = 20,
-    n1 = 12, lambda = 0.95, interim_fun = interim_postpred,
-    interim_params = list(prob_futstop = 0.15, prob_effstop = 0.85),
-    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
-      logbase = 2), results = "fwer")
-  toer_loop3 <- reject_twostage_loop(design = design, theta1 = c(0.2, 0.3, 0.4),
-    n = 20, n1 = 12, lambda = 0.95, interim_fun = interim_postpred,
-    interim_params = list(prob_futstop = 0.15, prob_effstop = 0.85),
-    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
-      logbase = 2), prob = "toer")
+  # Proposed design (i) in Fujikawa et al.
+  # Compare the results of reject_prob_ew, reject_prob_group and
+  # reject_twostage_loop
+  toer_group3 <- toer(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+    n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
+    interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
+      logbase = exp(1)), results = "group")
+  toer_fwer3 <- toer(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+    n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
+    interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
+      logbase = exp(1)), results = "fwer")
+  toer_loop3 <- reject_twostage_loop(design = design, theta1 = c(0.5, 0.2, 0.2),
+    n = 24, n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
+    interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
+      logbase = exp(1)), prob = "toer")
 
+  # In Fujikawa et al., based on simulation:
+  # Basketwise 0.806, 0.058, 0.068
+  # Experimentwise: 0.808 (different definition)
+  rej_expect3 <- c(0.79791970, 0.06210063, 0.06210063)
+  fwer_expect3 <- 0.1079397
+
+  expect_equal(toer_group3$rejection_probabilities, rej_expect3,
+    tolerance = 10e-7)
+  expect_equal(toer_fwer3, fwer_expect3, tolerance = 10e-7)
   expect_equal(toer_fwer3, toer_group3$fwer)
   expect_equal(toer_fwer3, toer_loop3$fwer)
   expect_equal(toer_group3$rejection_probabilities,
