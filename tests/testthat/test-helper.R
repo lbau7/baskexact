@@ -18,18 +18,18 @@ test_that("get_crit_pool works", {
   n <- 20
   crit <- get_crit_pool(design = design, n = n, lambda = 0.99)
   nocrit <- crit - 1
-  weight_mat <- get_weights(design = design, n = n, epsilon = 2, tau = 0,
-    logbase = 2)
+  weight_mat <- weights_fujikawa(design = design, n = n, epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE)
 
   shape_crit <- matrix(c(design@shape1 + rep(crit, design@k),
     design@shape2 + n - rep(crit, design@k)), byrow = TRUE, ncol = design@k)
   shape_nocrit <- matrix(c(design@shape1 + rep(nocrit, design@k),
     design@shape2 + n - rep(nocrit, design@k)), byrow = TRUE, ncol = design@k)
 
-  shape_crit <- beta_borrow(k = design@k, r = rep(crit, design@k),
-    weight_mat = weight_mat, shape = shape_crit)
-  shape_nocrit <- beta_borrow(k = design@k, r = rep(crit, design@k),
-    weight_mat = weight_mat, shape = shape_nocrit)
+  shape_crit <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
+    r = rep(crit, design@k))
+  shape_nocrit <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
+    r = rep(nocrit, design@k))
 
   post_prob_crit <- post_beta(shape = shape_crit, theta0 = design@theta0)
   post_prob_nocrit <- post_beta(shape = shape_nocrit, theta0 = design@theta0)
@@ -63,15 +63,15 @@ test_that("get_targ works", {
 
 test_that("prune_weights works", {
   design <- setupOneStageBasket(k = 6, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  weight_mat <- get_weights(design = design, n = 15, epsilon = 2, tau = 0,
-    logbase = 2)
+  weight_mat <- weights_fujikawa(design = design, n = 15, epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE)
   weight_mat <- prune_weights(weight_mat, cut = 8)
 
   r <- c(5, 6, 7, 8, 9, 10)
   shape_post <- matrix(c(design@shape1 + r, design@shape2 + 15 - r),
     byrow = TRUE, ncol = design@k)
-  shape_borrow <- beta_borrow(k = design@k, r = r, weight_mat = weight_mat,
-    shape = shape_post)
+  shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = 15,
+    r = r)
 
   expect_equal(shape_post[, 1:3], shape_borrow[, 1:3])
   expect_false(any(shape_post[, 4:6] == shape_borrow[, 4:6]))
@@ -87,3 +87,18 @@ test_that("vectorization of get_prob works", {
 
   expect_equal(prob_prod, prob_all)
 })
+
+test_that("beta_borrow works", {
+  # Reproduced from Fujikawa et al., 2020, Supplement R Code
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  weight_mat <- weights_fujikawa(design = design, n = 24, epsilon = 2,
+    tau = 0.5, logbase = exp(1), prune = FALSE)
+  r <- c(7, 2, 5)
+  shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = 24,
+    r = r)
+  shape_expect <- matrix(c(12.9215409, 34.4051363, 6.33262523, 34.1087508,
+    14.2283671, 47.5396861), nrow = 2)
+
+  expect_equal(shape_borrow, shape_expect, tolerance = 10e-7)
+})
+

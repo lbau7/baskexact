@@ -17,14 +17,8 @@ Information is then borrowed between baskets by calculating weights that
 reflect the similarity between the basket and computing posterior
 distributions for each basket where the parameters of the beta posterior are
 calculated as a weighted sum of the individual posterior distributions.
-The weight between two baskets i and j is found as (1 - JSD(i, j))^epsilon
-where JSD(i, j) is the Jensen-Shannon divergence between basket i and j.
-A small value of epsilon results in stronger borrowing also across baskets
-with heterogenous results. If epsilon is large then information is only
-borrowed between baskets with similar results. If a weight is smaller than
-tau it is set to 0, which results in no borrowing. If for a basket
-the posterior probability that \eqn{\theta} > theta0 is greater than
-lambda, then the null hypothesis is rejected.
+If for a basket the posterior probability that \eqn{\theta} > theta0 is
+greater than lambda, then the null hypothesis is rejected.
 
 Currently only common prior distributions and a common null
 hypothesis are supported.

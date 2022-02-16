@@ -1,21 +1,62 @@
-#' @include generics.R
+#' @include class.R
 NULL
+
+#' Check Within-Trial Monotonicity
+#'
+#' Checks whether the within-trial monotonicity condition holds.
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details \code{check_mon_within} checks whether the within-trial
+#' monotonicity condition holds. For a single-stage design with equal
+#' prior distributions and equal sample sizes for each basket this condition
+#' states that there are no cases where the null hypothesis of a basket is
+#' rejected when there is at least one other basket with more observed
+#' responses for which the null hypothesis cannot be rejected.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
+#' @return If \code{details = FALSE} then only a logical value is returned.
+#' If \code{details = TRUE} then if there are any cases where the
+#' within-trial monotonicity condition is violated, a list of these cases and
+#' their results are returned.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' check_mon_within(design = design, n = 24, lambda = 0.99,
+#'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 0.5,
+#'    tau = 0), details = TRUE)
+setGeneric("check_mon_within",
+  function(design, ...) standardGeneric("check_mon_within")
+)
 
 #' @describeIn check_mon_within Within-trial monotonicity condition for a
 #'   single-stage design.
+#'
+#' @template design
+#' @template n
+#' @template lambda
+#' @template weights
+#' @template details
+#' @template dotdotdot
 setMethod("check_mon_within", "OneStageBasket",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
+  function(design, n, lambda, weight_fun, weight_params = list(), details,
+           ...) {
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
-    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
 
     crit <- get_crit(design = design, n = n, lambda = lambda)
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
-      tau = tau, logbase = logbase)
-    if (prune) {
-      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
-    }
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+      n = n, lambda = lambda))
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
@@ -26,11 +67,12 @@ setMethod("check_mon_within", "OneStageBasket",
 
     # If pruning is used and no list of violating outcomes is desired,
     # then outcomes with a different number of responses in baskets that
-    # are pruned can be ignored
-    if (prune & !details) {
-      events[which(events < crit_pool)] <- 0
-      events <- events[!duplicated(events), ]
-    }
+    # are pruned can be ignored -
+    ### funktioniert aktuell nicht mehr -- verallgemeinern?
+    # if (prune & !details) {
+    #   events[which(events < crit_pool)] <- 0
+    #   events <- events[!duplicated(events), ]
+    # }
 
     func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
       r = x, weight_mat = weight_mat)
@@ -60,19 +102,60 @@ setMethod("check_mon_within", "OneStageBasket",
     }
   })
 
+#' Check Between-Trial Monotonicity
+#'
+#' Checks whether the between-trial monotonicity condition holds.
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details \code{check_mon_between} checks whether the between-trial
+#' monotonicity condition holds. For a single-stage design with equal prior
+#' distributions and equal sample sizes for each basket this condition states
+#' that there are no cases where at least one null hypothesis is rejected when
+#' when there is a case with an equal or higher number of responses in each
+#' basket for which no null hypothesis is rejected.
+#'
+#' If \code{prune = TRUE} then the baskets with an observed number of baskets
+#' smaller than the pooled critical value are not borrowed from. The
+#' pooled critical value is the smallest integer c for which all null
+#' hypotheses can be rejected if the number of responses is exactly c for
+#' all baskets.
+#'
+#' This method is implemented for the class \code{\link{OneStageBasket}}.
+#'
+#' @return If \code{details = FALSE} then only a logical value is returned.
+#' If \code{details = TRUE} then if there are any cases where the
+#' between-trial monotonicity condition is violated, a list of theses cases
+#' and their results are returned.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' check_mon_between(design = design, n = 24, lambda = 0.99,
+#'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 3,
+#'     tau = 0), details = TRUE)
+setGeneric("check_mon_between",
+  function(design, ...) standardGeneric("check_mon_between")
+)
+
 #' @describeIn check_mon_between Between-trial monotonicity condition for a
 #'   single-stage design.
+#'
+#' @template design
+#' @template n
+#' @template lambda
+#' @template weights
+#' @template details
+#' @template dotdotdot
 setMethod("check_mon_between", "OneStageBasket",
-  function(design, n, lambda, epsilon, tau, logbase = 2, prune, details, ...) {
+  function(design, n, lambda, weight_fun, weight_params = list(), details,
+           ...) {
     check_params(n = n, lambda = lambda)
-    check_tuning(epsilon = epsilon, tau = tau, logbase = logbase)
 
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
-    weight_mat <- get_weights(design = design, n = n, epsilon = epsilon,
-      tau = tau, logbase = logbase)
-    if (prune) {
-      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
-    }
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+      n = n, lambda = lambda))
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)

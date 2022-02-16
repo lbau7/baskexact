@@ -1,46 +1,50 @@
-Package: baskexact
 Type: Package
+Package: baskexact
 Title: Exact Calculation of Basket Trial Operating Characteristics
 Version: 0.1.0
 Authors@R:
-   person(given = "Lukas",
-          family = "Baumann", 
-          role = c("aut", "cre"),
-          email = "baumann@imbi.uni-heidelberg.de",
-          comment = c(ORCID = "0000-0001-7931-7470")
-		 )
-Description: Calculates the exact operating characteristics of a single-stage
-    basket trial with the design of
-	Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020). <doi:10.1002/bimj.201800404>.
+    person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-7931-7470"))
+Description: Calculates the exact operating characteristics of a
+    single-stage basket trial with the design of Fujikawa, K., Teramukai,
+    S., Yokota, I., & Daimon, T. (2020). <doi:10.1002/bimj.201800404>.
 License: GPL-3
 URL: https://github.com/lbau7/baskexact
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
+Imports: 
+    arrangements,
+    extraDistr,
+    methods,
+    Rcpp
+Suggests: 
+    covr,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 LinkingTo: 
     Rcpp,
     RcppArmadillo
-Imports: 
-    Rcpp,
-	arrangements,
-	methods
-Suggests: 
-    testthat (>= 3.0.0),
-    covr
+VignetteBuilder: 
+    knitr
 Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
 Collate: 
     'RcppExports.R'
     'class.R'
-    'generics.R'
     'adjust_lambda.R'
     'analysis.R'
     'basket_test.R'
     'baskexact-package.R'
     'borrowing.R'
     'check.R'
+    'ecd.R'
+    'ess.R'
     'helper.R'
+    'interim.R'
     'monotonicity.R'
     'pow.R'
     'rejection_probabilities.R'
     'toer.R'
     'validate.R'
+    'weights.R'

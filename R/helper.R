@@ -45,3 +45,22 @@ prune_weights <- function(weight_mat, cut) {
   weight_mat[, 0:cut] <- 0
   weight_mat
 }
+
+# Computes the posterior predictive probability
+post_pred <- function(n, n1, r1, shape, crit) {
+  extraDistr::pbbinom(
+    q = crit - r1 - 1,
+    size = n - n1,
+    alpha = shape[1, ],
+    beta = shape[2, ],
+    lower.tail = FALSE
+  )
+}
+
+# Calculates the number of permutations of results
+get_permutations <- function(x) {
+  tab <- tabulate(x + 1)
+  tab <- tab[tab != 0]
+  ifelse(length(unique(x)) == 1, 1,
+    arrangements::npermutations(x = unique(x), freq = tab))
+}

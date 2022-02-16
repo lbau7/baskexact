@@ -17,7 +17,7 @@ check_theta1 <- function(design, theta1, type) {
     stop("theta1 must have length k or length 1")
   }
   if (length(theta1) == 1) theta1 <- rep(theta1, design@k)
-    if ((type == "toer") & all(theta1 != design@theta0)) {
+  if ((type == "toer") & all(theta1 != design@theta0)) {
     stop("no true null hyoptheses, cannot compute type 1 error rate")
   }
   if ((type == "pwr") & all(theta1 == design@theta0)) {
