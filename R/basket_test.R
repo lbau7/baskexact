@@ -7,11 +7,6 @@ NULL
 #' the posterior distributions with and without borrowing.
 #'
 #' @template design
-#' @template n
-#' @param r The vector of observed responses.
-#' @template lambda
-#' @template tuning
-#' @template prune
 #' @template dotdotdot
 #'
 #' @return A list, including matrices of the weights that are used for
@@ -23,15 +18,21 @@ NULL
 #' @examples
 #' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 #' basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
-#'   epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
+#'   weight_fun = weights_fujikawa)
 setGeneric("basket_test",
   function(design, ...)
     standardGeneric("basket_test")
 )
 
+#' @template design
+#' @template n
+#' @param r The vector of observed responses.
+#' @template lambda
+#' @template weights
+#' @template dotdotdot
 #' @describeIn basket_test Testing for a single-stage basket design.
 setMethod("basket_test", "OneStageBasket",
-  function(design, n, r, lambda, weight_fun, weight_params, ...) {
+  function(design, n, r, lambda, weight_fun, weight_params = list(), ...) {
     check_params(n = n, lambda = lambda)
     if (any(r > n) | any(r < 0)) stop("responses must be between 0 and n")
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,

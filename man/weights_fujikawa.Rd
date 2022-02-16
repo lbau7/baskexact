@@ -31,8 +31,62 @@ weights_fujikawa(design, ...)
   ...
 )
 }
+\arguments{
+\item{design}{An object of class \code{Basket} created by
+\code{setupBasket}.}
+
+\item{...}{Further arguments.}
+
+\item{n}{The sample size per basket.}
+
+\item{lambda}{The posterior probability threshold. See details for more
+information.}
+
+\item{epsilon}{A tuning parameter that determines the amount of borrowing.
+See details for more information.}
+
+\item{tau}{A tuning parameter that determines how similar the baskets
+have to be that borrowing occurs. See details for more information.}
+
+\item{logbase}{A tuning parameter that determines which logarithm base is
+used to compute the Jensen-Shannon divergence. See details for more
+information.}
+
+\item{prune}{Whether baskets with a number of responses below the
+critical pooled value should be pruned before the final analysis.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+}
+\value{
+A matrix including the weights of all possible pairwise outcomes.
+}
 \description{
 Weights Based on Fujikawa et al.'s Design
+}
+\details{
+\code{weights_fujikawa} calculates the weights used for sharing
+information between baskets based on the proposal by Fujikawa et al. (2020).
+The weight between two baskets i and j is found as (1 - JSD(i, j))^epsilon
+where JSD(i, j) is the Jensen-Shannon divergence between the individual
+posterior distributions of the response probabilities of basket i and j.
+Note that Fujikawa's weights also share the prior information between the
+baskets.
+
+A small value of epsilon results in stronger borrowing also across baskets
+with heterogenous results. If epsilon is large then information is only
+borrowed between baskets with similar results. If a weight is smaller than
+tau it is set to 0, which results in no borrowing.
+
+If \code{prune = TRUE} then the baskets with an observed number of baskets
+smaller than the pooled critical value are not borrowed from. The
+pooled critical value is the smallest integer c for which all null
+hypotheses can be rejected if the number of responses is exactly c for
+all baskets.
+
+The function is generally not called by the user but passed to another
+function such as \code{\link{toer}} and \code{\link{pow}} to specificy
+how the weights are calculated.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -42,3 +96,7 @@ design.
 \item \code{TwoStageBasket}: Fujikawa-weights for a two-stage basket design.
 }}
 
+\examples{
+design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa)
+}

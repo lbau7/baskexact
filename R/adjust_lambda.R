@@ -15,8 +15,6 @@ NULL
 #' function followed by a grid search is used to finde the correct value
 #' for \code{lambda}.
 #'
-#' This method is implemented for the class \code{\link{OneStageBasket}}.
-#'
 #' @return The greatest value with \code{prec_digits} decimal places for
 #' \code{lambda} which controls the family wise error rate at level
 #' \code{alpha} (one-sided) and the exact family wise error rate for this
@@ -25,8 +23,8 @@ NULL
 #'
 #' @examples
 #' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-#' adjust_lambda(design = design, alpha = 0.025, n = 15, epsilon = 1, tau = 0,
-#'   logbase = 2, prune = FALSE, prec_digits = 4)
+#' adjust_lambda(design = design, alpha = 0.025, n = 15,
+#'   weight_fun = weights_fujikawa, prec_digits = 4)
 setGeneric("adjust_lambda",
   function(design, ...) standardGeneric("adjust_lambda")
 )
@@ -41,8 +39,8 @@ setGeneric("adjust_lambda",
 #' @template prec_digits
 #' @template dotdotdot
 setMethod("adjust_lambda", "OneStageBasket",
-  function(design, alpha = 0.025, theta1 = NULL, n, weight_fun, weight_params,
-           prec_digits, ...) {
+  function(design, alpha = 0.025, theta1 = NULL, n, weight_fun,
+           weight_params = list(), prec_digits, ...) {
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
     if (alpha <= 0 | alpha >= 1) stop("alpha must be between 0 and 1")
     if (length(n) != 1) stop("n must have length 1")

@@ -7,7 +7,7 @@
 \usage{
 basket_test(design, ...)
 
-\S4method{basket_test}{OneStageBasket}(design, n, r, lambda, weight_fun, weight_params, ...)
+\S4method{basket_test}{OneStageBasket}(design, n, r, lambda, weight_fun, weight_params = list(), ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
@@ -22,18 +22,10 @@ basket_test(design, ...)
 \item{lambda}{The posterior probability threshold. See details for more
 information.}
 
-\item{epsilon}{A tuning parameter that determines the amount of borrowing.
-See details for more information.}
+\item{weight_fun}{Which function should be used to calculate the weights.}
 
-\item{tau}{A tuning parameter that determines how similar the baskets
-have to be that borrowing occurs. See details for more information.}
-
-\item{logbase}{A tuning parameter that determines which logarithm base is
-used to compute the Jensen-Shannon divergence. See details for more
-information.}
-
-\item{prune}{Whether baskets with a number of responses below the
-critical pooled value should be pruned before the final analysis.}
+\item{weight_params}{A list of tuning parameters specific to
+\code{weight_fun}.}
 }
 \value{
 A list, including matrices of the weights that are used for
@@ -53,5 +45,5 @@ the posterior distributions with and without borrowing.
 \examples{
 design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
-  epsilon = 1, tau = 0, logbase = 2, prune = FALSE)
+  weight_fun = weights_fujikawa)
 }

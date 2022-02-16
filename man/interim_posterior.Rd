@@ -9,8 +9,44 @@ interim_posterior(design, ...)
 
 \S4method{interim_posterior}{TwoStageBasket}(design, n1, r1, weight_mat, prob_futstop, prob_effstop, ...)
 }
+\arguments{
+\item{design}{An object of class \code{Basket} created by
+\code{setupBasket}.}
+
+\item{...}{Further arguments.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{r1}{Vector of responses after the interim analysis.}
+
+\item{weight_mat}{The matrix with all weights. Automatically calculated
+in the functions to which \code{interim_postpred} is passed.}
+
+\item{prob_futstop}{Probability cut-off for stopping for futility.}
+
+\item{prob_effstop}{Probability cut-off for stopping for efficacy.}
+}
+\value{
+A vector with a length equal to the number of baskets with
+elements -1, 0 or 1 where -1 means stop for futility, 0 means continuation
+and 1 means stop for efficacy.
+}
 \description{
-Interim analysis based on the posterior probability
+Conducts an interim analysis based on the posterior probability.
+}
+\details{
+\code{interim_posterior} conducts an interim analysis with possible
+stop for efficacy and futility based on the posterior probability. If the
+posterior probability is less than \code{prob_fustop} the basket is stopped
+for futility, if the posterior probability is greater than
+\code{prob_effstop} the basket is stopped for efficacy. If
+\code{prob_fustop = 0} or \code{prob_effstop = 1} then no futility-stop and
+no efficacy stop is possible, respectively.
+
+The function is generally not called by the user but passed to another
+function such as \code{\link{toer}} and \code{\link{pow}} to specify which
+interim analysis is conducted.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -18,3 +54,9 @@ Interim analysis based on the posterior probability
 probabilty for two-stage basket designs.
 }}
 
+\examples{
+design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+toer(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,
+  interim_fun = interim_posterior, interim_params = list(prob_futstop = 0.05,
+    prob_effstop = 0.95))
+}

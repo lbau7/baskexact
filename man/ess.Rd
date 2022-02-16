@@ -20,11 +20,46 @@ ess(design, ...)
   ...
 )
 }
+\arguments{
+\item{design}{An object of class \code{Basket} created by
+\code{setupBasket}.}
+
+\item{...}{Further arguments.}
+
+\item{theta1}{Probabilities under the alternative hypothesis. If
+\code{length(theta1) ==  1}, then this is a common probability for all
+baskets. If \code{is.null(theta1)} then the type 1 error rate under the
+global null hypothesis is computed.}
+
+\item{n}{The sample size per basket.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{lambda}{The posterior probability threshold. See details for more
+information.}
+
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
+
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
+
+\item{weight_fun}{Which function should be used to calculate the weights.}
+
+\item{weight_params}{A list of tuning parameters specific to
+\code{weight_fun}.}
+}
 \description{
-Expected Sample Size
+Computes the expected sample size of a two-stage basket trial.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{TwoStageBasket}: Expected sample size for two-stage basket design.
 }}
 
+\examples{
+design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+ess(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,
+  interim_fun = interim_postpred)
+}

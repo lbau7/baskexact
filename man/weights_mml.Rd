@@ -8,12 +8,32 @@
 \usage{
 weights_mml(design, ...)
 
-\S4method{weights_mml}{OneStageBasket}(design, n, lambda, prune = FALSE, ...)
+\S4method{weights_mml}{OneStageBasket}(design, n, lambda, ...)
 
-\S4method{weights_mml}{TwoStageBasket}(design, n, n1, lambda, prune = FALSE, ...)
+\S4method{weights_mml}{TwoStageBasket}(design, n, n1, lambda, ...)
+}
+\arguments{
+\item{design}{An object of class \code{Basket} created by
+\code{setupBasket}.}
+
+\item{...}{Further arguments.}
+
+\item{n}{The sample size per basket.}
+
+\item{lambda}{The posterior probability threshold. See details for more
+information.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+}
+\value{
+A matrix including the weights of all possible pairwise outcomes.
 }
 \description{
 Weights Based on Maximising the Marginal Likelihood
+}
+\details{
+blabla
 }
 \section{Methods (by class)}{
 \itemize{
@@ -24,3 +44,7 @@ single-stage basket design.
 two-stage basket design.
 }}
 
+\examples{
+design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+toer(design, n = 15, lambda = 0.99, weight_fun = weights_mml)
+}

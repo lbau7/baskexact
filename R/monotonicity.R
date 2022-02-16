@@ -31,8 +31,9 @@ NULL
 #'
 #' @examples
 #' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
-#' check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
-#'   tau = 0, prune = FALSE, details = TRUE)
+#' check_mon_within(design = design, n = 24, lambda = 0.99,
+#'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 0.5,
+#'    tau = 0), details = TRUE)
 setGeneric("check_mon_within",
   function(design, ...) standardGeneric("check_mon_within")
 )
@@ -43,12 +44,12 @@ setGeneric("check_mon_within",
 #' @template design
 #' @template n
 #' @template lambda
-#' @template tuning
-#' @template prune
+#' @template weights
 #' @template details
 #' @template dotdotdot
 setMethod("check_mon_within", "OneStageBasket",
-  function(design, n, lambda, weight_fun, weight_params, details, ...) {
+  function(design, n, lambda, weight_fun, weight_params = list(), details,
+           ...) {
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
 
@@ -131,8 +132,9 @@ setMethod("check_mon_within", "OneStageBasket",
 #'
 #' @examples
 #' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
-#' check_mon_between(design = design, n = 24, lambda = 0.99, epsilon = 3,
-#'   tau = 0, prune = FALSE, details = TRUE)
+#' check_mon_between(design = design, n = 24, lambda = 0.99,
+#'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 3,
+#'     tau = 0), details = TRUE)
 setGeneric("check_mon_between",
   function(design, ...) standardGeneric("check_mon_between")
 )
@@ -143,12 +145,12 @@ setGeneric("check_mon_between",
 #' @template design
 #' @template n
 #' @template lambda
-#' @template tuning
-#' @template prune
+#' @template weights
 #' @template details
 #' @template dotdotdot
 setMethod("check_mon_between", "OneStageBasket",
-  function(design, n, lambda, weight_fun, weight_params, details, ...) {
+  function(design, n, lambda, weight_fun, weight_params = list(), details,
+           ...) {
     check_params(n = n, lambda = lambda)
 
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)

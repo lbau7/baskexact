@@ -14,7 +14,7 @@ adjust_lambda(design, ...)
   theta1 = NULL,
   n,
   weight_fun,
-  weight_params,
+  weight_params = list(),
   prec_digits,
   ...
 )
@@ -81,8 +81,6 @@ rate is protected at level \code{alpha}.
 rate at level \code{alpha} (one-sided). A combination of the uniroot
 function followed by a grid search is used to finde the correct value
 for \code{lambda}.
-
-This method is implemented for the class \code{\link{OneStageBasket}}.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -93,6 +91,6 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 
 \examples{
 design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-adjust_lambda(design = design, alpha = 0.025, n = 15, epsilon = 1, tau = 0,
-  logbase = 2, prune = FALSE, prec_digits = 4)
+adjust_lambda(design = design, alpha = 0.025, n = 15,
+  weight_fun = weights_fujikawa, prec_digits = 4)
 }

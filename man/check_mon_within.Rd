@@ -7,7 +7,15 @@
 \usage{
 check_mon_within(design, ...)
 
-\S4method{check_mon_within}{OneStageBasket}(design, n, lambda, weight_fun, weight_params, details, ...)
+\S4method{check_mon_within}{OneStageBasket}(
+  design,
+  n,
+  lambda,
+  weight_fun,
+  weight_params = list(),
+  details,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
@@ -20,21 +28,13 @@ check_mon_within(design, ...)
 \item{lambda}{The posterior probability threshold. See details for more
 information.}
 
+\item{weight_fun}{Which function should be used to calculate the weights.}
+
+\item{weight_params}{A list of tuning parameters specific to
+\code{weight_fun}.}
+
 \item{details}{Whether the cases where the monotonicity condition is
 violated should be returned, in case there are any.}
-
-\item{epsilon}{A tuning parameter that determines the amount of borrowing.
-See details for more information.}
-
-\item{tau}{A tuning parameter that determines how similar the baskets
-have to be that borrowing occurs. See details for more information.}
-
-\item{logbase}{A tuning parameter that determines which logarithm base is
-used to compute the Jensen-Shannon divergence. See details for more
-information.}
-
-\item{prune}{Whether baskets with a number of responses below the
-critical pooled value should be pruned before the final analysis.}
 }
 \value{
 If \code{details = FALSE} then only a logical value is returned.
@@ -69,6 +69,7 @@ single-stage design.
 
 \examples{
 design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
-check_mon_within(design = design, n = 24, lambda = 0.99, epsilon = 0.5,
-  tau = 0, prune = FALSE, details = TRUE)
+check_mon_within(design = design, n = 24, lambda = 0.99,
+  weight_fun = weights_fujikawa, weight_params = list(epsilon = 0.5,
+   tau = 0), details = TRUE)
 }
