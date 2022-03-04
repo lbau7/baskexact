@@ -23,7 +23,6 @@ weights_fujikawa(design, ...)
   design,
   n,
   n1,
-  lambda,
   epsilon = 1.25,
   tau = 0,
   logbase = 2,
