@@ -2,15 +2,24 @@
 % Please edit documentation in R/weights.R
 \name{weights_cpp}
 \alias{weights_cpp}
+\alias{weights_cpp,OneStageBasket-method}
 \title{Weights Based on the Calibrated Power Prior}
 \usage{
 weights_cpp(design, ...)
+
+\S4method{weights_cpp}{OneStageBasket}(design, n, a = 1, b = 1, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
 \code{setupBasket}.}
 
 \item{...}{Further arguments.}
+
+\item{n}{The sample size per basket.}
+
+\item{a}{first tuning parameter}
+
+\item{b}{second tuning parameter}
 }
 \value{
 A matrix including the weights of all possible pairwise outcomes.
@@ -18,6 +27,12 @@ A matrix including the weights of all possible pairwise outcomes.
 \description{
 Weights Based on the Calibrated Power Prior
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{OneStageBasket}: Calibrated power prior weights for a single-stage
+basket design.
+}}
+
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp)

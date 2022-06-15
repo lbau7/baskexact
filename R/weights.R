@@ -137,101 +137,6 @@ setMethod("weights_fujikawa", "TwoStageBasket",
     weight_mat
   })
 
-#' Weights Based on Maximising the Marginal Likelihood
-#'
-#' @template design
-#' @template dotdotdot
-#'
-#' @return A matrix including the weights of all possible pairwise outcomes.
-#' @export
-#'
-#' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_mml)
-setGeneric("weights_mml",
-  function(design, ...) standardGeneric("weights_mml")
-)
-
-#' @describeIn weights_mml Maximum marginal likelihood weights for a
-#'   single-stage basket design.
-#'
-#' @template design
-#' @template n
-#' @template dotdotdot
-setMethod("weights_mml", "OneStageBasket",
-  function(design, n, ...) {
-    x1 <- x2 <- c(0:n)
-    n_sum <- n + 1
-
-    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-    for (i in 1:n_sum) {
-      for (j in i:n_sum) {
-        if (i == j) {
-        } else {
-          l_x1 <- function(x) stats::dbinom(x1[i], n, prob = x)
-          l_x2 <- function(x) stats::dbinom(x2[j], n, prob = x)
-          prior <- function(x) stats::dbeta(x = x, shape1 = design@shape1,
-            shape2 = design@shape2)
-          l_marg <- function(delta) {
-            a <- stats::integrate(function(x) l_x1(x) * l_x2(x)^delta *
-              prior(x), lower = 0, upper = 1)$value
-            b <- stats::integrate(function(x) l_x1(x)^delta * prior(x),
-              lower = 0, upper = 1)$value
-            - a / b
-          }
-          weight_mat[i, j] <- stats::optim(0.5, l_marg, method = "Brent",
-            lower = 0, upper = 1)$par
-        }
-      }
-    }
-    # Achtung: Borrowing funktioniert anders als mit Fujikawa
-    weight_mat <- weight_mat + t(weight_mat)
-    diag(weight_mat) <- 1
-    class(weight_mat) <- "pp"
-    weight_mat
-  })
-
-#' @describeIn weights_mml Maximum marginal likelihood weights for a
-#'   two-stage basket design.
-#'
-#' @template design
-#' @template n
-#' @template n1
-#' @template lambda
-#' @template dotdotdot
-setMethod("weights_mml", "TwoStageBasket",
-  function(design, n, n1, ...) {
-    x1 <- x2 <- c(0:n1, 0:n)
-    n_sum <- n + n1 + 2
-
-    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-    for (i in 1:n_sum) {
-      for (j in i:n_sum) {
-        if (i == j) {
-          next
-        } else {
-          l_x1 <- function(x) stats::dbinom(x1[i], n, prob = x)
-          l_x2 <- function(x) stats::dbinom(x2[j], n, prob = x)
-          prior <- function(x) stats::dbeta(x = x, shape1 = design@shape1,
-            shape2 = design@shape2)
-          l_marg <- function(delta) {
-            a <- stats::integrate(function(x) l_x1(x) * l_x2(x)^delta *
-              prior(x), lower = 0, upper = 1)$value
-            b <- stats::integrate(function(x) l_x1(x)^delta * prior(x),
-              lower = 0, upper = 1)$value
-            - a / b
-          }
-          weight_mat[i, j] <- stats::optim(0.5, l_marg, method = "Brent",
-            lower = 0, upper = 1)$par
-        }
-      }
-    }
-    # Achtung: Borrowing funktioniert anders als mit Fujikawa
-    weight_mat <- weight_mat + t(weight_mat)
-    diag(weight_mat) <- 1
-    class(weight_mat) <- "pp"
-    weight_mat
-  })
 
 #' Weights Based on the Equivalence Probability Weight
 #'
@@ -355,7 +260,7 @@ setGeneric("weights_cpp",
   function(design, ...) standardGeneric("weights_cpp")
 )
 
-#' @describeIn weights_eqprob Calibrated power prior weights for a single-stage
+#' @describeIn weights_cpp Calibrated power prior weights for a single-stage
 #'   basket design.
 #'
 #' @template design

@@ -4,7 +4,6 @@
 \alias{weights_eqprob}
 \alias{weights_eqprob,OneStageBasket-method}
 \alias{weights_prob,OneStageBasket-method}
-\alias{weights_cpp,OneStageBasket-method}
 \title{Weights Based on the Equivalence Probability Weight}
 \usage{
 weights_eqprob(design, ...)
@@ -12,8 +11,6 @@ weights_eqprob(design, ...)
 \S4method{weights_eqprob}{OneStageBasket}(design, n, bound, ...)
 
 \S4method{weights_prob}{OneStageBasket}(design, n, ...)
-
-\S4method{weights_cpp}{OneStageBasket}(design, n, a = 1, b = 1, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
@@ -24,10 +21,6 @@ weights_eqprob(design, ...)
 \item{n}{The sample size per basket.}
 
 \item{bound}{Equivalence bound.}
-
-\item{a}{first tuning parameter}
-
-\item{b}{second tuning parameter}
 }
 \value{
 A matrix including the weights of all possible pairwise outcomes.
@@ -42,8 +35,5 @@ single-stage basket design.
 
 \item \code{OneStageBasket}: Probability weights for a single-stage basket
 design.
-
-\item \code{OneStageBasket}: Calibrated power prior weights for a single-stage
-basket design.
 }}
 
