@@ -297,3 +297,42 @@ setMethod("weights_cpp", "OneStageBasket",
     weight_mat
   })
 
+#' @describeIn weights_cpp Calibrated power prior weights for a two-stage
+#'   basket design.
+#'
+#' @template design
+#' @template n
+#' @template n1
+#' @param a first tuning parameter
+#' @param b second tuning parameter
+#' @template dotdotdot
+setMethod("weights_cpp", "TwoStageBasket",
+  function(design, n, n1, a = 1, b = 1, ...) {
+    r <-  c(0:n1, 0:n)
+    nvec <- c(rep(n1, n1 + 1), rep(n, n + 1))
+    n_sum <- n + n1 + 2
+    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+
+    g <- function(s, a, b) {
+      1 / (1 + exp(a + b * log(s)))
+    }
+
+    for (i in 1:n_sum) {
+      for (j in i:n_sum) {
+        if (i == j) {
+          next
+        } else {
+          vec1 <- rep(0:1, c(nvec[i] - r[i], r[i]))
+          vec2 <- rep(0:1, c(nvec[j] - r[j], r[j]))
+          ks <- suppressWarnings(stats::ks.test(vec1, vec2)$statistic)
+          s <- n^(1/4) * ks
+          weight_mat[i, j] <- g(s = s, a = a, b = b)
+        }
+      }
+    }
+    weight_mat <- weight_mat + t(weight_mat)
+    diag(weight_mat) <- 1
+    class(weight_mat) <- "pp"
+    weight_mat
+  })
+

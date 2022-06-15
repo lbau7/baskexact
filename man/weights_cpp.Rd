@@ -3,11 +3,14 @@
 \name{weights_cpp}
 \alias{weights_cpp}
 \alias{weights_cpp,OneStageBasket-method}
+\alias{weights_cpp,TwoStageBasket-method}
 \title{Weights Based on the Calibrated Power Prior}
 \usage{
 weights_cpp(design, ...)
 
 \S4method{weights_cpp}{OneStageBasket}(design, n, a = 1, b = 1, ...)
+
+\S4method{weights_cpp}{TwoStageBasket}(design, n, n1, a = 1, b = 1, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
@@ -20,6 +23,9 @@ weights_cpp(design, ...)
 \item{a}{first tuning parameter}
 
 \item{b}{second tuning parameter}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
 }
 \value{
 A matrix including the weights of all possible pairwise outcomes.
@@ -30,6 +36,9 @@ Weights Based on the Calibrated Power Prior
 \section{Methods (by class)}{
 \itemize{
 \item \code{OneStageBasket}: Calibrated power prior weights for a single-stage
+basket design.
+
+\item \code{TwoStageBasket}: Calibrated power prior weights for a two-stage
 basket design.
 }}
 
