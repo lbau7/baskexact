@@ -36,6 +36,7 @@ setMethod("ecd", "OneStageBasket",
   function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),
            ...) {
     check_params(n = n, lambda = lambda)
+    if (is.null(theta1)) theta1 <- rep(design@theta0, design@k)
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda))
