@@ -70,8 +70,9 @@ plot_weights <- function(n, r1, weight_fun, weight_params = list()) {
     ggplot2::ggplot(plotdf, ggplot2::aes(x = r, y = weight)) +
       ggplot2::geom_line(ggplot2::aes(group = param1, colour = param1)) +
       ggplot2::facet_grid(
-        cols = vars(param2),
-        labeller = as_labeller(function(x) paste(names(index)[2], "=", x))
+        cols = ggplot2::vars(param2),
+        labeller = ggplot2::as_labeller(function(x)
+          paste(names(index)[2], "=", x))
       ) +
       ggplot2::xlim(0, n) +
       ggplot2::ylim(0, 1) +
