@@ -35,6 +35,7 @@ setMethod("basket_test", "OneStageBasket",
   function(design, n, r, lambda, weight_fun, weight_params = list(), ...) {
     check_params(n = n, lambda = lambda)
     if (any(r > n) | any(r < 0)) stop("responses must be between 0 and n")
+    if (length(r) != design@k) stop("r must have length k")
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda))
 
