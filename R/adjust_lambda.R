@@ -114,6 +114,7 @@ setMethod("adjust_lambda", "TwoStageBasket",
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
     if (alpha <= 0 | alpha >= 1) stop("alpha must be between 0 and 1")
     if (length(n) != 1) stop("n must have length 1")
+    if (length(n1) != 1) stop("n1 must have length 1")
 
     upper_lim <- 1 - 10^(-prec_digits)
     root_fun <- function(x) toer(design = design, theta1 = theta1, n = n,
