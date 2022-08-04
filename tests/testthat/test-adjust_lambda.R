@@ -1,4 +1,4 @@
-test_that("adjust_lambda works", {
+test_that("adjust_lambda works for a single-stage design", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   # Without Pruning
@@ -71,7 +71,7 @@ test_that("adjust_lambda works", {
   expect_gt(toer_high4, 0.025)
 })
 
-test_that("errors in adjust_lambda work", {
+test_that("errors in adjust_lambda work for a single-stage design", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
   expect_error(adjust_lambda(design = design, alpha = 1.1, n = 20,
@@ -80,4 +80,28 @@ test_that("errors in adjust_lambda work", {
   expect_error(adjust_lambda(design = design, alpha = 0.025, n = c(20, 10, 10),
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = 2, prune = TRUE), prec_digits = 3))
+})
+
+test_that("adjust_lambda works for a two-stage design", {
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+
+  adj_res1 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0,
+      logbase = 2), interim_fun = interim_postpred,
+    interim_params = list(futstop = 0.1, effstop = 0.1), prec_digits = 4)
+  lambda_high1 <- adj_res1$lambda - 0.0001
+  toer_adj1 <- toer(design = design, n = 20, n1 = 10,
+    lambda = adj_res1$lambda, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1))
+  toer_high1 <- toer(design = design, n = 20, n1 = 10,
+    lambda = lambda_high1, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1))
+
+  expect_equal(adj_res1$toer, toer_adj1)
+  expect_lte(adj_res1$toer, 0.025)
+  expect_gt(toer_high1, 0.025)
 })
