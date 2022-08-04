@@ -104,4 +104,64 @@ test_that("adjust_lambda works for a two-stage design", {
   expect_equal(adj_res1$toer, toer_adj1)
   expect_lte(adj_res1$toer, 0.025)
   expect_gt(toer_high1, 0.025)
+
+  # Cases with an additional step after uniroot
+  adj_res2 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1.5, tau = 0,
+      logbase = 2), interim_fun = interim_postpred,
+    interim_params = list(futstop = 0.1, effstop = 0.1), prec_digits = 4)
+  lambda_high2 <- adj_res2$lambda - 0.0001
+  toer_adj2 <- toer(design = design, n = 20, n1 = 10,
+    lambda = adj_res2$lambda, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1.5, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1))
+  toer_high2 <- toer(design = design, n = 20, n1 = 10,
+    lambda = lambda_high2, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1.5, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1))
+
+  expect_equal(adj_res2$toer, toer_adj2)
+  expect_lte(adj_res2$toer, 0.025)
+  expect_gt(toer_high2, 0.025)
+
+  adj_res3 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2.5, tau = 0,
+      logbase = 2), interim_fun = interim_postpred,
+    interim_params = list(futstop = 0.1, effstop = 0.1), prec_digits = 4)
+  lambda_high3 <- adj_res3$lambda - 0.0001
+  toer_adj3 <- toer(design = design, n = 20, n1 = 10,
+    lambda = adj_res3$lambda, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 2.5, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1))
+  toer_high3 <- toer(design = design, n = 20, n1 = 10,
+    lambda = lambda_high3, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 2.5, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1))
+
+  expect_equal(adj_res3$toer, toer_adj3)
+  expect_lte(adj_res3$toer, 0.025)
+  expect_gt(toer_high3, 0.025)
+})
+
+test_that("errors in adjust_lambda work for a two-stage design", {
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+
+  expect_error(adjust_lambda(design = design, alpha = 1.1, n = 20, n1 = 10,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0,
+      logbase = 2), interim_fun = interim_postpred,
+    interim_params = list(futstop = 0.1, effstop = 0.1), prec_digits = 4))
+  expect_error(adjust_lambda(design = design, alpha = 0.025, n = c(20, 10, 10),
+    n1 = 10, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1), prec_digits = 4))
+  expect_error(adjust_lambda(design = design, alpha = 0.025, n = 20,
+    n1 = c(10, 5, 5), weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2),
+    interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
+      effstop = 0.1), prec_digits = 4))
 })
