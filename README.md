@@ -43,7 +43,7 @@ At first, a design-object has to be created using either
 for a two-stage trial. For example:
 
 ``` r
-library(blindrecalc) # the development version is used for the example
+library(baskexact) # the development version is used for the example
 design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 ```
 
