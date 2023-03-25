@@ -15,6 +15,8 @@ toer(design, ...)
   lambda,
   weight_fun,
   weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params,
   results = c("fwer", "group"),
   ...
 )
@@ -91,11 +93,11 @@ theta 0 and to the power for baskets with theta1 > theta 0.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Type 1 error rate for a single-stage basket design.
+\item \code{toer(OneStageBasket)}: Type 1 error rate for a single-stage basket design.
 
-\item \code{TwoStageBasket}: Type 1 error rate for two-stage basket design.
+\item \code{toer(TwoStageBasket)}: Type 1 error rate for two-stage basket design.
+
 }}
-
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa)

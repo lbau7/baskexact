@@ -30,10 +30,10 @@ Weights Based on the Equivalence Probability Weight
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Equivalence probability weights for a
+\item \code{weights_eqprob(OneStageBasket)}: Equivalence probability weights for a
 single-stage basket design.
 
-\item \code{OneStageBasket}: Probability weights for a single-stage basket
+\item \code{weights_prob(OneStageBasket)}: Probability weights for a single-stage basket
 design.
-}}
 
+}}

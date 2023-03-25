@@ -95,11 +95,11 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Power for a single-stage basket design.
+\item \code{pow(OneStageBasket)}: Power for a single-stage basket design.
 
-\item \code{TwoStageBasket}: Power for a two-stage basket design.
+\item \code{pow(TwoStageBasket)}: Power for a two-stage basket design.
+
 }}
-
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 pow(design, theta1 = c(0.2, 0.5, 0.5), n = 15, lambda = 0.99,

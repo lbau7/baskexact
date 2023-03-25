@@ -89,12 +89,12 @@ how the weights are calculated.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Fujikawa-weights for a single-stage basket
+\item \code{weights_fujikawa(OneStageBasket)}: Fujikawa-weights for a single-stage basket
 design.
 
-\item \code{TwoStageBasket}: Fujikawa-weights for a two-stage basket design.
-}}
+\item \code{weights_fujikawa(TwoStageBasket)}: Fujikawa-weights for a two-stage basket design.
 
+}}
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa)

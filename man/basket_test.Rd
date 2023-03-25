@@ -39,9 +39,9 @@ the posterior distributions with and without borrowing.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Testing for a single-stage basket design.
-}}
+\item \code{basket_test(OneStageBasket)}: Testing for a single-stage basket design.
 
+}}
 \examples{
 design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,

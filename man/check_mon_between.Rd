@@ -63,10 +63,10 @@ This method is implemented for the class \code{\link{OneStageBasket}}.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Between-trial monotonicity condition for a
+\item \code{check_mon_between(OneStageBasket)}: Between-trial monotonicity condition for a
 single-stage design.
-}}
 
+}}
 \examples{
 design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
 check_mon_between(design = design, n = 24, lambda = 0.99,

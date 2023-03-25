@@ -35,13 +35,13 @@ Weights Based on the Calibrated Power Prior
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Calibrated power prior weights for a single-stage
+\item \code{weights_cpp(OneStageBasket)}: Calibrated power prior weights for a single-stage
 basket design.
 
-\item \code{TwoStageBasket}: Calibrated power prior weights for a two-stage
+\item \code{weights_cpp(TwoStageBasket)}: Calibrated power prior weights for a two-stage
 basket design.
+
 }}
-
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp)

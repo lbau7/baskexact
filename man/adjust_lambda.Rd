@@ -84,11 +84,11 @@ for \code{lambda}.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Adjust lambda for a single-stage design.
+\item \code{adjust_lambda(OneStageBasket)}: Adjust lambda for a single-stage design.
 
-\item \code{TwoStageBasket}: Adjust lambda for a two-stage design.
+\item \code{adjust_lambda(TwoStageBasket)}: Adjust lambda for a two-stage design.
+
 }}
-
 \examples{
 design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 adjust_lambda(design = design, alpha = 0.025, n = 15,

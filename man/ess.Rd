@@ -55,9 +55,9 @@ Computes the expected sample size of a two-stage basket trial.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{TwoStageBasket}: Expected sample size for two-stage basket design.
-}}
+\item \code{ess(TwoStageBasket)}: Expected sample size for two-stage basket design.
 
+}}
 \examples{
 design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
 ess(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,

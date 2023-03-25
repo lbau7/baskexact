@@ -7,7 +7,17 @@
 \usage{
 ecd(design, ...)
 
-\S4method{ecd}{OneStageBasket}(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(), ...)
+\S4method{ecd}{OneStageBasket}(
+  design,
+  theta1 = NULL,
+  n,
+  lambda,
+  weight_fun,
+  weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
@@ -42,10 +52,10 @@ actually inactive baskets that are declared inactive.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{OneStageBasket}: Expected number of correction decisions for a single-stage
+\item \code{ecd(OneStageBasket)}: Expected number of correction decisions for a single-stage
 basket design.
-}}
 
+}}
 \examples{
 design <- setupOneStageBasket(k = 3, theta0 = 0.2)
 ecd(design = design, theta1 = c(0.5, 0.2, 0.2), n = 20, lambda = 0.99,

@@ -50,10 +50,10 @@ interim analysis is conducted.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{TwoStageBasket}: Interim analysis based on the posterior
+\item \code{interim_posterior(TwoStageBasket)}: Interim analysis based on the posterior
 probabilty for two-stage basket designs.
-}}
 
+}}
 \examples{
 design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
 toer(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,
