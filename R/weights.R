@@ -335,4 +335,3 @@ setMethod("weights_cpp", "TwoStageBasket",
     class(weight_mat) <- "pp"
     weight_mat
   })
-

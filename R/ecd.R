@@ -34,7 +34,7 @@ setGeneric("ecd",
 #' @template dotdotdot
 setMethod("ecd", "OneStageBasket",
   function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),
-           ...) {
+           globalweight_fun = NULL, globalweight_params = list(), ...) {
     check_params(n = n, lambda = lambda)
     if (is.null(theta1)) theta1 <- rep(design@theta0, design@k)
 
@@ -42,5 +42,6 @@ setMethod("ecd", "OneStageBasket",
       n = n, lambda = lambda))
 
     ecd_calc(design = design, theta1 = theta1, n = n, lambda = lambda,
-      weight_mat = weight_mat)
+      weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
   })

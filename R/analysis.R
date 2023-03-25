@@ -1,7 +1,9 @@
 # Function that conducts the final test in a one-stage design
-bskt_final <- function(design, n, lambda, r, weight_mat) {
+bskt_final <- function(design, n, lambda, r, weight_mat, globalweight_fun,
+                       globalweight_params) {
   shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
-    r = r)
+    r = r, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
   post_prob <- post_beta(shape = shape_borrow, theta0 = design@theta0)
   ifelse(post_prob >= lambda, 1, 0)
 }

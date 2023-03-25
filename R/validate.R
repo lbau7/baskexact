@@ -217,8 +217,9 @@ mon_between_loop <- function(design, n, lambda, weight_fun, weight_params) {
 }
 
 # Loop-based version of ecd
-ecd_loop <- function(design, theta1 = NULL, n, lambda, weight_fun,
-                     weight_params = list()) {
+ecd_loop <- function(design, theta1, n, lambda, weight_fun,
+                     weight_params = list(), globalweight_fun = NULL,
+                     globalweight_params = list()) {
   weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
@@ -227,7 +228,9 @@ ecd_loop <- function(design, theta1 = NULL, n, lambda, weight_fun,
   cd <- prob <- numeric(nrow(events))
   for (i in 1:nrow(events)) {
     res_loop <- bskt_final(design = design, n = n, lambda = lambda,
-      r = events[i, ], weight_mat = weight_mat)
+      r = events[i, ], weight_mat = weight_mat,
+      globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
     cd[i] <- sum(res_loop == targ)
     prob[i] <- get_prob(n = n, r = events[i, ], theta = theta1)
   }

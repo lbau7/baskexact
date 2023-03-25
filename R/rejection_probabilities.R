@@ -1,6 +1,8 @@
 # Calculates expected number of correct decisions for a single-stage design
-ecd_calc <- function(design, theta1, n, lambda, weight_mat) {
+ecd_calc <- function(design, theta1, n, lambda, weight_mat, globalweight_fun,
+                     globalweight_params) {
   targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = "pwr")
+
   # Create matrix with all possible outcomes (without permutations)
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
 
@@ -19,7 +21,8 @@ ecd_calc <- function(design, theta1, n, lambda, weight_mat) {
 
   # Conduct test for the remaining outcomes
   fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
-    weight_mat = weight_mat)
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
   res_sel <- t(apply(events_sel, 1, fun))
 
   # Add results for outcomes with all or no significant baskets
@@ -75,6 +78,7 @@ ecd_calc <- function(design, theta1, n, lambda, weight_mat) {
 
 # Calculates the experimentwise rejection probability for a single-stage design
 reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
+                           globalweight_fun, globalweight_params,
                            prob = c("toer", "pwr")) {
   # Computational shortcuts don't work with unequal priors or n!
   targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
@@ -95,7 +99,8 @@ reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
 
   # Conduct test for the remaining outcomes
   fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
-    weight_mat = weight_mat)
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
   res <- t(apply(events, 1, fun))
 
   # Select outcomes with at least one rejected null hypothesis
@@ -140,14 +145,17 @@ reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
 
 # Calculates the groupwise rejection probabilities for a single-stage design
 reject_prob_group <- function(design, theta1, n, lambda, weight_mat,
-  prob = c("toer", "pwr")) {
+                              globalweight_fun = globalweight_fun,
+                              globalweight_params = globalweight_params,
+                              prob = c("toer", "pwr")) {
   targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
   # Create matrix with all possible outcomes
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
 
   # Conduct test for all possible outcomes
   fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
-    weight_mat = weight_mat)
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
   res <- t(apply(events, 1, fun))
 
   eff_vec <- apply(res, 1, function(x) any(x == 1))

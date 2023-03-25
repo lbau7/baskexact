@@ -44,6 +44,7 @@ setGeneric("toer",
 #' @template dotdotdot
 setMethod("toer", "OneStageBasket",
   function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params,
            results = c("fwer", "group"), ...) {
     check_params(n = n, lambda = lambda)
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
@@ -54,10 +55,13 @@ setMethod("toer", "OneStageBasket",
 
     if (results == "fwer") {
       reject_prob_ew(design = design, theta1 = theta1, n = n, lambda = lambda,
-        weight_mat = weight_mat, prob = "toer")
+        weight_mat = weight_mat, globalweight_fun,
+        globalweight_params = globalweight_params, prob = "toer")
     } else {
       reject_prob_group(design = design, theta1 = theta1, n = n,
-        lambda = lambda, weight_mat = weight_mat, prob = "toer")
+        lambda = lambda, weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, prob = "toer")
     }
   })
 
