@@ -36,6 +36,7 @@ setGeneric("adjust_lambda",
 #' @template theta1_toer
 #' @template n
 #' @template weights
+#' @template globalweights
 #' @template prec_digits
 #' @template dotdotdot
 setMethod("adjust_lambda", "OneStageBasket",

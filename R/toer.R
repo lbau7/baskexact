@@ -40,6 +40,7 @@ setGeneric("toer",
 #' @template n
 #' @template lambda
 #' @template weights
+#' @template globalweights
 #' @template results_toer
 #' @template dotdotdot
 setMethod("toer", "OneStageBasket",

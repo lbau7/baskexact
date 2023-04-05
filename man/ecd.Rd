@@ -34,10 +34,17 @@ baskets.}
 \item{lambda}{The posterior probability threshold. See details for more
 information.}
 
-\item{weight_fun}{Which function should be used to calculate the weights.}
+\item{weight_fun}{Which function should be used to calculate the pairwise
+weights.}
 
 \item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 }
 \value{
 A numeric value.

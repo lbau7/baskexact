@@ -46,6 +46,7 @@ setGeneric("pow",
 #' @template n
 #' @template lambda
 #' @template weights
+#' @template globalweights
 #' @template results_pow
 setMethod("pow", "OneStageBasket",
   function(design, theta1, n, lambda, weight_fun, weight_params = list(),

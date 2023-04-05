@@ -11,7 +11,8 @@ plot_weights(n, r1, weight_fun, weight_params = list())
 
 \item{r1}{Number of responses in one basket}
 
-\item{weight_fun}{Which function should be used to calculate the weights.}
+\item{weight_fun}{Which function should be used to calculate the pairwise
+weights.}
 
 \item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}

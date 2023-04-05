@@ -15,6 +15,8 @@ adjust_lambda(design, ...)
   n,
   weight_fun,
   weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
   prec_digits,
   ...
 )
@@ -48,10 +50,17 @@ global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
 
-\item{weight_fun}{Which function should be used to calculate the weights.}
+\item{weight_fun}{Which function should be used to calculate the pairwise
+weights.}
 
 \item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 
 \item{prec_digits}{Number of decimal places that are considered when
 adjusting lambda.}

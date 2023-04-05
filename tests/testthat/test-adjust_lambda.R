@@ -165,3 +165,4 @@ test_that("errors in adjust_lambda work for a two-stage design", {
     interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
       effstop = 0.1), prec_digits = 4))
 })
+

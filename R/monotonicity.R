@@ -45,6 +45,7 @@ setGeneric("check_mon_within",
 #' @template n
 #' @template lambda
 #' @template weights
+#' @template globalweights
 #' @template details
 #' @template dotdotdot
 setMethod("check_mon_within", "OneStageBasket",
@@ -148,6 +149,7 @@ setGeneric("check_mon_between",
 #' @template n
 #' @template lambda
 #' @template weights
+#' @template globalweights
 #' @template details
 #' @template dotdotdot
 setMethod("check_mon_between", "OneStageBasket",

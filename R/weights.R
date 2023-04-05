@@ -168,8 +168,8 @@ setMethod("weights_eqprob", "OneStageBasket",
         } else {
           denom <- sqrt(((p1[i] * (1 - p1[i])) / n) +
               ((p2[j] * (1 - p2[j])) / n))
-          a <- pnorm(bound - (p1[i] - p2[j]) / denom)
-          b <- pnorm(-bound - (p1[i] - p2[j]) / denom)
+          a <- stats::pnorm(bound - (p1[i] - p2[j]) / denom)
+          b <- stats::pnorm(-bound - (p1[i] - p2[j]) / denom)
           weight_mat[i, j] <- a - b
         }
       }
@@ -180,8 +180,8 @@ setMethod("weights_eqprob", "OneStageBasket",
     # Caution: If 0 responses in both arms the result is NaN
     denom <- sqrt(((p1[2] * (1 - p1[2])) / n) +
         ((p2[2] * (1 - p2[2])) / n))
-    a <- pnorm(bound - (p1[2] - p2[2]) / denom)
-    b <- pnorm(-bound - (p1[2] - p2[2]) / denom)
+    a <- stats::pnorm(bound - (p1[2] - p2[2]) / denom)
+    b <- stats::pnorm(-bound - (p1[2] - p2[2]) / denom)
     diag_weight <- a - b
 
     diag(weight_mat) <- diag_weight

@@ -29,10 +29,12 @@ setGeneric("basket_test",
 #' @param r The vector of observed responses.
 #' @template lambda
 #' @template weights
+#' @template globalweights
 #' @template dotdotdot
 #' @describeIn basket_test Testing for a single-stage basket design.
 setMethod("basket_test", "OneStageBasket",
-  function(design, n, r, lambda, weight_fun, weight_params = list(), ...) {
+  function(design, n, r, lambda, weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params = list(), ...) {
     check_params(n = n, lambda = lambda)
     if (any(r > n) | any(r < 0)) stop("responses must be between 0 and n")
     if (length(r) != design@k) stop("r must have length k")
@@ -41,6 +43,13 @@ setMethod("basket_test", "OneStageBasket",
 
     all_combs <- arrangements::combinations(r, 2) + 1
     weights_vec <- weight_mat[all_combs]
+
+    if (!is.null(globalweight_fun)) {
+      w <- do.call(globalweight_fun, args = c(n = n, list(r = r),
+        globalweight_params))
+      weights_vec <- weights_vec * w
+    }
+
     weights <- matrix(0, nrow = design@k, ncol = design@k)
     weights[lower.tri(weights, diag = FALSE)] <- weights_vec
     weights <- weights + t(weights)
@@ -56,8 +65,9 @@ setMethod("basket_test", "OneStageBasket",
       c("shape1", "shape2"),
       sapply(1:design@k, function(x) paste("Basket", x))
     )
-    shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design,
-      n = n, r = r)
+    shape_borrow <- beta_borrow(weight_mat = weight_mat, globalweight_fun =
+        globalweight_fun, globalweight_params = globalweight_params,
+      design = design, n = n, r = r)
     dimnames(shape_borrow) <- list(
       c("shape1", "shape2"),
       sapply(1:design@k, function(x) paste("Basket", x))

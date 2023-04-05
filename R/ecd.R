@@ -31,6 +31,7 @@ setGeneric("ecd",
 #' @template n
 #' @template lambda
 #' @template weights
+#' @template globalweights
 #' @template dotdotdot
 setMethod("ecd", "OneStageBasket",
   function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),

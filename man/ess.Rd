@@ -45,7 +45,8 @@ in case of a two-stage design.}
 \item{interim_params}{A list of tuning parameters specific to
 \code{interim_fun}.}
 
-\item{weight_fun}{Which function should be used to calculate the weights.}
+\item{weight_fun}{Which function should be used to calculate the pairwise
+weights.}
 
 \item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}

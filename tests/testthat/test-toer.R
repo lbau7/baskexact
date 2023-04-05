@@ -77,6 +77,27 @@ test_that("toer works for a single-stage design without pruning", {
   expect_equal(toer_fwer3, toer_loop3$fwer)
   expect_equal(toer_group3$rejection_probabilities,
     toer_loop3$rejection_probabilities)
+
+  # Compare the results of "fwer" and "group" when a global weight is used
+  toer_group4 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 20,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 1, b = 1), globalweight_fun =
+      globalweights_diff, globalweight_params = list(eps_global = 1),
+    results = "group")
+  toer_fwer4 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 20,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 1, b = 1), globalweight_fun =
+      globalweights_diff, globalweight_params = list(eps_global = 1),
+    results = "fwer")
+  toer_loop4 <- reject_single_loop(design = design, theta1 = c(0.2, 0.4, 0.5),
+    n = 20, lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 1, b = 1), globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 1), prob = "toer")
+
+  expect_equal(toer_fwer4, toer_group4$fwer)
+  expect_equal(toer_fwer4, toer_loop4$fwer)
+  expect_equal(toer_group4$rejection_probabilities,
+    toer_loop4$rejection_probabilities)
 })
 
 test_that("toer works for a single-stage design with pruning", {

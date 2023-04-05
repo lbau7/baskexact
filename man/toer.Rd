@@ -16,7 +16,7 @@ toer(design, ...)
   weight_fun,
   weight_params = list(),
   globalweight_fun = NULL,
-  globalweight_params,
+  globalweight_params = list(),
   results = c("fwer", "group"),
   ...
 )
@@ -51,10 +51,17 @@ global null hypothesis is computed.}
 \item{lambda}{The posterior probability threshold. See details for more
 information.}
 
-\item{weight_fun}{Which function should be used to calculate the weights.}
+\item{weight_fun}{Which function should be used to calculate the pairwise
+weights.}
 
 \item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 
 \item{results}{Whether only the family wise error rate (option \code{fwer})
 or also the rejection probabilities per group (option \code{group}) should
