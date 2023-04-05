@@ -8,7 +8,7 @@ beta_borrow <- function(weight_mat, ...) {
 # shared
 #' @export
 beta_borrow.fujikawa <- function(weight_mat, globalweight_fun = NULL,
-                                 globalweight_params, design, n, r) {
+                                 globalweight_params, design, n, r, ...) {
   all_combs <- arrangements::combinations(r, 2) + 1
   weights_vec <- weight_mat[all_combs]
 
@@ -27,7 +27,7 @@ beta_borrow.fujikawa <- function(weight_mat, globalweight_fun = NULL,
 # is shared
 #' @export
 beta_borrow.pp <- function(weight_mat, globalweight_fun = NULL,
-                           globalweight_params, design, n, r) {
+                           globalweight_params, design, n, r, ...) {
   all_combs <- arrangements::combinations(r, 2) + 1
   weights_vec <- weight_mat[all_combs]
 
@@ -53,7 +53,8 @@ beta_borrow_int <- function(weight_mat, ...) {
 # Borrowing method for Fujikawa's design, where the prior information is also
 # shared
 #' @export
-beta_borrow_int.fujikawa <- function(weight_mat, design, n, n1, r, res_int) {
+beta_borrow_int.fujikawa <- function(weight_mat, design, n, n1, r, res_int,
+                                     ...) {
   r_temp <- get_r_temp(n1 = n1, r = r, res_int = res_int)
   all_combs <- arrangements::combinations(r_temp, 2)
   weights_vec <- weight_mat[all_combs]
@@ -66,7 +67,7 @@ beta_borrow_int.fujikawa <- function(weight_mat, design, n, n1, r, res_int) {
 # Borrowing method for Power Prior design, where only the observed information
 # is shared
 #' @export
-beta_borrow_int.pp <- function(weight_mat, design, n, n1, r, res_int) {
+beta_borrow_int.pp <- function(weight_mat, design, n, n1, r, res_int, ...) {
   r_temp <- get_r_temp(n1 = n1, r = r, res_int = res_int)
   all_combs <- arrangements::combinations(r_temp, 2)
   weights_vec <- weight_mat[all_combs]
