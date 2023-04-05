@@ -7,9 +7,17 @@ beta_borrow <- function(weight_mat, ...) {
 # Borrowing method for Fujikawa's design, where the prior information is also
 # shared
 #' @export
-beta_borrow.fujikawa <- function(weight_mat, design, n, r) {
+beta_borrow.fujikawa <- function(weight_mat, globalweight_fun = NULL,
+                                 globalweight_params, design, n, r) {
   all_combs <- arrangements::combinations(r, 2) + 1
   weights_vec <- weight_mat[all_combs]
+
+  if (!is.null(globalweight_fun)) {
+    w <- do.call(globalweight_fun, args = c(n = n, list(r = r),
+      globalweight_params))
+    weights_vec <- weights_vec * w
+  }
+
   shape <- matrix(c(design@shape1 + r, design@shape2 + n - r),
    byrow = TRUE, ncol = design@k)
   weight_beta(k = design@k, weights = weights_vec, shape = shape)

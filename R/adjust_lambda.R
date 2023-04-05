@@ -40,7 +40,8 @@ setGeneric("adjust_lambda",
 #' @template dotdotdot
 setMethod("adjust_lambda", "OneStageBasket",
   function(design, alpha = 0.025, theta1 = NULL, n, weight_fun,
-           weight_params = list(), prec_digits, ...) {
+           weight_params = list(), globalweight_fun = NULL,
+           globalweight_params = list(), prec_digits, ...) {
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")
     if (alpha <= 0 | alpha >= 1) stop("alpha must be between 0 and 1")
     if (length(n) != 1) stop("n must have length 1")
@@ -48,7 +49,8 @@ setMethod("adjust_lambda", "OneStageBasket",
     upper_lim <- 1 - 10^(-prec_digits)
     root_fun <- function(x) toer(design = design, theta1 = theta1, n = n,
       lambda = x, weight_fun = weight_fun, weight_params = weight_params,
-      results = "fwer") - alpha
+      globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params, results = "fwer") - alpha
 
     # Use uniroot to find lambda close to the smallest lambda that protects
     # the significance level at alpha

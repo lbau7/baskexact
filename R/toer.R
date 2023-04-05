@@ -44,7 +44,7 @@ setGeneric("toer",
 #' @template dotdotdot
 setMethod("toer", "OneStageBasket",
   function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),
-           globalweight_fun = NULL, globalweight_params,
+           globalweight_fun = NULL, globalweight_params = list(),
            results = c("fwer", "group"), ...) {
     check_params(n = n, lambda = lambda)
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "toer")

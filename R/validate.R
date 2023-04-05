@@ -5,7 +5,9 @@
 # Loop-based calculation of the rejection probabilities of a single-stage
 # basket design with 3 baskets
 reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
-                               weight_params, prob = c("toer", "pwr")) {
+                               weight_params, globalweight_fun = NULL,
+                               globalweight_params = list(),
+                               prob = c("toer", "pwr")) {
   targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
@@ -17,7 +19,8 @@ reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
       for (i3 in 0:n) {
         events <- c(i1, i2, i3)
         res <- bskt_final(design = design, n = n, lambda = lambda, r = events,
-          weight_mat = weights)
+          weight_mat = weights, globalweight_fun = globalweight_fun,
+          globalweight_params = globalweight_params)
 
         if (any(res == 1)) {
           prob_temp <- get_prob(n = n, r = events, theta = theta1)
@@ -163,13 +166,16 @@ reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
 }
 
 # Loop-based version of check_mon_within
-mon_within_loop <- function(design, n, lambda, weight_fun, weight_params) {
+mon_within_loop <- function(design, n, lambda, weight_fun, weight_params,
+                            globalweight_fun = NULL,
+                            globalweight_params = list()) {
   weights <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
   func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-    r = x, weight_mat = weights)
+    r = x, weight_mat = weights, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
 
   viol <- c()
   for (i in 1:nrow(events)) {
@@ -185,13 +191,16 @@ mon_within_loop <- function(design, n, lambda, weight_fun, weight_params) {
 }
 
 # Loop-based version of check_mon_between without shortcuts
-mon_between_loop <- function(design, n, lambda, weight_fun, weight_params) {
+mon_between_loop <- function(design, n, lambda, weight_fun, weight_params,
+                             globalweight_fun = NULL,
+                             globalweight_params = list()) {
   weights <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
   func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-    r = x, weight_mat = weights)
+    r = x, weight_mat = weights, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
 
   res <- numeric(nrow(events))
   for (i in 1:nrow(events)) {

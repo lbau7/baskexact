@@ -48,7 +48,8 @@ setGeneric("pow",
 #' @template weights
 #' @template results_pow
 setMethod("pow", "OneStageBasket",
-  function(design, theta1, n, lambda, weight_fun, weight_params,
+  function(design, theta1, n, lambda, weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params = list(),
            results = c("ewp", "group"), ...) {
     theta1 <- check_theta1(design = design, theta1 = theta1, type = "pwr")
     check_params(n = n, lambda = lambda)
@@ -59,10 +60,13 @@ setMethod("pow", "OneStageBasket",
 
     if (results == "ewp") {
       reject_prob_ew(design = design, theta1 = theta1, n = n, lambda = lambda,
-        weight_mat = weight_mat, prob = "pwr")
+        weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, prob = "pwr")
     } else {
       reject_prob_group(design = design, theta1 = theta1, n = n,
-        lambda = lambda, weight_mat = weight_mat, prob = "pwr")
+        lambda = lambda, weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, prob = "pwr")
     }
   })
 

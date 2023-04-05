@@ -17,15 +17,15 @@ test_that("check_mon_within works", {
   weights1 <- weights_fujikawa(design = design1, n = 24, epsilon = 0.5,
     tau = 0, logbase = 2, prune = FALSE)
   res1 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r1,
-    weight_mat = weights1)
+    weight_mat = weights1, globalweight_fun = NULL)
   res2 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r2,
-    weight_mat = weights1)
+    weight_mat = weights1, globalweight_fun = NULL)
   res3 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r3,
-    weight_mat = weights1)
+    weight_mat = weights1, globalweight_fun = NULL)
   res4 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r4,
-    weight_mat = weights1)
+    weight_mat = weights1, globalweight_fun = NULL)
   res5 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r5,
-    weight_mat = weights1)
+    weight_mat = weights1, globalweight_fun = NULL)
 
   expect_true(any(res1 != cummax(res1)))
   expect_false(any(res2 != cummax(res2)))
@@ -65,13 +65,13 @@ test_that("check_mon_within works", {
   weights2 <- prune_weights(weights2, cut = crit_pool)
 
   res6 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r6,
-    weight_mat = weights2)
+    weight_mat = weights2, globalweight_fun = NULL)
   res7 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r7,
-    weight_mat = weights2)
+    weight_mat = weights2, globalweight_fun = NULL)
   res8 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r8,
-    weight_mat = weights2)
+    weight_mat = weights2, globalweight_fun = NULL)
   res9 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r9,
-    weight_mat = weights2)
+    weight_mat = weights2, globalweight_fun = NULL)
 
   expect_true(any(res6 != cummax(res6)))
   expect_false(any(res7 != cummax(res7)))
@@ -80,7 +80,8 @@ test_that("check_mon_within works", {
 
   # Check results of all other violating outcomes
   resall <- t(apply(r$Events, 1, function(x) bskt_final(design = design1,
-    n = 24, lambda = 0.99, r = x, weight_mat = weights2)))
+    n = 24, lambda = 0.99, r = x, weight_mat = weights2,
+    globalweight_fun = NULL)))
 
   expect_true(all(resall == r$Results))
 
@@ -130,9 +131,10 @@ test_that("check_mon_between works", {
     logbase = 2, prune = FALSE)
 
   res1 <- bskt_final(design = design, n = 15, lambda = 0.99,
-    r = ev1$Events[1, ], weight_mat = weights1)
+    r = ev1$Events[1, ], weight_mat = weights1, globalweight_fun = NULL)
   res2 <- t(apply(ev1$Events[-1, ], 1, function(x) bskt_final(design = design,
-    n = 15, lambda = 0.99, r = x, weight_mat = weights1)))
+    n = 15, lambda = 0.99, r = x, weight_mat = weights1,
+    globalweight_fun = NULL)))
 
   expect_equal(res1, ev1$Results[1, ])
   expect_true(any(res1 == 1))
@@ -141,7 +143,8 @@ test_that("check_mon_between works", {
 
   # Check whether there is a significant basket in each violated outcome
   res3 <- t(apply(ev_viol, 1, function(x) bskt_final(design = design,
-    n = 15, lambda = 0.99, r = x, weight_mat = weights1)))
+    n = 15, lambda = 0.99, r = x, weight_mat = weights1,
+    globalweight_fun = NULL)))
   res_sig1 <- apply(res3, 1, function(x) any(x == 1))
   expect_true(all(res_sig1))
 
@@ -170,9 +173,10 @@ test_that("check_mon_between works", {
   crit_pool <- get_crit_pool(design = design, n = 15, lambda = 0.99)
   weights2 <- prune_weights(weights1, cut = crit_pool)
   res4 <- bskt_final(design = design, n = 15, lambda = 0.99,
-    r = ev1$Events[1, ], weight_mat = weights2)
+    r = ev1$Events[1, ], weight_mat = weights2, globalweight_fun = NULL)
   res5 <- t(apply(ev1$Events[-1, ], 1, function(x) bskt_final(design = design,
-    n = 15, lambda = 0.99, r = x, weight_mat = weights2)))
+    n = 15, lambda = 0.99, r = x, weight_mat = weights2,
+    globalweight_fun = NULL)))
 
   res_sig3 <- any(res4 == 1)
   res_sig2 <- apply(res5, 1, function(x) any(x == 1))

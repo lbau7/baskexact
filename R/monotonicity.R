@@ -48,8 +48,9 @@ setGeneric("check_mon_within",
 #' @template details
 #' @template dotdotdot
 setMethod("check_mon_within", "OneStageBasket",
-  function(design, n, lambda, weight_fun, weight_params = list(), details,
-           ...) {
+  function(design, n, lambda, weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params = list(),
+           details, ...) {
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
 
@@ -75,7 +76,8 @@ setMethod("check_mon_within", "OneStageBasket",
     # }
 
     func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-      r = x, weight_mat = weight_mat)
+      r = x, weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
 
     # Conduct test for all remaining outcomes
     res <- t(apply(events, 1, func))
@@ -149,7 +151,8 @@ setGeneric("check_mon_between",
 #' @template details
 #' @template dotdotdot
 setMethod("check_mon_between", "OneStageBasket",
-  function(design, n, lambda, weight_fun, weight_params = list(), details,
+  function(design, n, lambda, weight_fun, weight_params = list(),
+           details, globalweight_fun = NULL, globalweight_params = list(),
            ...) {
     check_params(n = n, lambda = lambda)
 
@@ -160,7 +163,8 @@ setMethod("check_mon_between", "OneStageBasket",
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
     func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-      r = x, weight_mat = weight_mat)
+      r = x, weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
 
     # Conduct test for all outcomes
     res <- t(apply(events, 1, func))
