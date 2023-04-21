@@ -311,7 +311,7 @@ setMethod("weights_cpp", "OneStageBasket",
           vec1 <- rep(0:1, c(n - r1[i], r1[i]))
           vec2 <- rep(0:1, c(n - r2[j], r2[j]))
           ks <- suppressWarnings(stats::ks.test(vec1, vec2)$statistic)
-          s <- n^(1/4) * ks
+          s <- n^(1 / 4) * ks
           weight_mat[i, j] <- g(s = s, a = a, b = b)
         }
       }
@@ -350,118 +350,11 @@ setMethod("weights_cpp", "TwoStageBasket",
           vec1 <- rep(0:1, c(nvec[i] - r[i], r[i]))
           vec2 <- rep(0:1, c(nvec[j] - r[j], r[j]))
           ks <- suppressWarnings(stats::ks.test(vec1, vec2)$statistic)
-          s <- n^(1/4) * ks
+          s <- max(nvec[i], nvec[j])^(1 / 4) * ks
           weight_mat[i, j] <- g(s = s, a = a, b = b)
         }
       }
     }
-    weight_mat <- weight_mat + t(weight_mat)
-    diag(weight_mat) <- 1
-    class(weight_mat) <- "pp"
-    weight_mat
-  })
-
-#' Weights Based on the Equivalence Probability Weight
-#'
-#' @template design
-#' @template dotdotdot
-#'
-#' @return A matrix including the weights of all possible pairwise outcomes.
-#' @export
-setGeneric("weights_eqprob",
-  function(design, ...) standardGeneric("weights_eqprob")
-)
-
-#' @describeIn weights_eqprob Equivalence probability weights for a
-#'   single-stage basket design.
-#'
-#' @template design
-#' @template n
-#' @param bound Equivalence bound.
-#' @template dotdotdot
-setMethod("weights_eqprob", "OneStageBasket",
-  function(design, n, bound, ...) {
-    n_sum <- n + 1
-    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-    p1 <- p2 <- 0:n / n
-
-    for (i in 1:n_sum) {
-      for (j in i:n_sum) {
-        if (i == j) {
-        } else {
-          denom <- sqrt(((p1[i] * (1 - p1[i])) / n) +
-              ((p2[j] * (1 - p2[j])) / n))
-          a <- stats::pnorm(bound - (p1[i] - p2[j]) / denom)
-          b <- stats::pnorm(-bound - (p1[i] - p2[j]) / denom)
-          weight_mat[i, j] <- a - b
-        }
-      }
-    }
-    weight_mat <- weight_mat + t(weight_mat)
-
-    # Calculate diagonal weight using arbitrary element
-    # Caution: If 0 responses in both arms the result is NaN
-    denom <- sqrt(((p1[2] * (1 - p1[2])) / n) +
-        ((p2[2] * (1 - p2[2])) / n))
-    a <- stats::pnorm(bound - (p1[2] - p2[2]) / denom)
-    b <- stats::pnorm(-bound - (p1[2] - p2[2]) / denom)
-    diag_weight <- a - b
-
-    diag(weight_mat) <- diag_weight
-    class(weight_mat) <- "pp"
-    weight_mat
-  })
-
-#' Weights Based on the Probability Weight
-#'
-#' @template design
-#' @template dotdotdot
-#'
-#' @return A matrix including the weights of all possible pairwise outcomes.
-#' @export
-#'
-#' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_prob)
-setGeneric("weights_prob",
-  function(design, ...) standardGeneric("weights_prob")
-)
-
-#' @describeIn weights_eqprob Probability weights for a single-stage basket
-#'   design.
-#'
-#' @template design
-#' @template n
-#' @template dotdotdot
-setMethod("weights_prob", "OneStageBasket",
-  function(design, n, ...) {
-    shape1_post <- design@shape1 + c(0:n)
-    shape2_post <- design@shape2 + c(n:0)
-    n_sum <- n + 1
-    weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-
-    for (i in 1:n_sum) {
-      for (j in i:n_sum) {
-        if (i == j) {
-        } else {
-          f <- function(x) {
-            stats::dbeta(
-              x = x,
-              shape1 = shape1_post[i],
-              shape2 = shape2_post[i]
-            ) *
-              stats::pbeta(
-                q = x,
-                shape1 = shape1_post[j],
-                shape2 = shape2_post[j]
-              )
-          }
-          temp <- stats::integrate(f, lower = 0, upper = 1)$value
-          weight_mat[i, j] <- 2 * min(temp, 1 - temp)
-        }
-      }
-    }
-
     weight_mat <- weight_mat + t(weight_mat)
     diag(weight_mat) <- 1
     class(weight_mat) <- "pp"
