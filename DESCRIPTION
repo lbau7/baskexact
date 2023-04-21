@@ -45,6 +45,7 @@ Collate:
     'helper.R'
     'interim.R'
     'monotonicity.R'
+    'opt_design.R'
     'plot.R'
     'pow.R'
     'rejection_probabilities.R'
