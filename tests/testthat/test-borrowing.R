@@ -81,7 +81,7 @@ test_that("beta_borrow_int works", {
   # When no information is shared, posterior paramaters are identical
   postshape_fuj2 <- beta_borrow_int(weights_fuj, design = design, n = 15,
     n1 = 7, r = c(3, 4, 5), res_int = c(-1, -1, -1))
-  postshape_jsd2 <- beta_borrow_int(weights_jsd, design = design1, n = 15,
+  postshape_jsd2 <- beta_borrow_int(weights_jsd, design = design, n = 15,
     n1 = 7, r = c(3, 4, 5), res_int = c(-1, -1, -1))
 
   expect_equal(postshape_fuj2, postshape_jsd2)
