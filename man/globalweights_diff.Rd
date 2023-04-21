@@ -4,7 +4,7 @@
 \alias{globalweights_diff}
 \title{Global Weights Based on Response Rate Differences}
 \usage{
-globalweights_diff(n, r, eps_global, w = 1)
+globalweights_diff(n, r, eps_global = 1, w = 1)
 }
 \arguments{
 \item{n}{The sample size per basket.}

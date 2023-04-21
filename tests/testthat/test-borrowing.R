@@ -5,9 +5,8 @@ test_that("beta_borrow works", {
   # Reproduced from Fujikawa et al., 2020, Supplement R Code
   weights_fuj1 <- weights_fujikawa(design = design, n = 24, epsilon = 2,
     tau = 0.5, logbase = exp(1), prune = FALSE)
-  r <- c(7, 2, 5)
-  postshape_comp <- beta_borrow(weight_mat = weight_fuj1, design = design, n = 24,
-    r = r)
+  postshape_comp <- beta_borrow(weight_mat = weights_fuj1, design = design,
+    n = 24, r = c(7, 2, 5))
   shape_expect <- matrix(c(12.9215409, 34.4051363, 6.33262523, 34.1087508,
     14.2283671, 47.5396861), nrow = 2)
 
@@ -74,7 +73,7 @@ test_that("beta_borrow_int works", {
 
   postshape_fuj1 <- beta_borrow_int(weights_fuj, design = design, n = 15,
     n1 = 7, r = c(3, 3, 3), res_int = c(-1, -1, -1))
-  postshape_jsd1 <- beta_borrow_int(weights_jsd, design = design1, n = 15,
+  postshape_jsd1 <- beta_borrow_int(weights_jsd, design = design, n = 15,
     n1 = 7, r = c(3, 3, 3), res_int = c(-1, -1, -1))
 
   expect_equal(postshape_fuj1, postshape_jsd1 + 2)
