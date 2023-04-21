@@ -9,14 +9,14 @@ globalweights_diff(n, r, eps_global, w = 1)
 \arguments{
 \item{n}{The sample size per basket.}
 
+\item{r}{Vector of responses.}
+
 \item{eps_global}{A tuning parameter that determines the amount of borrowing.
 A higher value leads to a smaller weight and therefore less borrowing
 when the heterogeneity between the results in the baskets increases.}
 
 \item{w}{A fixed probability between 0 and 1. \code{w} is multiplied to
 the weight.}
-
-\item{r1}{Vector of responses.}
 }
 \value{
 A numeric value.
