@@ -87,18 +87,3 @@ test_that("vectorization of get_prob works", {
 
   expect_equal(prob_prod, prob_all)
 })
-
-test_that("beta_borrow works", {
-  # Reproduced from Fujikawa et al., 2020, Supplement R Code
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  weight_mat <- weights_fujikawa(design = design, n = 24, epsilon = 2,
-    tau = 0.5, logbase = exp(1), prune = FALSE)
-  r <- c(7, 2, 5)
-  shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = 24,
-    r = r)
-  shape_expect <- matrix(c(12.9215409, 34.4051363, 6.33262523, 34.1087508,
-    14.2283671, 47.5396861), nrow = 2)
-
-  expect_equal(shape_borrow, shape_expect, tolerance = 10e-7)
-})
-

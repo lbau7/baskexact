@@ -17,7 +17,7 @@
 #'
 #' @examples
 #' globalweights_diff(n = 20, r = c(1, 3, 5), eps_global = 2)
-globalweights_diff <- function(n, r, eps_global, w = 1) {
+globalweights_diff <- function(n, r, eps_global = 1, w = 1) {
   rr <- r / n
   rs <- sort(rr)
   d <- diff(rs)

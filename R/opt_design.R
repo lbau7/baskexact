@@ -89,7 +89,7 @@ setMethod("opt_design", "OneStageBasket",
     }
 
     if (ncol(grid) == 0) {
-      cbind(lambdas, ecd_res, "Mean_ECD" = rowMeans(ecd_res))
+      cbind("Lambda" = lambdas, ecd_res, "Mean_ECD" = rowMeans(ecd_res))
     } else {
       ecd_res <- cbind(grid, "Lambda" = lambdas, ecd_res,
         "Mean_ECD" = rowMeans(ecd_res))

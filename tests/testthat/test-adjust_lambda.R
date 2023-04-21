@@ -105,7 +105,6 @@ test_that("adjust_lambda works for a two-stage design", {
   expect_lte(adj_res1$toer, 0.025)
   expect_gt(toer_high1, 0.025)
 
-  # Cases with an additional step after uniroot
   adj_res2 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1.5, tau = 0,
       logbase = 2), interim_fun = interim_postpred,
@@ -126,6 +125,7 @@ test_that("adjust_lambda works for a two-stage design", {
   expect_lte(adj_res2$toer, 0.025)
   expect_gt(toer_high2, 0.025)
 
+  # Cases with an additional step after uniroot
   adj_res3 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2.5, tau = 0,
       logbase = 2), interim_fun = interim_postpred,
@@ -145,6 +145,24 @@ test_that("adjust_lambda works for a two-stage design", {
   expect_equal(adj_res3$toer, toer_adj3)
   expect_lte(adj_res3$toer, 0.025)
   expect_gt(toer_high3, 0.025)
+
+  adj_res4 <- adjust_lambda(design = design, alpha = 0.025, n = 23, n1 = 10,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
+      logbase = 2), interim_fun = interim_postpred,
+    interim_params = list(futstop = 0.1, effstop = 0.1), prec_digits = 4)
+  lambda_high4 <- adj_res4$lambda - 0.0001
+  toer_adj4 <- toer(design = design, n = 23, n1 = 10, lambda = adj_res4$lambda,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
+      logbase = 2), interim_fun = interim_postpred, interim_params =
+      list(futstop = 0.1, effstop = 0.1))
+  toer_high4 <- toer(design = design, n = 23, n1 = 10, lambda = lambda_high4,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2.5, tau = 0,
+      logbase = 2), interim_fun = interim_postpred, interim_params =
+      list(futstop = 0.1, effstop = 0.1))
+
+  expect_equal(adj_res4$toer, toer_adj4)
+  expect_lte(adj_res4$toer, 0.025)
+  expect_gt(toer_high4, 0.025)
 })
 
 test_that("errors in adjust_lambda work for a two-stage design", {
