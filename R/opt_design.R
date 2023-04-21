@@ -97,6 +97,23 @@ setMethod("opt_design", "OneStageBasket",
     }
   })
 
+#' Create a Scenario Matrix
+#'
+#' Creates a default scenario matrix.
+#'
+#' @template design
+#' @param theta1 Probabilitiy under the alternative hypothesis.
+#'
+#' @details \code{get_scenarios} creates a default scenario matrix
+#' that can be used for \code{\link{opt_design}}. The function creates
+#' \code{k + 1} scenarios, from a global null to a global alternative scenario.
+#'
+#' @return A matrix with \code{k} rows and \code{k + 1} columns.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' get_scenarios(design = design, theta1 = 0.5)
 get_scenarios <- function(design, theta1) {
   scen_mat <- matrix(nrow = design@k, ncol = design@k + 1)
   for (i in 0:design@k) {
