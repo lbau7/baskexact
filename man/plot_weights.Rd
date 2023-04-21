@@ -24,5 +24,5 @@ A plot.
 Plot Weight Functions
 }
 \examples{
-plot_weights(n = 20, r1 = 10, weight_fun = weights_prob)
+plot_weights(n = 20, r1 = 10, weight_fun = weights_jsd)
 }
