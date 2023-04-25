@@ -41,6 +41,7 @@ Collate:
     'check.R'
     'ecd.R'
     'ess.R'
+    'estim.R'
     'globalweights.R'
     'helper.R'
     'interim.R'
