@@ -87,3 +87,27 @@ test_that("vectorization of get_prob works", {
 
   expect_equal(prob_prod, prob_all)
 })
+
+test_that("mean_beta works", {
+  shape <- matrix(rep(1, 6), ncol = 3)
+  res <- mean_beta(shape)
+
+  expect_equal(res, rep(0.5, 3))
+})
+
+test_that("post_pred works", {
+  # Reproduced from Fujikawa et al., 2020, Supplement R Code
+  design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+  crit <- get_crit(design = design, n = 24, lambda = 0.99)
+  shape <- matrix(c(6, 11, 2, 15, 4, 13), nrow = 2)
+
+  weights <- weights_fujikawa(design = design, n = 25, n1 = 15,
+    epsilon = 2, tau = 0.5, logbase = exp(1))
+  shape_post <- beta_borrow(weight_mat = weights, design = design, n = 15,
+    r = c(5, 1, 3))
+  res <- post_pred(n = 24, n1 = 15, r1 = c(5, 1, 3), shape = shape_post,
+    crit = crit)
+  prob_expect <- c(0.1309378, 4.769149e-06, 0.002926508)
+
+  expect_equal(res, prob_expect, tolerance = 1e-6)
+})

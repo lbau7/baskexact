@@ -27,3 +27,10 @@ globalweights_diff <- function(n, r, eps_global = 1, w = 1) {
 globalweights_fix <- function(n, r, w) {
   w
 }
+
+globalweights_maxdiff <- function(n, r, eps_global, w = 1) {
+  rr <- r/n
+  rs <- sort(rr)
+  d <- rs[length(rs)] - rs[1]
+  (1 - d)^eps_global * w
+}

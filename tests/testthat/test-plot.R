@@ -23,4 +23,8 @@ test_that("plot_weights_work", {
   expect_s3_class(plot3, "ggplot")
   expect_true(all(unique(plot3$param1) %in% 1:3))
   expect_true(all(unique(plot3$param2) %in% 1:3))
+
+  expect_error(plot_weights(n = 20, r1 = 10, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = c(1, 2, 3), tau = c(0, 0.5),
+      logbase = c(2, 3))))
 })

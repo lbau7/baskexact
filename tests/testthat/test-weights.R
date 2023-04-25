@@ -39,19 +39,27 @@ test_that("weight_jsd works", {
   expect_equal(unclass(weight_jsd1), unclass(weight_fujikawa1))
   expect_s3_class(weight_jsd1, "pp")
 
+  # Single-stage design with pruning
+  weight_jsd2 <- weights_jsd(design = design1, n = 15, lambda = 0.95,
+    epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
+  weight_fujikawa2 <- weights_fujikawa(design = design1, n = 15, lambda = 0.95,
+    epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
+
+  expect_equal(unclass(weight_jsd2), unclass(weight_fujikawa2))
+
   # Two-stage design
   design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
 
-  weight_jsd2 <- weights_jsd(design = design2, n = 15, n1 = 7, epsilon = 2,
+  weight_jsd3 <- weights_jsd(design = design2, n = 15, n1 = 7, epsilon = 2,
     tau = 0, logbase = 2, prune = FALSE)
-  weight_fujikawa2 <- weights_fujikawa(design = design2, n = 15, n1 = 7,
+  weight_fujikawa3 <- weights_fujikawa(design = design2, n = 15, n1 = 7,
     epsilon = 2, tau = 0, logbase = 2, prune = FALSE)
 
-  expect_equal(unclass(weight_jsd2), unclass(weight_fujikawa2))
-  expect_s3_class(weight_jsd2, "pp")
+  expect_equal(unclass(weight_jsd3), unclass(weight_fujikawa3))
+  expect_s3_class(weight_jsd3, "pp")
 
   # Compare single-stage and two-stage weight matrices
-  expect_equal(unclass(weight_jsd1), weight_jsd2[-(1:8), -(1:8)])
+  expect_equal(unclass(weight_jsd1), weight_jsd3[-(1:8), -(1:8)])
 })
 
 test_that("weight_cpp works", {

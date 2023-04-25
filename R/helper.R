@@ -46,6 +46,11 @@ prune_weights <- function(weight_mat, cut) {
   weight_mat
 }
 
+# Calculate posterior mean of a beta distribution
+mean_beta <- function(x) {
+  apply(x, 2, function(x) x[1] / (x[1] + x[2]))
+}
+
 # Computes the posterior predictive probability
 post_pred <- function(n, n1, r1, shape, crit) {
   extraDistr::pbbinom(
