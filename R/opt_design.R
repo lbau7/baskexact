@@ -45,7 +45,6 @@ setMethod("opt_design", "OneStageBasket",
   function(design, n, alpha, weight_fun, weight_params = list(),
            globalweight_fun = NULL, globalweight_params = list(),
            scenarios, prec_digits, ...) {
-    #browser()
     all_params <- c(weight_params, globalweight_params)
     grid <- expand.grid(all_params)
     if (length(all_params) == 0) {
@@ -56,12 +55,11 @@ setMethod("opt_design", "OneStageBasket",
 
     l1 <- length(weight_params)
     l2 <- length(globalweight_params)
-
-    ecd_res <- matrix(nrow = lgrid, ncol = ncol(scenarios))
-    colnames(ecd_res) <- colnames(scenarios)
     lambdas <- numeric(lgrid)
 
-    for (i in 1:lgrid) {
+    ecd_res <- foreach::foreach(i = 1:lgrid, .combine = 'rbind',
+      .options.future = list(seed = TRUE)) %dofuture% {
+      res_loop <- numeric(ncol(scenarios) + 1)
       if (l1 >= 1) {
         ploop1 <- as.list(grid[i, 1:l1, drop = FALSE])
       } else {
@@ -77,22 +75,24 @@ setMethod("opt_design", "OneStageBasket",
         theta1 = NULL, alpha = alpha, weight_fun = weight_fun,
         weight_params = list(ploop1), globalweight_fun = globalweight_fun,
         globalweight_params = list(ploop2), prec_digits = prec_digits, ...))
-      lambdas[i] <- l$lambda
+      res_loop[1] <- l$lambda
 
       for (j in 1:ncol(scenarios)) {
-        ecd_res[i, j] <- do.call(ecd, args = c(design = list(design),
+        res_loop[j + 1] <- do.call(ecd, args = c(design = list(design),
           theta1 = list(scenarios[, j]), n = n, lambda = l$lambda,
           weight_fun = weight_fun, weight_params = list(ploop1),
           globalweight_fun = globalweight_fun,
           globalweight_params = list(ploop2), ...))
       }
-    }
+      res_loop
+      }
 
-    if (ncol(grid) == 0) {
-      cbind("Lambda" = lambdas, ecd_res, "Mean_ECD" = rowMeans(ecd_res))
+    if (lgrid == 1) {
+      names(ecd_res) <- c("Lambda", colnames(scenarios))
+      c(ecd_res, "Mean_ECD" = mean(ecd_res[-1]))
     } else {
-      ecd_res <- cbind(grid, "Lambda" = lambdas, ecd_res,
-        "Mean_ECD" = rowMeans(ecd_res))
+      colnames(ecd_res) <- c("Lambda", colnames(scenarios))
+      ecd_res <- cbind(grid, ecd_res, "Mean_ECD" = rowMeans(ecd_res[, -1]))
       ecd_res[order(ecd_res[, ncol(ecd_res)], decreasing = TRUE), ]
     }
   })

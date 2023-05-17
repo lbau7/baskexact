@@ -59,10 +59,10 @@ test_that("opt_design works", {
     lambda = lambdres2$lambda, weight_fun = weights_fujikawa,
     globalweight_fun = globalweights_diff)
 
-  expect_equal(optres2[1], lambdres2$lambda)
-  expect_equal(optres2[2], ecdres12)
-  expect_equal(optres2[3], ecdres22)
-  expect_equal(optres2[4], ecdres32)
-  expect_equal(optres2[5], ecdres42)
-  expect_equal(optres2[6], mean(c(ecdres12, ecdres22, ecdres32, ecdres42)))
+  expect_equal(unname(optres2[1]), lambdres2$lambda)
+  expect_equal(unname(optres2[2]), ecdres12)
+  expect_equal(unname(optres2[3]), ecdres22)
+  expect_equal(unname(optres2[4]), ecdres32)
+  expect_equal(unname(optres2[5]), ecdres42)
+  expect_equal(unname(optres2[6]), mean(c(ecdres12, ecdres22, ecdres32, ecdres42)))
 })
