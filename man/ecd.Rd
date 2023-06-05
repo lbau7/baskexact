@@ -9,7 +9,7 @@ ecd(design, ...)
 
 \S4method{ecd}{OneStageBasket}(
   design,
-  theta1 = NULL,
+  p1 = NULL,
   n,
   lambda,
   weight_fun,
@@ -21,12 +21,12 @@ ecd(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
-\item{theta1}{Probabilities under the alternative hypothesis. If
-\code{length(theta1) ==  1}, then this is a common probability for all
+\item{p1}{Probabilities under the alternative hypothesis. If
+\code{length(p1) ==  1}, then this is a common probability for all
 baskets.}
 
 \item{n}{The sample size per basket.}
@@ -64,7 +64,7 @@ basket design.
 
 }}
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-ecd(design = design, theta1 = c(0.5, 0.2, 0.2), n = 20, lambda = 0.99,
+design <- setupOneStageBasket(k = 3, p0 = 0.2)
+ecd(design = design, p1 = c(0.5, 0.2, 0.2), n = 20, lambda = 0.99,
 weight_fun = weights_fujikawa)
 }

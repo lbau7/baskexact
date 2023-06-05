@@ -9,7 +9,7 @@ ess(design, ...)
 
 \S4method{ess}{TwoStageBasket}(
   design,
-  theta1 = NULL,
+  p1 = NULL,
   n,
   n1,
   lambda,
@@ -22,13 +22,13 @@ ess(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
-\item{theta1}{Probabilities under the alternative hypothesis. If
-\code{length(theta1) ==  1}, then this is a common probability for all
-baskets. If \code{is.null(theta1)} then the type 1 error rate under the
+\item{p1}{Probabilities under the alternative hypothesis. If
+\code{length(p1) ==  1}, then this is a common probability for all
+baskets. If \code{is.null(p1)} then the type 1 error rate under the
 global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
@@ -60,7 +60,7 @@ Computes the expected sample size of a two-stage basket trial.
 
 }}
 \examples{
-design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+design <- setupTwoStageBasket(k = 3, p0 = 0.2)
 ess(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,
   interim_fun = interim_postpred)
 }

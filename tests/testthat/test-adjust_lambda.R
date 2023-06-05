@@ -1,5 +1,5 @@
 test_that("adjust_lambda works for a single-stage design", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   # Without Pruning
   adj_res1 <- adjust_lambda(design = design, alpha = 0.025, n = 15,
@@ -72,7 +72,7 @@ test_that("adjust_lambda works for a single-stage design", {
 })
 
 test_that("errors in adjust_lambda work for a single-stage design", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   expect_error(adjust_lambda(design = design, alpha = 1.1, n = 20,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
@@ -83,7 +83,7 @@ test_that("errors in adjust_lambda work for a single-stage design", {
 })
 
 test_that("adjust_lambda works for a two-stage design", {
-  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   adj_res1 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0,
@@ -166,7 +166,7 @@ test_that("adjust_lambda works for a two-stage design", {
 })
 
 test_that("errors in adjust_lambda work for a two-stage design", {
-  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   expect_error(adjust_lambda(design = design, alpha = 1.1, n = 20, n1 = 10,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0,

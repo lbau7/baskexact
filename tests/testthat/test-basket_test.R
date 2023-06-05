@@ -1,7 +1,7 @@
 test_that("basket_test works", {
   ## Without Pruning
   # Reproduced from Fujikawa et al., 2020, Supplement R Code
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   res1 <- basket_test(design = design, n = 24, r = c(5, 3, 8), lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = FALSE))
@@ -23,7 +23,7 @@ test_that("basket_test works", {
   expect_equal(prob, prob_exp, tolerance = 10e-7)
 
   ## With Pruning
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   res2 <- basket_test(design = design, n = 24, r = c(4, 4, 5), lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = TRUE))
@@ -44,7 +44,7 @@ test_that("basket_test works", {
 })
 
 test_that("errors in basket_test work", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   expect_error(basket_test(design = design, n = 20, r = c(-1, 10, 10),
     lambda = 0.99, weight_fun = weights_fujikawa, weight_params = list(

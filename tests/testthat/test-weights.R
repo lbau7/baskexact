@@ -1,7 +1,7 @@
 test_that("weight_fujikawa works", {
   # Single-stage design
   # Reproduced from Fujikawa et al., 2020, Supplement R code
-  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   weight_fuj1 <- weights_fujikawa(design = design1, n = 15, epsilon = 2,
     tau = 0, logbase = exp(1), prune = FALSE)
   r <- c(5, 1, 3)
@@ -14,7 +14,7 @@ test_that("weight_fujikawa works", {
   expect_true(isSymmetric(unclass(weight_fuj1)))
 
   # Two-stage design
-  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   weight_fuj2 <- weights_fujikawa(design = design2, n = 15, n1 = 7, epsilon = 2,
     tau = 0, logbase = exp(1), prune = FALSE)
 
@@ -27,7 +27,7 @@ test_that("weight_fujikawa works", {
 
 test_that("weight_jsd works", {
   # Single-stage design
-  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   weight_jsd1 <- weights_jsd(design = design1, n = 15, epsilon = 2, tau = 0,
     logbase = 2, prune = FALSE)
@@ -48,7 +48,7 @@ test_that("weight_jsd works", {
   expect_equal(unclass(weight_jsd2), unclass(weight_fujikawa2))
 
   # Two-stage design
-  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   weight_jsd3 <- weights_jsd(design = design2, n = 15, n1 = 7, epsilon = 2,
     tau = 0, logbase = 2, prune = FALSE)
@@ -64,7 +64,7 @@ test_that("weight_jsd works", {
 
 test_that("weight_cpp works", {
   # Single-stage design
-  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   weight_cpp1 <- weights_cpp(design = design1, n = 20, a = 1, b = 1)
 
   x11 <- c(rep(0, 7), rep(1, 13))
@@ -78,7 +78,7 @@ test_that("weight_cpp works", {
   expect_true(isSymmetric(unclass(weight_cpp1)))
 
   # Two-stage design
-  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   weight_cpp2 <- weights_cpp(design = design2, n = 20, n1 = 10, a = 1, b = 1)
 
   x12 <- c(rep(0, 6), rep(1, 14))

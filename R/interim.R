@@ -26,7 +26,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+#' design <- setupTwoStageBasket(k = 3, p0 = 0.2)
 #' toer(design, n = 20, n1 = 10, lambda = 0.99, interim_fun = interim_postpred,
 #'   weight_fun = weights_fujikawa)
 setGeneric("interim_postpred",
@@ -81,7 +81,7 @@ setMethod("interim_postpred", "TwoStageBasket",
 #' @export
 #'
 #' @examples
-#' design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+#' design <- setupTwoStageBasket(k = 3, p0 = 0.2)
 #' toer(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,
 #'   interim_fun = interim_posterior, interim_params = list(prob_futstop = 0.05,
 #'     prob_effstop = 0.95))
@@ -103,6 +103,6 @@ setMethod("interim_posterior", "TwoStageBasket",
   function(design, n1, r1, weight_mat, prob_futstop, prob_effstop, ...) {
     shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design,
       n = n1, r = r1)
-    post_prob <- post_beta(shape = shape_borrow, theta0 = design@theta0)
+    post_prob <- post_beta(shape = shape_borrow, p0 = design@p0)
     ifelse(post_prob < prob_futstop, -1, ifelse(post_prob > prob_effstop, 1, 0))
   })

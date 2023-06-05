@@ -4,7 +4,7 @@
 \alias{setupOneStageBasket}
 \title{Setup OneStageBasket}
 \usage{
-setupOneStageBasket(k, shape1 = 1, shape2 = 1, theta0)
+setupOneStageBasket(k, shape1 = 1, shape2 = 1, p0)
 }
 \arguments{
 \item{k}{The number of baskets.}
@@ -13,7 +13,7 @@ setupOneStageBasket(k, shape1 = 1, shape2 = 1, theta0)
 
 \item{shape2}{Second common shape parameter of the beta prior.}
 
-\item{theta0}{A common probability under the null hypothesis.}
+\item{p0}{A common probability under the null hypothesis.}
 }
 \value{
 An S4 object of class \code{\link{OneStageBasket}}.
@@ -27,5 +27,5 @@ design features of a basket trial. Currently only common prior distributions
 and a common null hypothesis are supported.
 }
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+design <- setupOneStageBasket(k = 3, p0 = 0.2)
 }

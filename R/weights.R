@@ -33,7 +33,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
 #' toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa)
 setGeneric("weights_fujikawa",
   function(design, ...) standardGeneric("weights_fujikawa")
@@ -168,7 +168,7 @@ setMethod("weights_fujikawa", "TwoStageBasket",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
 #' toer(design, n = 15, lambda = 0.99, weight_fun = weights_jsd)
 setGeneric("weights_jsd",
   function(design, ...) standardGeneric("weights_jsd")
@@ -279,7 +279,7 @@ setMethod("weights_jsd", "TwoStageBasket",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
 #' toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp)
 setGeneric("weights_cpp",
   function(design, ...) standardGeneric("weights_cpp")

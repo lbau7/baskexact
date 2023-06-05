@@ -1,6 +1,6 @@
 test_that("analyses with interim_posterior work", {
-  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  ess1 <- ess(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+  ess1 <- ess(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_posterior,
     interim_params = list(
       prob_futstop = 0.3,
@@ -14,7 +14,7 @@ test_that("analyses with interim_posterior work", {
     ),
     results = "group")
 
-  ess2 <- ess(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  ess2 <- ess(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_posterior,
     interim_params = list(
       prob_futstop = 0.3,
@@ -28,7 +28,7 @@ test_that("analyses with interim_posterior work", {
     ),
     results = "group")
 
-  ess3 <- ess(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  ess3 <- ess(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_posterior,
     interim_params = list(
       prob_futstop = 0.5,
@@ -49,8 +49,8 @@ test_that("analyses with interim_posterior work", {
 })
 
 test_that("analyses with interim_postpred work", {
-  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  ess1 <- ess(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+  ess1 <- ess(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(
       prob_futstop = 0.1,
@@ -64,7 +64,7 @@ test_that("analyses with interim_postpred work", {
     ),
     results = "group")
 
-  ess2 <- ess(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  ess2 <- ess(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(
       prob_futstop = 0.1,
@@ -78,7 +78,7 @@ test_that("analyses with interim_postpred work", {
     ),
     results = "group")
 
-  ess3 <- ess(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  ess3 <- ess(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(
       prob_futstop = 0.3,

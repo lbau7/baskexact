@@ -9,7 +9,7 @@ estim(design, ...)
 
 \S4method{estim}{OneStageBasket}(
   design,
-  theta1,
+  p1,
   n,
   weight_fun,
   weight_params = list(),
@@ -20,12 +20,12 @@ estim(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
-\item{theta1}{Probabilities under the alternative hypothesis. If
-\code{length(theta1) ==  1}, then this is a common probability for all
+\item{p1}{Probabilities under the alternative hypothesis. If
+\code{length(p1) ==  1}, then this is a common probability for all
 baskets.}
 
 \item{n}{The sample size per basket.}
@@ -57,7 +57,7 @@ basket design.
 
 }}
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-estim(design = design, theta1 = c(0.2, 0.2, 0.5), n = 15,
+design <- setupOneStageBasket(k = 3, p0 = 0.2)
+estim(design = design, p1 = c(0.2, 0.2, 0.5), n = 15,
   weight_fun = weights_fujikawa)
 }

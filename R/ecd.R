@@ -16,8 +16,8 @@ NULL
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' ecd(design = design, theta1 = c(0.5, 0.2, 0.2), n = 20, lambda = 0.99,
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+#' ecd(design = design, p1 = c(0.5, 0.2, 0.2), n = 20, lambda = 0.99,
 #' weight_fun = weights_fujikawa)
 setGeneric("ecd",
   function(design, ...) standardGeneric("ecd")
@@ -27,22 +27,22 @@ setGeneric("ecd",
 #'   basket design.
 #'
 #' @template design
-#' @template theta1_pow
+#' @template p1_pow
 #' @template n
 #' @template lambda
 #' @template weights
 #' @template globalweights
 #' @template dotdotdot
 setMethod("ecd", "OneStageBasket",
-  function(design, theta1 = NULL, n, lambda, weight_fun, weight_params = list(),
+  function(design, p1 = NULL, n, lambda, weight_fun, weight_params = list(),
            globalweight_fun = NULL, globalweight_params = list(), ...) {
     check_params(n = n, lambda = lambda)
-    if (is.null(theta1)) theta1 <- rep(design@theta0, design@k)
+    if (is.null(p1)) p1 <- rep(design@p0, design@k)
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda))
 
-    ecd_calc(design = design, theta1 = theta1, n = n, lambda = lambda,
+    ecd_calc(design = design, p1 = p1, n = n, lambda = lambda,
       weight_mat = weight_mat, globalweight_fun = globalweight_fun,
       globalweight_params = globalweight_params)
   })

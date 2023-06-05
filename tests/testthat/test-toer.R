@@ -1,6 +1,6 @@
 test_that("toer works for a single-stage design without pruning", {
   # Compare Fujikawa et al., 2020
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   # Proposed design (i) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
@@ -11,7 +11,7 @@ test_that("toer works for a single-stage design without pruning", {
   toer_fwer1 <- toer(design = design, n = 24, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
     logbase = exp(1), prune = FALSE), results = "fwer")
-  toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
+  toer_loop1 <- reject_single_loop(design = design, p1 = rep(0.2, 3),
     n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 2, tau = 0, logbase = exp(1), prune = FALSE),
     prob = "toer")
@@ -39,7 +39,7 @@ test_that("toer works for a single-stage design without pruning", {
   toer_fwer2 <- toer(design = design, n = 24, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0.5,
       logbase = exp(1), prune = FALSE), results = "fwer")
-  toer_loop2 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
+  toer_loop2 <- reject_single_loop(design = design, p1 = rep(0.2, 3),
     n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 2, tau = 0.5, logbase = exp(1),
     prune = FALSE), prob = "toer")
@@ -60,15 +60,15 @@ test_that("toer works for a single-stage design without pruning", {
 
   # Compare the results of "fwer" and "group" when null hypothesis is not
   # global null
-  toer_group3 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 24,
+  toer_group3 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
     results = "group")
-  toer_fwer3 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 24,
+  toer_fwer3 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
     results = "fwer")
-  toer_loop3 <- reject_single_loop(design = design, theta1 = c(0.2, 0.4, 0.5),
+  toer_loop3 <- reject_single_loop(design = design, p1 = c(0.2, 0.4, 0.5),
     n = 24, lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 1, tau = 0, logbase = 2,
     prune = FALSE), prob = "toer")
@@ -79,17 +79,17 @@ test_that("toer works for a single-stage design without pruning", {
     toer_loop3$rejection_probabilities)
 
   # Compare the results of "fwer" and "group" when a global weight is used
-  toer_group4 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 20,
+  toer_group4 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 20,
     lambda = 0.95, weight_fun = weights_cpp,
     weight_params = list(a = 1, b = 1), globalweight_fun =
       globalweights_diff, globalweight_params = list(eps_global = 1),
     results = "group")
-  toer_fwer4 <- toer(design = design, theta1 = c(0.2, 0.4, 0.5), n = 20,
+  toer_fwer4 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 20,
     lambda = 0.95, weight_fun = weights_cpp,
     weight_params = list(a = 1, b = 1), globalweight_fun =
       globalweights_diff, globalweight_params = list(eps_global = 1),
     results = "fwer")
-  toer_loop4 <- reject_single_loop(design = design, theta1 = c(0.2, 0.4, 0.5),
+  toer_loop4 <- reject_single_loop(design = design, p1 = c(0.2, 0.4, 0.5),
     n = 20, lambda = 0.95, weight_fun = weights_cpp,
     weight_params = list(a = 1, b = 1), globalweight_fun = globalweights_diff,
     globalweight_params = list(eps_global = 1), prob = "toer")
@@ -101,7 +101,7 @@ test_that("toer works for a single-stage design without pruning", {
 })
 
 test_that("toer works for a single-stage design with pruning", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_single_loop
@@ -111,7 +111,7 @@ test_that("toer works for a single-stage design with pruning", {
   toer_fwer1 <- toer(design = design, n = 15, lambda = 0.95,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
       logbase = 2, prune = TRUE), results = "fwer")
-  toer_loop1 <- reject_single_loop(design = design, theta1 = rep(0.2, 3),
+  toer_loop1 <- reject_single_loop(design = design, p1 = rep(0.2, 3),
     n = 15, lambda = 0.95, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 1, tau = 0.2, logbase = 2, prune = TRUE),
     prob = "toer")
@@ -124,7 +124,7 @@ test_that("toer works for a single-stage design with pruning", {
 
 test_that("toer works for a two-stage design", {
   # Compare Fujikawa et al., 2020
-  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   # Proposed design (i) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
@@ -139,7 +139,7 @@ test_that("toer works for a two-stage design", {
       prob_effstop = 0.9), weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 2, tau = 0, logbase = exp(1)),
     results = "fwer")
-  toer_loop1 <- reject_twostage_loop(design = design, theta1 = c(0.2, 0.2, 0.2),
+  toer_loop1 <- reject_twostage_loop(design = design, p1 = c(0.2, 0.2, 0.2),
     n = 24, n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
@@ -172,7 +172,7 @@ test_that("toer works for a two-stage design", {
       prob_effstop = 0.9), weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 2, tau = 0.5, logbase = exp(1)),
     results = "fwer")
-  toer_loop2 <- reject_twostage_loop(design = design, theta1 = c(0.2, 0.2, 0.2),
+  toer_loop2 <- reject_twostage_loop(design = design, p1 = c(0.2, 0.2, 0.2),
     n = 24, n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0.5,
@@ -197,17 +197,17 @@ test_that("toer works for a two-stage design", {
   # Proposed design (i) in Fujikawa et al.
   # Compare the results of reject_prob_ew, reject_prob_group and
   # reject_twostage_loop
-  toer_group3 <- toer(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  toer_group3 <- toer(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
       logbase = exp(1)), results = "group")
-  toer_fwer3 <- toer(design = design, theta1 = c(0.5, 0.2, 0.2), n = 24,
+  toer_fwer3 <- toer(design = design, p1 = c(0.5, 0.2, 0.2), n = 24,
     n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
       logbase = exp(1)), results = "fwer")
-  toer_loop3 <- reject_twostage_loop(design = design, theta1 = c(0.5, 0.2, 0.2),
+  toer_loop3 <- reject_twostage_loop(design = design, p1 = c(0.5, 0.2, 0.2),
     n = 24, n1 = 15, lambda = 0.99, interim_fun = interim_postpred,
     interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,

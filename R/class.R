@@ -4,7 +4,7 @@ setClass("Basket",
     k = "numeric",
     shape1 = "numeric",
     shape2 = "numeric",
-    theta0 = "numeric"
+    p0 = "numeric"
   ))
 
 #' Class OneStageBasket
@@ -15,7 +15,7 @@ setClass("Basket",
 #' @slot k The number of baskets.
 #' @slot shape1 First common shape parameter of the beta prior.
 #' @slot shape2 Second common shape parameter of the beta prior.
-#' @slot theta0 A common probability under the null hypothesis.
+#' @slot p0 A common probability under the null hypothesis.
 #'
 #' @details
 #' This class implements a single-stage basket trial based on the design
@@ -25,7 +25,7 @@ setClass("Basket",
 #' reflect the similarity between the basket and computing posterior
 #' distributions for each basket where the parameters of the beta posterior are
 #' calculated as a weighted sum of the individual posterior distributions.
-#' If for a basket the posterior probability that \eqn{\theta} > theta0 is
+#' If for a basket the posterior probability that p > p0 is
 #' greater than lambda, then the null hypothesis is rejected.
 #'
 #' Currently only common prior distributions and a common null
@@ -47,7 +47,7 @@ setClass("OneStageBasket", contains = "Basket")
 #' @slot k The number of baskets.
 #' @slot shape1 First common shape parameter of the beta prior.
 #' @slot shape2 Second common shape parameter of the beta prior.
-#' @slot theta0 A common probability under the null hypothesis.
+#' @slot p0 A common probability under the null hypothesis.
 #'
 #' @details
 #' This class implements a two-stage basket trial based on the design
@@ -63,7 +63,7 @@ setClass("TwoStageBasket", contains = "Basket")
 #' @param k The number of baskets.
 #' @param shape1 First common shape parameter of the beta prior.
 #' @param shape2 Second common shape parameter of the beta prior.
-#' @param theta0 A common probability under the null hypothesis.
+#' @param p0 A common probability under the null hypothesis.
 #'
 #' @details A \code{\link{OneStageBasket}} object contains the most important
 #' design features of a basket trial. Currently only common prior distributions
@@ -73,13 +73,13 @@ setClass("TwoStageBasket", contains = "Basket")
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-setupOneStageBasket <- function(k, shape1 = 1, shape2 = 1, theta0) {
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+setupOneStageBasket <- function(k, shape1 = 1, shape2 = 1, p0) {
   methods::new("OneStageBasket",
     k = k,
     shape1 = shape1,
     shape2 = shape2,
-    theta0 = theta0
+    p0 = p0
   )}
 
 setValidity("OneStageBasket", function(object) {
@@ -95,10 +95,10 @@ setValidity("OneStageBasket", function(object) {
     "shape1 must be positive"
   } else if (object@shape2 <= 0) {
     "shape2 must be positive"
-  } else if (length(object@theta0) != 1) {
-    "theta0 must have length 1"
-  } else if ((object@theta0 <= 0) | (object@theta0 >= 1)) {
-    "theta0 must be between 0 and 1"
+  } else if (length(object@p0) != 1) {
+    "p0 must have length 1"
+  } else if ((object@p0 <= 0) | (object@p0 >= 1)) {
+    "p0 must be between 0 and 1"
   } else {
     TRUE
   }})
@@ -110,7 +110,7 @@ setValidity("OneStageBasket", function(object) {
 #' @param k The number of baskets.
 #' @param shape1 First common shape parameter of the beta prior.
 #' @param shape2 Second common shape parameter of the beta prior.
-#' @param theta0 A common probability under the null hypothesis.
+#' @param p0 A common probability under the null hypothesis.
 #'
 #' @details A \code{\link{TwoStageBasket}} object contains the most important
 #' design features of a basket trial. Currently only common prior distributions
@@ -120,13 +120,13 @@ setValidity("OneStageBasket", function(object) {
 #' @export
 #'
 #' @examples
-#' design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
-setupTwoStageBasket <- function(k, shape1 = 1, shape2 = 1, theta0) {
+#' design <- setupTwoStageBasket(k = 3, p0 = 0.2)
+setupTwoStageBasket <- function(k, shape1 = 1, shape2 = 1, p0) {
   methods::new("TwoStageBasket",
     k = k,
     shape1 = shape1,
     shape2 = shape2,
-    theta0 = theta0
+    p0 = p0
   )}
 
 setValidity("TwoStageBasket", function(object) {
@@ -142,10 +142,10 @@ setValidity("TwoStageBasket", function(object) {
     "shape1 must be positive"
   } else if (object@shape2 <= 0) {
     "shape2 must be positive"
-  } else if (length(object@theta0) != 1) {
-    "theta0 must have length 1"
-  } else if ((object@theta0 <= 0) | (object@theta0 >= 1)) {
-    "theta0 must be between 0 and 1"
+  } else if (length(object@p0) != 1) {
+    "p0 must have length 1"
+  } else if ((object@p0 <= 0) | (object@p0 >= 1)) {
+    "p0 must be between 0 and 1"
   } else {
     TRUE
   }})

@@ -21,7 +21,7 @@ basket_test(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
@@ -60,7 +60,7 @@ the posterior distributions with and without borrowing.
 
 }}
 \examples{
-design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
   weight_fun = weights_fujikawa)
 }

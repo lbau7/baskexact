@@ -22,6 +22,6 @@ proposed by Fujikawa et al.
 
 \item{\code{shape2}}{Second common shape parameter of the beta prior.}
 
-\item{\code{theta0}}{A common probability under the null hypothesis.}
+\item{\code{p0}}{A common probability under the null hypothesis.}
 }}
 

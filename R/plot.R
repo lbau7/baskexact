@@ -13,7 +13,7 @@ NULL
 #' @examples
 #' plot_weights(n = 20, r1 = 10, weight_fun = weights_jsd)
 plot_weights <- function(n, r1, weight_fun, weight_params = list()) {
-  design <- setupOneStageBasket(k = 2, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 2, p0 = 0.2)
 
   if (!any(lapply(weight_params, length) > 1)) {
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,

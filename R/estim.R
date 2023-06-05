@@ -11,8 +11,8 @@
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' estim(design = design, theta1 = c(0.2, 0.2, 0.5), n = 15,
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+#' estim(design = design, p1 = c(0.2, 0.2, 0.5), n = 15,
 #'   weight_fun = weights_fujikawa)
 setGeneric("estim",
   function(design, ...) standardGeneric("estim")
@@ -22,21 +22,21 @@ setGeneric("estim",
 #'   basket design.
 #'
 #' @template design
-#' @template theta1_pow
+#' @template p1_pow
 #' @template n
 #' @template weights
 #' @template globalweights
 #' @template dotdotdot
 setMethod("estim", "OneStageBasket",
-  function(design, theta1, n, weight_fun, weight_params = list(),
+  function(design, p1, n, weight_fun, weight_params = list(),
            globalweight_fun = NULL, globalweight_params = list(), ...) {
-    check_theta1(design = design, theta1 = theta1, type = "pwr")
+    check_p1(design = design, p1 = p1, type = "pwr")
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n))
 
     events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
     prob_events <- apply(events, 1, function(x) get_prob(n = n, r = x,
-      theta = theta1))
+      p = p1))
     post_shapes <- apply(events, 1, function(x) beta_borrow(weight_mat =
         weight_mat, globalweight_fun = globalweight_fun,
       globalweight_params = globalweight_params, design = design, n = n,
@@ -45,6 +45,6 @@ setMethod("estim", "OneStageBasket",
 
     list(
       Mean = colSums(post_means * prob_events),
-      MSE = colSums(t((t(post_means) - theta1)^2) * prob_events)
+      MSE = colSums(t((t(post_means) - p1)^2) * prob_events)
     )
   })

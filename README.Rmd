@@ -46,17 +46,17 @@ At first, a design-object has to be created using either `setupOneStageBasket` f
 
 ```{r}
 library(baskexact) # the development version is used for the example
-design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 ```
 
-`k` is the number of baskets, `shape1` and `shape2` are the two shape parameters of the Beta-prior of the response probabilities of each basket and `theta0` is the response probability under the null hypothesis. Note that currently only common prior parameters and a common null response probability are supported.
+`k` is the number of baskets, `shape1` and `shape2` are the two shape parameters of the Beta-prior of the response probabilities of each basket and `p0` is the response probability under the null hypothesis. Note that currently only common prior parameters and a common null response probability are supported.
 
 Use `toer` to calculate the type 1 error rate of a certain design:
 
 ```{r}
 toer(
   design = design,
-  theta1 = NULL,
+  p1 = NULL,
   n = 15,
   lambda = 0.99,
   weight_fun = weights_fujikawa,
@@ -71,7 +71,7 @@ toer(
 # [1] 0.03845609
 ```
 
-`theta1` refers to the true response probabilities under which the type 1 error rate is computed. Since `theta1 = NULL` is specified, the type 1 error rates under a global null hypothesis are calculated. `n` specifies the sample size per basket. Currently only equal sample sizes are supported. `lambda` is the probability cut-off for the posterior probability cut-off to reject the null hypothesis. If the posterior probability that the response probability of the basket is larger than `theta0` is larger than `lambda`, then the null hypothesis is rejected. `weight_fun` specifies which method should be used to calculate the weights. With `weights_fujikawa` the weights are calculated based on the Jensen-Shannon divergence between the individual posterior distributions for the response probabilities. In `weight_params` a list of parameters that further define the weights is given. See Fujikawa et al. (2020) for details. `results` specifies whether only the family wise type 1 error rate (option `fwer`) or also the basketwise type 1 error rates (option `group`) are calculated.
+`p1` refers to the true response probabilities under which the type 1 error rate is computed. Since `p1 = NULL` is specified, the type 1 error rates under a global null hypothesis are calculated. `n` specifies the sample size per basket. Currently only equal sample sizes are supported. `lambda` is the probability cut-off for the posterior probability cut-off to reject the null hypothesis. If the posterior probability that the response probability of the basket is larger than `p0` is larger than `lambda`, then the null hypothesis is rejected. `weight_fun` specifies which method should be used to calculate the weights. With `weights_fujikawa` the weights are calculated based on the Jensen-Shannon divergence between the individual posterior distributions for the response probabilities. In `weight_params` a list of parameters that further define the weights is given. See Fujikawa et al. (2020) for details. `results` specifies whether only the family wise type 1 error rate (option `fwer`) or also the basketwise type 1 error rates (option `group`) are calculated.
 
 To find the probability cut-off `lambda` such that a certain FWER is maintained,  use `adjust_lambda`, for example to find `lambda` such that the FWER does not exceed 2.5% (note that all hypothesis are tested one-sided):
 
@@ -79,7 +79,7 @@ To find the probability cut-off `lambda` such that a certain FWER is maintained,
 adjust_lambda(
   design = design,
   alpha = 0.025,
-  theta1 = NULL,
+  p1 = NULL,
   n = 15,
   weight_fun = weights_fujikawa,
   weight_params = list(epsilon = 1, tau = 0, logbase = 2),
@@ -100,7 +100,7 @@ Use `pow` to calculate the power of the design:
 ```{r}
 pow(
   design = design,
-  theta1 = c(0.5, 0.5, 0.5),
+  p1 = c(0.5, 0.5, 0.5),
   n = 15,
   lambda = 0.9942,
   weight_fun = weights_fujikawa,

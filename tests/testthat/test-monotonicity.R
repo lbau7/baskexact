@@ -1,6 +1,6 @@
 test_that("check_mon_within works", {
   ## Without Pruning
-  design1 <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design1 <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   # One outcome violates the within-trial monotonicity condition
   r1 <- check_mon_within(design = design1, n = 24, lambda = 0.99,
@@ -100,7 +100,7 @@ test_that("check_mon_within works", {
   expect_true(all(res_loop2 == r$Events))
 
   ## Compare result when condition holds
-  design2 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design2 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   res_noviol1 <- check_mon_within(design = design2, n = 20, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
@@ -118,7 +118,7 @@ test_that("check_mon_within works", {
 
 test_that("check_mon_between works", {
   ## Without Pruning
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   ev <- check_mon_between(design = design, n = 15, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,

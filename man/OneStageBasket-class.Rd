@@ -17,7 +17,7 @@ Information is then borrowed between baskets by calculating weights that
 reflect the similarity between the basket and computing posterior
 distributions for each basket where the parameters of the beta posterior are
 calculated as a weighted sum of the individual posterior distributions.
-If for a basket the posterior probability that \eqn{\theta} > theta0 is
+If for a basket the posterior probability that p > p0 is
 greater than lambda, then the null hypothesis is rejected.
 
 Currently only common prior distributions and a common null
@@ -32,7 +32,7 @@ hypothesis are supported.
 
 \item{\code{shape2}}{Second common shape parameter of the beta prior.}
 
-\item{\code{theta0}}{A common probability under the null hypothesis.}
+\item{\code{p0}}{A common probability under the null hypothesis.}
 }}
 
 \references{

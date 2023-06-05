@@ -16,7 +16,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 #' basket_test(design = design, n = 24, r = c(5, 9, 10), lambda = 0.99,
 #'   weight_fun = weights_fujikawa)
 setGeneric("basket_test",
@@ -73,8 +73,8 @@ setMethod("basket_test", "OneStageBasket",
       sapply(1:design@k, function(x) paste("Basket", x))
     )
 
-    postprob <- post_beta(shape_post, theta0 = design@theta0)
-    postprob_borrow <- post_beta(shape_borrow, theta0 = design@theta0)
+    postprob <- post_beta(shape_post, p0 = design@p0)
+    postprob_borrow <- post_beta(shape_borrow, p0 = design@p0)
 
     list(
       weights = weights,

@@ -30,7 +30,7 @@ NULL
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.2)
 #' check_mon_within(design = design, n = 24, lambda = 0.99,
 #'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 0.5,
 #'    tau = 0), details = TRUE)
@@ -134,7 +134,7 @@ setMethod("check_mon_within", "OneStageBasket",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.2)
 #' check_mon_between(design = design, n = 24, lambda = 0.99,
 #'   weight_fun = weights_fujikawa, weight_params = list(epsilon = 3,
 #'     tau = 0), details = TRUE)

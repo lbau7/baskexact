@@ -5,20 +5,20 @@ test_that("check_tuning works", {
   expect_error(check_tuning(epsilon = 1, tau = 0, logbase = 0))
 })
 
-test_that("check_theta1 works", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
-  theta1a <- check_theta1(design = design, theta1 = NULL, type = "toer")
-  theta1b <- check_theta1(design = design, theta1 = 0.5, type = "pwr")
+test_that("check_p1 works", {
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+  p1a <- check_p1(design = design, p1 = NULL, type = "toer")
+  p1b <- check_p1(design = design, p1 = 0.5, type = "pwr")
 
-  expect_equal(theta1a, c(0.2, 0.2, 0.2))
-  expect_equal(theta1b, c(0.5, 0.5, 0.5))
+  expect_equal(p1a, c(0.2, 0.2, 0.2))
+  expect_equal(p1b, c(0.5, 0.5, 0.5))
 
-  expect_error(check_theta1(design = design, theta1 = c(0.2, 0.5),
+  expect_error(check_p1(design = design, p1 = c(0.2, 0.5),
     type = "pwr"))
-  expect_error(check_theta1(design = design, theta1 = c(0.1, 0.2, 0.5),
+  expect_error(check_p1(design = design, p1 = c(0.1, 0.2, 0.5),
     type = "toer"))
-  expect_error(check_theta1(design = design, theta1 = NULL, type = "pwr"))
-  expect_error(check_theta1(design = design, theta1 = 0.5, type = "toer"))
+  expect_error(check_p1(design = design, p1 = NULL, type = "pwr"))
+  expect_error(check_p1(design = design, p1 = 0.5, type = "toer"))
 })
 
 test_that("check_params works", {

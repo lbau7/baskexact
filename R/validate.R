@@ -4,11 +4,11 @@
 
 # Loop-based calculation of the rejection probabilities of a single-stage
 # basket design with 3 baskets
-reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
+reject_single_loop <- function(design, p1, n, lambda, weight_fun,
                                weight_params, globalweight_fun = NULL,
                                globalweight_params = list(),
                                prob = c("toer", "pwr")) {
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
   weights <- do.call(weight_fun, args = c(weight_params, design = design,
@@ -23,7 +23,7 @@ reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
           globalweight_params = globalweight_params)
 
         if (any(res == 1)) {
-          prob_temp <- get_prob(n = n, r = events, theta = theta1)
+          prob_temp <- get_prob(n = n, r = events, p = p1)
           rej_group[which(res == 1)] <- rej_group[which(res == 1)] +
             prob_temp
 
@@ -50,11 +50,11 @@ reject_single_loop <- function(design, theta1, n, lambda, weight_fun,
 
 # Loop-based calculation of the rejection probabilities of a two-stage
 # basket design with 3 baskets
-reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
+reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
                                  interim_params = list(), weight_fun,
                                  weight_params = list(),
                                  prob = c("toer", "pwr")) {
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
   weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
@@ -69,7 +69,7 @@ reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
         if (sum(res_int) == -design@k) {
           next
         } else if (all(res_int %in% c(-1, 1))) {
-          prob_temp <- get_prob(n = n1, r = events1, theta = theta1)
+          prob_temp <- get_prob(n = n1, r = events1, p = p1)
           rej_group[which(res_int == 1)] <- rej_group[which(res_int == 1)] +
             prob_temp
           if (any(res_int[targ] == 1)) {
@@ -77,7 +77,7 @@ reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
           }
         } else {
           if (any(res_int == 1)) {
-            prob_temp <- get_prob(n = n1, r = events1, theta = theta1)
+            prob_temp <- get_prob(n = n1, r = events1, p = p1)
             rej_group[which(res_int == 1)] <- rej_group[which(res_int == 1)] +
               prob_temp
             if (any(res_int[targ] == 1)) {
@@ -94,9 +94,9 @@ reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
                 r = events_sum, res_int = res_int, lambda = lambda,
                 weight_mat = weight_mat)
               if (any(res_fin == 1)) {
-                prob_temp <- get_prob(n = n1, r = events1, theta = theta1) *
+                prob_temp <- get_prob(n = n1, r = events1, p = p1) *
                   get_prob(n = (n - n1), r = i4,
-                    theta = theta1[which(res_int == 0)])
+                    p = p1[which(res_int == 0)])
                 rej_group[which(res_fin == 1)] <-
                   rej_group[which(res_fin == 1)] + prob_temp
                 if (any(res_fin[targ] == 1) & all(res_int[targ] != 1)) {
@@ -114,9 +114,9 @@ reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
                   r = events_sum, res_int = res_int, lambda = lambda,
                   weight_mat = weight_mat)
                 if (any(res_fin == 1)) {
-                  prob_temp <- get_prob(n = n1, r = events1, theta = theta1) *
+                  prob_temp <- get_prob(n = n1, r = events1, p = p1) *
                     get_prob(n = (n - n1), r = c(i4, i5),
-                      theta = theta1[which(res_int == 0)])
+                      p = p1[which(res_int == 0)])
                   rej_group[which(res_fin == 1)] <-
                     rej_group[which(res_fin == 1)] + prob_temp
                   if (any(res_fin[targ] == 1) & all(res_int[targ] != 1)) {
@@ -135,9 +135,9 @@ reject_twostage_loop <- function(design, theta1, n, n1, lambda, interim_fun,
                     r = events_sum, res_int = res_int, lambda = lambda,
                     weight_mat = weight_mat)
                   if (any(res_fin == 1)) {
-                    prob_temp <- get_prob(n = n1, r = events1, theta = theta1) *
+                    prob_temp <- get_prob(n = n1, r = events1, p = p1) *
                       get_prob(n = (n - n1), r = c(i4, i5, i6),
-                        theta = theta1)
+                        p = p1)
                     rej_group[which(res_fin == 1)] <-
                       rej_group[which(res_fin == 1)] + prob_temp
                     if (any(res_fin[targ] == 1) & all(res_int[targ] != 1)) {
@@ -226,13 +226,13 @@ mon_between_loop <- function(design, n, lambda, weight_fun, weight_params,
 }
 
 # Loop-based version of ecd
-ecd_loop <- function(design, theta1, n, lambda, weight_fun,
+ecd_loop <- function(design, p1, n, lambda, weight_fun,
                      weight_params = list(), globalweight_fun = NULL,
                      globalweight_params = list()) {
   weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
     n = n, lambda = lambda))
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = "pwr")
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = "pwr")
 
   cd <- prob <- numeric(nrow(events))
   for (i in 1:nrow(events)) {
@@ -241,7 +241,7 @@ ecd_loop <- function(design, theta1, n, lambda, weight_fun,
       globalweight_fun = globalweight_fun,
       globalweight_params = globalweight_params)
     cd[i] <- sum(res_loop == targ)
-    prob[i] <- get_prob(n = n, r = events[i, ], theta = theta1)
+    prob[i] <- get_prob(n = n, r = events[i, ], p = p1)
   }
 
   sum(cd * prob)

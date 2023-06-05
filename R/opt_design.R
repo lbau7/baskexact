@@ -22,7 +22,7 @@ NULL
 #'
 #' @examples
 #' \donttest{
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
 #' opt_design(design = design, n = 20, alpha = 0.05,
 #'   weight_fun = weights_fujikawa, weight_params = list(epsilon = c(1, 2),
 #'   tau = c(0, 0.5)), scenarios = get_scenarios(design, 0.5), prec_digits = 4)
@@ -57,7 +57,7 @@ setMethod("opt_design", "OneStageBasket",
     l2 <- length(globalweight_params)
     lambdas <- numeric(lgrid)
 
-    ecd_res <- foreach::foreach(i = 1:lgrid, .combine = 'rbind',
+    ecd_res <- foreach(i = 1:lgrid, .combine = 'rbind',
       .options.future = list(seed = TRUE)) %dofuture% {
       res_loop <- numeric(ncol(scenarios) + 1)
       if (l1 >= 1) {
@@ -72,14 +72,14 @@ setMethod("opt_design", "OneStageBasket",
       }
 
       l <- do.call(adjust_lambda, args = c(design = list(design), n = n,
-        theta1 = NULL, alpha = alpha, weight_fun = weight_fun,
+        p1 = NULL, alpha = alpha, weight_fun = weight_fun,
         weight_params = list(ploop1), globalweight_fun = globalweight_fun,
         globalweight_params = list(ploop2), prec_digits = prec_digits, ...))
       res_loop[1] <- l$lambda
 
       for (j in 1:ncol(scenarios)) {
         res_loop[j + 1] <- do.call(ecd, args = c(design = list(design),
-          theta1 = list(scenarios[, j]), n = n, lambda = l$lambda,
+          p1 = list(scenarios[, j]), n = n, lambda = l$lambda,
           weight_fun = weight_fun, weight_params = list(ploop1),
           globalweight_fun = globalweight_fun,
           globalweight_params = list(ploop2), ...))
@@ -102,7 +102,7 @@ setMethod("opt_design", "OneStageBasket",
 #' Creates a default scenario matrix.
 #'
 #' @template design
-#' @param theta1 Probabilitiy under the alternative hypothesis.
+#' @param p1 Probabilitiy under the alternative hypothesis.
 #'
 #' @details \code{get_scenarios} creates a default scenario matrix
 #' that can be used for \code{\link{opt_design}}. The function creates
@@ -112,13 +112,13 @@ setMethod("opt_design", "OneStageBasket",
 #' @export
 #'
 #' @examples
-#' design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-#' get_scenarios(design = design, theta1 = 0.5)
-get_scenarios <- function(design, theta1) {
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+#' get_scenarios(design = design, p1 = 0.5)
+get_scenarios <- function(design, p1) {
   scen_mat <- matrix(nrow = design@k, ncol = design@k + 1)
   for (i in 0:design@k) {
-    scen_mat[, (i + 1)] <- c(rep(design@theta0, design@k - i),
-      rep(theta1, i))
+    scen_mat[, (i + 1)] <- c(rep(design@p0, design@k - i),
+      rep(p1, i))
   }
   colnames(scen_mat) <- paste(0:design@k, "Active")
   scen_mat

@@ -1,20 +1,20 @@
 test_that("get_crit works", {
   # Reproduced from Fujikawa et al. 2020
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   crit <- get_crit(design = design, n = 24, lambda = 0.99)
 
   expect_equal(crit, 10)
 })
 
 test_that("get_crit returns NA if sample size is too small", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.7)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.7)
   crit <- get_crit(design = design, n = 11, lambda = 0.99)
 
   expect_equal(crit, NA_integer_)
 })
 
 test_that("get_crit_pool works", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   n <- 20
   crit <- get_crit_pool(design = design, n = n, lambda = 0.99)
   nocrit <- crit - 1
@@ -31,15 +31,15 @@ test_that("get_crit_pool works", {
   shape_nocrit <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
     r = rep(nocrit, design@k))
 
-  post_prob_crit <- post_beta(shape = shape_crit, theta0 = design@theta0)
-  post_prob_nocrit <- post_beta(shape = shape_nocrit, theta0 = design@theta0)
+  post_prob_crit <- post_beta(shape = shape_crit, p0 = design@p0)
+  post_prob_nocrit <- post_beta(shape = shape_nocrit, p0 = design@p0)
 
   expect_true(all(post_prob_crit > 0.99))
   expect_true(all(post_prob_nocrit <= 0.99))
 })
 
 test_that("get_crit and get_crit_pool are identical with one basket", {
-  design <- setupOneStageBasket(k = 1, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 1, shape1 = 1, shape2 = 1, p0 = 0.2)
   crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.99)
   crit <- get_crit(design = design, n = 20, lambda = 0.99)
 
@@ -47,22 +47,22 @@ test_that("get_crit and get_crit_pool are identical with one basket", {
 })
 
 test_that("get_crit_pool returns NA if sample size is too small", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, theta0 = 0.8)
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.8)
   crit <- get_crit_pool(design = design, n = 10, lambda = 0.99)
 
   expect_true(is.na(crit))
 })
 
 test_that("get_targ works", {
-  targ_toer <- get_targ(theta0 = 0.2, theta1 = c(0.5, 0.2, 0.2), prob = "toer")
-  targ_pwr <- get_targ(theta0 = 0.2, theta1 = c(0.5, 0.2, 0.2), prob = "pwr")
+  targ_toer <- get_targ(p0 = 0.2, p1 = c(0.5, 0.2, 0.2), prob = "toer")
+  targ_pwr <- get_targ(p0 = 0.2, p1 = c(0.5, 0.2, 0.2), prob = "pwr")
 
   expect_equal(targ_toer, c(FALSE, TRUE, TRUE))
   expect_equal(targ_pwr, c(TRUE, FALSE, FALSE))
 })
 
 test_that("prune_weights works", {
-  design <- setupOneStageBasket(k = 6, shape1 = 1, shape2 = 1, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 6, shape1 = 1, shape2 = 1, p0 = 0.2)
   weight_mat <- weights_fujikawa(design = design, n = 15, epsilon = 2, tau = 0,
     logbase = 2, prune = FALSE)
   weight_mat <- prune_weights(weight_mat, cut = 8)
@@ -78,12 +78,12 @@ test_that("prune_weights works", {
 })
 
 test_that("vectorization of get_prob works", {
-  prob1 <- get_prob(n = 5, r = 2, theta = 0.2)
-  prob2 <- get_prob(n = 10, r = 3, theta = 0.4)
-  prob3 <- get_prob(n = 15, r = 4, theta = 0.5)
+  prob1 <- get_prob(n = 5, r = 2, p = 0.2)
+  prob2 <- get_prob(n = 10, r = 3, p = 0.4)
+  prob3 <- get_prob(n = 15, r = 4, p = 0.5)
   prob_prod <- prob1 * prob2 * prob3
   prob_all <- get_prob(n = c(5, 10, 15), r = c(2, 3, 4),
-    theta = c(0.2, 0.4, 0.5))
+    p = c(0.2, 0.4, 0.5))
 
   expect_equal(prob_prod, prob_all)
 })
@@ -97,7 +97,7 @@ test_that("mean_beta works", {
 
 test_that("post_pred works", {
   # Reproduced from Fujikawa et al., 2020, Supplement R Code
-  design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+  design <- setupTwoStageBasket(k = 3, p0 = 0.2)
   crit <- get_crit(design = design, n = 24, lambda = 0.99)
   shape <- matrix(c(6, 11, 2, 15, 4, 13), nrow = 2)
 

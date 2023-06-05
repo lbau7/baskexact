@@ -1,5 +1,6 @@
 ## usethis namespace: start
 #' @importFrom doFuture %dofuture%
+#' @importFrom foreach foreach
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib baskexact, .registration = TRUE
 ## usethis namespace: end

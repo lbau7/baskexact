@@ -14,7 +14,7 @@ weights_cpp(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
@@ -43,6 +43,6 @@ basket design.
 
 }}
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+design <- setupOneStageBasket(k = 3, p0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp)
 }

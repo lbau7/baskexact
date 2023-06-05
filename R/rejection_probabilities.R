@@ -1,7 +1,7 @@
 # Calculates expected number of correct decisions for a single-stage design
-ecd_calc <- function(design, theta1, n, lambda, weight_mat, globalweight_fun,
+ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun,
                      globalweight_params) {
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = "pwr")
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = "pwr")
 
   # Create matrix with all possible outcomes (without permutations)
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
@@ -35,8 +35,8 @@ ecd_calc <- function(design, theta1, n, lambda, weight_mat, globalweight_fun,
   # Reorder events to allign with res
   events <- rbind(events_nosig, events_sel, events_sig)
 
-  # If all theta1 are equal each permutation has the same probability
-  if (length(unique(theta1)) == 1) {
+  # If all p1 are equal each permutation has the same probability
+  if (length(unique(p1)) == 1) {
     # Compute number of correct decisions for all outcomes
     cd <- apply(res_sel, 1, function(x) sum(x == targ))
 
@@ -47,17 +47,17 @@ ecd_calc <- function(design, theta1, n, lambda, weight_mat, globalweight_fun,
       times = sum(sel_sig)))
 
     probs <- apply(events, 1,
-      function(x) get_prob(n = n, r = x, theta = theta1))
+      function(x) get_prob(n = n, r = x, p = p1))
     nperm <- apply(events, 1, get_permutations)
     exp_cd <- sum(cd * probs * nperm)
   } else {
-    # If not all theta1 are equal calculate probability for each permutation
+    # If not all p1 are equal calculate probability for each permutation
     exp_cd <- numeric(nrow(events))
     for (i in 1:nrow(events)) {
       # If number of responses is equal in each basket, there is only
       # one permutation (when n is equal)
       if (length(unique(events[i, ])) == 1) {
-        probs_loop <- get_prob(n = n, r = events[i, ], theta = theta1)
+        probs_loop <- get_prob(n = n, r = events[i, ], p = p1)
         cd_loop <- sum(res[i, ] == targ)
         exp_cd[i] <- cd_loop * probs_loop
       } else {
@@ -66,7 +66,7 @@ ecd_calc <- function(design, theta1, n, lambda, weight_mat, globalweight_fun,
           res[i, ])[!duplicated(events_loop), ]
         events_loop <- events_loop[!duplicated(events_loop), ]
         probs_loop <- apply(events_loop, 1, function(x) get_prob(n = n,
-          r = x, theta = theta1))
+          r = x, p = p1))
         cd_loop <- apply(res_loop, 1, function(x) sum(x == targ))
         exp_cd[i] <- sum(cd_loop * probs_loop)
       }
@@ -77,11 +77,11 @@ ecd_calc <- function(design, theta1, n, lambda, weight_mat, globalweight_fun,
 }
 
 # Calculates the experimentwise rejection probability for a single-stage design
-reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
+reject_prob_ew <- function(design, p1, n, lambda, weight_mat,
                            globalweight_fun, globalweight_params,
                            prob = c("toer", "pwr")) {
   # Computational shortcuts don't work with unequal priors or n!
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   # Create matrix with all possible outcomes (without permutations)
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
 
@@ -112,21 +112,21 @@ reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
     matrix(1, nrow = nrow(events_sig), ncol = design@k)
   )
 
-  # If all theta1 are equal each permutation has the same probability
-  if ((sum(targ) == design@k) & (length(unique(theta1)) == 1)) {
+  # If all p1 are equal each permutation has the same probability
+  if ((sum(targ) == design@k) & (length(unique(p1)) == 1)) {
     probs_eff <- apply(events_eff, 1,
-      function(x) get_prob(n = n, r = x, theta = theta1))
+      function(x) get_prob(n = n, r = x, p = p1))
     eff_perm <- apply(events_eff, 1, get_permutations)
     rej_prob <- sum(probs_eff * eff_perm)
   } else {
-    # If not all theta1 are equal calculate probability for each permutation
+    # If not all p1 are equal calculate probability for each permutation
     rej_prob <- numeric(nrow(res_eff))
     for (i in 1:nrow(res_eff)) {
       # If number of responses is equal in each basket, there is only
       # one permutation (when n is equal)
       if (length(unique(events_eff[i, ])) == 1) {
         rej_prob[i] <- get_prob(n = n, r = events_eff[i, ],
-          theta = theta1)
+          p = p1)
       } else {
       events_loop <- arrangements::permutations(events_eff[i, ])
       res_loop <- arrangements::permutations(
@@ -135,7 +135,7 @@ reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
       eff_loop <- apply(res_loop, 1, function(x) any(x[targ] == 1))
       events_loop <- events_loop[eff_loop, , drop = FALSE]
       rej_prob[i] <- sum(apply(events_loop, 1, function(x) get_prob(n = n,
-        r = x, theta = theta1)))
+        r = x, p = p1)))
       }
     }
     rej_prob <- sum(rej_prob)
@@ -144,11 +144,11 @@ reject_prob_ew <- function(design, theta1, n, lambda, weight_mat,
 }
 
 # Calculates the groupwise rejection probabilities for a single-stage design
-reject_prob_group <- function(design, theta1, n, lambda, weight_mat,
+reject_prob_group <- function(design, p1, n, lambda, weight_mat,
                               globalweight_fun = globalweight_fun,
                               globalweight_params = globalweight_params,
                               prob = c("toer", "pwr")) {
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   # Create matrix with all possible outcomes
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
 
@@ -163,7 +163,7 @@ reject_prob_group <- function(design, theta1, n, lambda, weight_mat,
   events_eff <- events[eff_vec, ]
   # Calculate probability of ouctomes where any null hypothesis was rejected
   probs_eff <- apply(events_eff, 1,
-    function(x) get_prob(n = n, r = x, theta = theta1))
+    function(x) get_prob(n = n, r = x, p = p1))
   res_eff <- res[eff_vec,]
   rej <- colSums(apply(res_eff == 1, 2, function(x) x * probs_eff))
   # Use only the probabilities of outcomes with a rejected null hypothesis
@@ -185,10 +185,10 @@ reject_prob_group <- function(design, theta1, n, lambda, weight_mat,
 }
 
 # Calculates the experimentwise rejection probability for a two-stage design
-reject_prob_ew2 <- function(design, theta1, n, n1, lambda, interim_fun,
+reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
                             interim_params, weight_mat,
                             prob = c("toer", "pwr")) {
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
 
   # Überprüfen, ob diese Unterscheidung notwendig ist
   if (sum(targ) == design@k) {
@@ -208,7 +208,7 @@ reject_prob_ew2 <- function(design, theta1, n, n1, lambda, interim_fun,
   eff_vec <- apply(res_int, 1, function(x) any(x[targ] == 1))
   events_eff <- events_int[eff_vec, ]
   probs_eff <- apply(events_eff, 1,
-    function(x) get_prob(n = n1, r = x, theta = theta1))
+    function(x) get_prob(n = n1, r = x, p = p1))
 
   if (sum(targ) == design@k) {
     # Multiply probability by number of permutations for each row
@@ -247,9 +247,9 @@ reject_prob_ew2 <- function(design, theta1, n, n1, lambda, interim_fun,
     fin_res <- t(apply(events_fin, 1, fin_func))
     sig_vec <- apply(fin_res, 1, function(x) any(x[targ] == 1))
 
-    prob_cont <- get_prob(n = n1, r = events_cont[i, ], theta = theta1)
+    prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
     prob_sig <- apply(events_stg2[sig_vec, , drop = FALSE], 1, function(x)
-      get_prob(n = n - n1, r = x, theta = theta1[res_cont[i, ] == 0]))
+      get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
     rej_prob_temp <- prob_cont * sum(prob_sig)
 
     if ((rej_prob_temp > 0) & (length(unique(events_cont[i, ])) > 1) &
@@ -264,10 +264,10 @@ reject_prob_ew2 <- function(design, theta1, n, n1, lambda, interim_fun,
 }
 
 # Calculates the groupwise rejection probability for a two-stage design
-reject_prob_group2 <- function(design, theta1, n, n1, lambda, interim_fun,
+reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
                                interim_params, weight_mat,
                                prob = c("toer", "pwr")) {
-  targ <- get_targ(theta0 = design@theta0, theta1 = theta1, prob = prob)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   events_int <- arrangements::permutations(x = 0:n1, k = design@k,
     replace = TRUE)
 
@@ -280,7 +280,7 @@ reject_prob_group2 <- function(design, theta1, n, n1, lambda, interim_fun,
   eff_vec_targ <- apply(res_int[eff_vec, ], 1, function(x) any(x[targ] == 1))
   events_eff <- events_int[eff_vec, ]
   probs_eff <- apply(events_eff, 1,
-    function(x) get_prob(n = n1, r = x, theta = theta1))
+    function(x) get_prob(n = n1, r = x, p = p1))
   res_eff <- res_int[eff_vec,]
   rej <- colSums(apply(res_eff == 1, 2, function(x) x * probs_eff))
   rej_ew <- sum(probs_eff[eff_vec_targ])
@@ -307,9 +307,9 @@ reject_prob_group2 <- function(design, theta1, n, n1, lambda, interim_fun,
       r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat)
     res_fin <- t(apply(events_fin, 1, fin_func))
 
-    prob_cont <- get_prob(n = n1, r = events_cont[i, ], theta = theta1)
+    prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
     prob_stg2 <- apply(events_stg2, 1, function(x)
-      get_prob(n = n - n1, r = x, theta = theta1[res_cont[i, ] == 0]))
+      get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
     rej <- rej + colSums(apply(res_fin == 1, 2, function(x) x * prob_stg2)) *
       prob_cont
 

@@ -4,13 +4,13 @@
 \alias{get_scenarios}
 \title{Create a Scenario Matrix}
 \usage{
-get_scenarios(design, theta1)
+get_scenarios(design, p1)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
-\item{theta1}{Probabilitiy under the alternative hypothesis.}
+\item{p1}{Probabilitiy under the alternative hypothesis.}
 }
 \value{
 A matrix with \code{k} rows and \code{k + 1} columns.
@@ -24,6 +24,6 @@ that can be used for \code{\link{opt_design}}. The function creates
 \code{k + 1} scenarios, from a global null to a global alternative scenario.
 }
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2)
-get_scenarios(design = design, theta1 = 0.5)
+design <- setupOneStageBasket(k = 3, p0 = 0.2)
+get_scenarios(design = design, p1 = 0.5)
 }

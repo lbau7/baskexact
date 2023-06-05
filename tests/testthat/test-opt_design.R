@@ -1,5 +1,5 @@
 test_that("opt_design works", {
-  design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, p0 = 0.2)
   optres1 <- opt_design(design = design, n = 15, alpha = 0.05,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = c(1, 2),
     tau = c(0)), globalweight_fun = globalweights_diff, globalweight_params =
@@ -16,17 +16,17 @@ test_that("opt_design works", {
         optres1[1, ]$epsilon, tau = optres1[1, ]$tau), globalweight_fun =
       globalweights_diff, globalweight_params = list(eps_global =
           optres1[1, ]$eps_global))
-  ecdres21 <- ecd(design = design, n = 15, theta1 = c(0.2, 0.2, 0.5),
+  ecdres21 <- ecd(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
     lambda = lambdres1$lambda, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = optres1[1, ]$epsilon,
       tau = optres1[1, ]$tau), globalweight_fun = globalweights_diff,
     globalweight_params = list(eps_global = optres1[1, ]$eps_global))
-  ecdres31 <- ecd(design = design, n = 15, theta1 = c(0.2, 0.5, 0.5),
+  ecdres31 <- ecd(design = design, n = 15, p1 = c(0.2, 0.5, 0.5),
     lambda = lambdres1$lambda, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = optres1[1, ]$epsilon,
       tau = optres1[1, ]$tau), globalweight_fun = globalweights_diff,
     globalweight_params = list(eps_global = optres1[1, ]$eps_global))
-  ecdres41 <- ecd(design = design, n = 15, theta1 = c(0.5, 0.5, 0.5),
+  ecdres41 <- ecd(design = design, n = 15, p1 = c(0.5, 0.5, 0.5),
     lambda = lambdres1$lambda, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = optres1[1, ]$epsilon,
       tau = optres1[1, ]$tau), globalweight_fun = globalweights_diff,
@@ -49,13 +49,13 @@ test_that("opt_design works", {
     prec_digits = 4)
   ecdres12 <- ecd(design = design, n = 15, weight_fun = weights_fujikawa,
     lambda = lambdres2$lambda, globalweight_fun = globalweights_diff)
-  ecdres22 <- ecd(design = design, n = 15, theta1 = c(0.2, 0.2, 0.5),
+  ecdres22 <- ecd(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
     lambda = lambdres2$lambda, weight_fun = weights_fujikawa,
     globalweight_fun = globalweights_diff)
-  ecdres32 <- ecd(design = design, n = 15, theta1 = c(0.2, 0.5, 0.5),
+  ecdres32 <- ecd(design = design, n = 15, p1 = c(0.2, 0.5, 0.5),
     lambda = lambdres2$lambda, weight_fun = weights_fujikawa,
     globalweight_fun = globalweights_diff)
-  ecdres42 <- ecd(design = design, n = 15, theta1 = c(0.5, 0.5, 0.5),
+  ecdres42 <- ecd(design = design, n = 15, p1 = c(0.5, 0.5, 0.5),
     lambda = lambdres2$lambda, weight_fun = weights_fujikawa,
     globalweight_fun = globalweights_diff)
 

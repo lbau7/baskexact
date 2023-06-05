@@ -10,7 +10,7 @@ toer(design, ...)
 
 \S4method{toer}{OneStageBasket}(
   design,
-  theta1 = NULL,
+  p1 = NULL,
   n,
   lambda,
   weight_fun,
@@ -23,7 +23,7 @@ toer(design, ...)
 
 \S4method{toer}{TwoStageBasket}(
   design,
-  theta1 = NULL,
+  p1 = NULL,
   n,
   n1,
   lambda,
@@ -37,13 +37,13 @@ toer(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
-\item{theta1}{Probabilities under the alternative hypothesis. If
-\code{length(theta1) ==  1}, then this is a common probability for all
-baskets. If \code{is.null(theta1)} then the type 1 error rate under the
+\item{p1}{Probabilities under the alternative hypothesis. If
+\code{length(p1) ==  1}, then this is a common probability for all
+baskets. If \code{is.null(p1)} then the type 1 error rate under the
 global null hypothesis is computed.}
 
 \item{n}{The sample size per basket.}
@@ -80,10 +80,10 @@ in case of a two-stage design.}
 If \code{results = "fwer"} then the family wise type 1 error rate is
 returned as a numeric value. If \code{results = "group"} then a list with
 the rejection probabilities per group and the family wise type 1 error rate
-is returned. If all theta1 > theta0 then the family wise type 1 error rate
-is calculated under the global null hypothesis. For baskets with theta1 =
-theta0 the rejection probabilities corresponds to the type 1 error rate, for
-baskets with theta1 > theta0 the rejection probabilities corresponds to the
+is returned. If all p1 > p0 then the family wise type 1 error rate
+is calculated under the global null hypothesis. For baskets with p1 =
+p0 the rejection probabilities corresponds to the type 1 error rate, for
+baskets with p1 > p0 the rejection probabilities corresponds to the
 power.
 }
 \description{
@@ -93,10 +93,10 @@ Computes the exact family wise type 1 error rate of a basket trial .
 \code{toer} computes the exact family wise type 1 error rate and the
 exact rejection probabilities per group. The family wise type 1 error rate
 is the probability to reject at least one null hypothesis for a basket with
-theta1 = theta0. If all theta1 > theta0 then the family wise type 1 error
+p1 = p0. If all p1 > p0 then the family wise type 1 error
 rate under the global null hypothesis is computed. The rejection
-probabilities correspond to the type 1 error rate for baskets with theta1 =
-theta 0 and to the power for baskets with theta1 > theta 0.
+probabilities correspond to the type 1 error rate for baskets with p1 =
+p0 and to the power for baskets with p1 > p0.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -106,6 +106,6 @@ theta 0 and to the power for baskets with theta1 > theta 0.
 
 }}
 \examples{
-design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+design <- setupOneStageBasket(k = 3, p0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa)
 }

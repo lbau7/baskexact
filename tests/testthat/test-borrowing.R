@@ -1,5 +1,5 @@
 test_that("beta_borrow works", {
-  design <- setupOneStageBasket(k = 3, theta0 = 0.2)
+  design <- setupOneStageBasket(k = 3, p0 = 0.2)
 
   ## Without Global Weight
   # Reproduced from Fujikawa et al., 2020, Supplement R Code
@@ -52,7 +52,7 @@ test_that("beta_borrow works", {
 })
 
 test_that("beta_borrow_int works", {
-  design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+  design <- setupTwoStageBasket(k = 3, p0 = 0.2)
 
   # Reproduced from Fujikawa et al., 2020 Supplement R code
   weights_fuj1 <- weights_fujikawa(design = design, n = 24, n1 = 15,

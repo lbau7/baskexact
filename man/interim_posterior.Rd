@@ -11,7 +11,7 @@ interim_posterior(design, ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
-\code{setupBasket}.}
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
 
 \item{...}{Further arguments.}
 
@@ -55,7 +55,7 @@ probabilty for two-stage basket designs.
 
 }}
 \examples{
-design <- setupTwoStageBasket(k = 3, theta0 = 0.2)
+design <- setupTwoStageBasket(k = 3, p0 = 0.2)
 toer(design, n = 20, n1 = 10, lambda = 0.99, weight_fun = weights_fujikawa,
   interim_fun = interim_posterior, interim_params = list(prob_futstop = 0.05,
     prob_effstop = 0.95))
