@@ -1,5 +1,5 @@
 ---
-title: "Reproduce_Fujikawa"
+title: "Reproduce Results From Fujikawa et al. (2022)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Reproduce_Fujikawa}
@@ -16,35 +16,53 @@ knitr::opts_chunk$set(
 )
 ```
 
+In this vignette we show how to reproduce the results from Fujikawa et al. (2020) using `baskexact`. At first, we have to set up a a design object, using either `setupOneStageBasket()` for a single-stage design or `setupTwoStageBasket()`for a two-stage design with one interim analysis.
+
 ```{r setup, eval=FALSE}
 library(baskexact)
-
-### Single-Stage Design
 design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+```
 
-# Figure 1
+To get the results shown in Figure 1, `basket_test()` can be used, which computes posterior probabilities for a given results-vector and also shows the pairwise weights and the parameters of the Beta posterior distribution.
+
+```{r, eval=FALSE}
 basket_test(design1, n = 15, r = c(1, 5, 7), lambda = 0.99, 
   weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0.5,
     logbase = exp(1)))
+```
 
+Note that at the moment it's not possible to reproduce the results from Table 1, as `baskexact` currently doesn't support baskets with unequal sample sizes.
+
+To reproduce the results from Table 2 we can use `toer()` and `pow()`. First, the results from the single-stage design with two different choices of tuning parameter values. Fujikawa et al.'s "Proposed design (i)" uses $\varepsilon = 2$ and $\tau = 0$, "Proposed design (ii)" uses $\varepsilon = 2$ and $\tau = 0.5$.
+
+Note that the default value for the logbase parameter is 2, such that the weights are always bounded between 0 and 1, but Fujikawa et al. use the natural logarithm, which leads to a lower limit for the weights that is strictly greater than 0.
+
+```{r, eval=FALSE}
 ## p = (0.2, 0.2, 0.2)
 # Proposed design (i)
 toer(
   design = design1, n = 24, lambda = 0.99,
   weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
-  logbase = exp(1), prune = FALSE), results = "group"
+  logbase = exp(1)), results = "group"
 )
 
 # Proposed design (ii)
 toer(
   design = design1, n = 24, lambda = 0.99,
   weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0.5,
-  logbase = exp(1), prune = FALSE), results = "group"
+  logbase = exp(1)), results = "group"
 )
+```
 
-### Single-Stage Design
+For the results from the two-stage design, we have to set up a different design object at first:
+
+```{r, eval=FALSE}
 design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+```
 
+Fujikawa et al. use an interim analysis that allows stopping of individual baskets based on the posterior predictive probability.
+
+```{r, eval = FALSE}
 ## p = (0.2, 0.2, 0.2)
 # Proposed design (i)
 toer(
@@ -121,3 +139,8 @@ pow(
   results = "group"
 )
 ```
+
+Note that the results are slightly different, as Fujikawa et al.'s results are based on simulation with $n_{\text{sim}} = 5000$. `baskexact` calculates the results analytically.
+
+## References
+Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020). A Bayesian basket trial design that borrows information across strata based on the similarity between the posterior distributions of the response probability. Biometrical Journal, 62(2), 330-338.
