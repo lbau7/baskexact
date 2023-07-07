@@ -2,7 +2,7 @@
 using namespace Rcpp;
 // [[Rcpp::depends(RcppArmadillo)]]
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 arma::mat weight_beta(const int& k, const arma::vec& weights,
                       const arma::mat& shape) {
   arma::mat help_mat;

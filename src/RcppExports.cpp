@@ -55,7 +55,6 @@ arma::mat weight_beta(const int& k, const arma::vec& weights, const arma::mat& s
 RcppExport SEXP _baskexact_weight_beta(SEXP kSEXP, SEXP weightsSEXP, SEXP shapeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const int& >::type k(kSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type shape(shapeSEXP);
