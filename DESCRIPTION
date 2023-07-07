@@ -17,6 +17,7 @@ Imports:
     foreach,
     ggplot2,
     methods,
+	progressr,
     Rcpp
 Suggests: 
     covr,

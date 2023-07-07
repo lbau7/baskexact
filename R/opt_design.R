@@ -56,9 +56,9 @@ setMethod("opt_design", "OneStageBasket",
     l1 <- length(weight_params)
     l2 <- length(globalweight_params)
     lambdas <- numeric(lgrid)
+    p <- progressr::progressor(steps = lgrid)
 
-    ecd_res <- foreach(i = 1:lgrid, .combine = 'rbind',
-      .options.future = list(seed = TRUE)) %dofuture% {
+    ecd_res <- foreach(i = 1:lgrid, .combine = 'rbind') %dofuture% {
       res_loop <- numeric(ncol(scenarios) + 1)
       if (l1 >= 1) {
         ploop1 <- as.list(grid[i, 1:l1, drop = FALSE])
@@ -84,6 +84,7 @@ setMethod("opt_design", "OneStageBasket",
           globalweight_fun = globalweight_fun,
           globalweight_params = list(ploop2), ...))
       }
+      p()
       res_loop
       }
 
