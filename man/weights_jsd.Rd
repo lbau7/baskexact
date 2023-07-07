@@ -57,12 +57,12 @@ Weights Based on the Jensen-Shannon Divergence
 \details{
 \code{weights_jsd} calculates the weights used for sharing
 information between baskets based on the Jensen-Shannon divergence (JSD).
-The weight between two baskets i and j is found as (1 - JSD(i, j))^epsilon
-where JSD(i, j) is the Jensen-Shannon divergence between the individual
-posterior distributions of the response probabilities of basket i and j.
-This is identical to how the weights are calculated in
-\code{\link{weights_fujikawa}}, however when Fujikawa's weights are used
-the prior information is also shared.
+The weight for two baskets i and j is found as
+\eqn{(1 - JSD(i, j))^\varepsilon} where \eqn{JSD(i, j)} is the Jensen-Shannon
+divergence between the individual posterior distributions of the response
+probabilities of basket i and j. This is identical to how the weights are
+calculated in \code{\link{weights_fujikawa}}, however when Fujikawa's weights
+are used the prior information is also shared.
 
 A small value of epsilon results in stronger borrowing also across baskets
 with heterogenous results. If epsilon is large then information is only

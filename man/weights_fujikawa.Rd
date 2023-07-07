@@ -57,11 +57,11 @@ Weights Based on Fujikawa et al.'s Design
 \details{
 \code{weights_fujikawa} calculates the weights used for sharing
 information between baskets based on the proposal by Fujikawa et al. (2020).
-The weight between two baskets i and j is found as (1 - JSD(i, j))^epsilon
-where JSD(i, j) is the Jensen-Shannon divergence between the individual
-posterior distributions of the response probabilities of basket i and j.
-Note that Fujikawa's weights also share the prior information between the
-baskets.
+The weight for two baskets i and j is found as
+\eqn{(1 - JSD(i, j))^\varepsilon} where \eqn{JSD(i, j)} is the Jensen-Shannon
+divergence between the individual posterior distributions of the response
+probabilities of basket i and j. Note that Fujikawa's weights also share the
+prior information between the baskets.
 
 A small value of epsilon results in stronger borrowing also across baskets
 with heterogenous results. If epsilon is large then information is only
@@ -89,4 +89,10 @@ design.
 \examples{
 design <- setupOneStageBasket(k = 3, p0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_fujikawa)
+}
+\references{
+Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
+A Bayesian basket trial design that borrows information across strata based
+on the similarity between the posterior distributions of the response
+probability. Biometrical Journal, 62(2), 330-338.
 }

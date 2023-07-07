@@ -8,11 +8,11 @@ NULL
 #'
 #' @details \code{weights_fujikawa} calculates the weights used for sharing
 #' information between baskets based on the proposal by Fujikawa et al. (2020).
-#' The weight between two baskets i and j is found as (1 - JSD(i, j))^epsilon
-#' where JSD(i, j) is the Jensen-Shannon divergence between the individual
-#' posterior distributions of the response probabilities of basket i and j.
-#' Note that Fujikawa's weights also share the prior information between the
-#' baskets.
+#' The weight for two baskets i and j is found as
+#' \eqn{(1 - JSD(i, j))^\varepsilon} where \eqn{JSD(i, j)} is the Jensen-Shannon
+#' divergence between the individual posterior distributions of the response
+#' probabilities of basket i and j. Note that Fujikawa's weights also share the
+#' prior information between the baskets.
 #'
 #' A small value of epsilon results in stronger borrowing also across baskets
 #' with heterogenous results. If epsilon is large then information is only
@@ -28,6 +28,11 @@ NULL
 #' The function is generally not called by the user but passed to another
 #' function such as \code{\link{toer}} and \code{\link{pow}} to specificy
 #' how the weights are calculated.
+#'
+#' @references Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
+#' A Bayesian basket trial design that borrows information across strata based
+#' on the similarity between the posterior distributions of the response
+#' probability. Biometrical Journal, 62(2), 330-338.
 #'
 #' @return A matrix including the weights of all possible pairwise outcomes.
 #' @export
@@ -66,11 +71,6 @@ setMethod("weights_fujikawa", "OneStageBasket",
         if (i == j) {
           next
         } else {
-          p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-          q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-          m <- function(x) 0.5 * (p(x) + q(x))
-          f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-          g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
           kl_f <- stats::integrate(f, 0, 1)$value
           kl_g <- stats::integrate(g, 0, 1)$value
           jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
@@ -116,11 +116,6 @@ setMethod("weights_fujikawa", "TwoStageBasket",
         if (i == j) {
           next
         } else {
-          p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-          q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-          m <- function(x) 0.5 * (p(x) + q(x))
-          f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-          g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
           kl_f <- stats::integrate(f, 0, 1)$value
           kl_g <- stats::integrate(g, 0, 1)$value
           jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
@@ -142,12 +137,12 @@ setMethod("weights_fujikawa", "TwoStageBasket",
 #'
 #' @details \code{weights_jsd} calculates the weights used for sharing
 #' information between baskets based on the Jensen-Shannon divergence (JSD).
-#' The weight between two baskets i and j is found as (1 - JSD(i, j))^epsilon
-#' where JSD(i, j) is the Jensen-Shannon divergence between the individual
-#' posterior distributions of the response probabilities of basket i and j.
-#' This is identical to how the weights are calculated in
-#' \code{\link{weights_fujikawa}}, however when Fujikawa's weights are used
-#' the prior information is also shared.
+#' The weight for two baskets i and j is found as
+#' \eqn{(1 - JSD(i, j))^\varepsilon} where \eqn{JSD(i, j)} is the Jensen-Shannon
+#' divergence between the individual posterior distributions of the response
+#' probabilities of basket i and j. This is identical to how the weights are
+#' calculated in \code{\link{weights_fujikawa}}, however when Fujikawa's weights
+#' are used the prior information is also shared.
 #'
 #' A small value of epsilon results in stronger borrowing also across baskets
 #' with heterogenous results. If epsilon is large then information is only
@@ -201,11 +196,6 @@ setMethod("weights_jsd", "OneStageBasket",
         if (i == j) {
           next
         } else {
-          p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-          q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-          m <- function(x) 0.5 * (p(x) + q(x))
-          f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-          g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
           kl_f <- stats::integrate(f, 0, 1)$value
           kl_g <- stats::integrate(g, 0, 1)$value
           jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
@@ -251,11 +241,6 @@ setMethod("weights_jsd", "TwoStageBasket",
         if (i == j) {
           next
         } else {
-          p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-          q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-          m <- function(x) 0.5 * (p(x) + q(x))
-          f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-          g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
           kl_f <- stats::integrate(f, 0, 1)$value
           kl_g <- stats::integrate(g, 0, 1)$value
           jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
@@ -274,6 +259,23 @@ setMethod("weights_jsd", "TwoStageBasket",
 #'
 #' @template design
 #' @template dotdotdot
+#'
+#' @details \code{weights_cpp} calculates the weights based on a suggestion
+#' by Pan & Yuan (2017). The weight for two baskets i and j is found by at
+#' first calculating \eqn{S_{KS;i,j}} as the Kolmogorov-Smirnov statistic,
+#' which is equal to the difference in response rates for binary variables.
+#' \eqn{S_{KS;i,j}} is then transformed to \eqn{S_{i,j} = n^{1/4}S_{KS;i,j}}.
+#' Then the weight is found as \eqn{1 / (1 + exp(a + b * log(S_{i,j})))}, where
+#' a and b are tuning parameters.
+#'
+#' The function is generally not called by the user but passed to another
+#' function such as \code{\link{toer}} and \code{\link{pow}} to specificy
+#' how the weights are calculated.
+#'
+#' @references Pan, H., Yuan, Y., & Xia, J. (2017). A calibrated power prior
+#' approach to borrow information from historical data with application to
+#' biosimilar clinical trials. Journal of the Royal Statistical Society Series
+#' C: Applied Statistics, 66(5), 979-996.
 #'
 #' @return A matrix including the weights of all possible pairwise outcomes.
 #' @export

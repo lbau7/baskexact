@@ -33,6 +33,19 @@ A matrix including the weights of all possible pairwise outcomes.
 \description{
 Weights Based on the Calibrated Power Prior
 }
+\details{
+\code{weights_cpp} calculates the weights based on a suggestion
+by Pan & Yuan (2017). The weight for two baskets i and j is found by at
+first calculating \eqn{S_{KS;i,j}} as the Kolmogorov-Smirnov statistic,
+which is equal to the difference in response rates for binary variables.
+\eqn{S_{KS;i,j}} is then transformed to \eqn{S_{i,j} = n^{1/4}S_{KS;i,j}}.
+Then the weight is found as \eqn{1 / (1 + exp(a + b * log(S_{i,j})))}, where
+a and b are tuning parameters.
+
+The function is generally not called by the user but passed to another
+function such as \code{\link{toer}} and \code{\link{pow}} to specificy
+how the weights are calculated.
+}
 \section{Methods (by class)}{
 \itemize{
 \item \code{weights_cpp(OneStageBasket)}: Calibrated power prior weights for a single-stage
@@ -45,4 +58,10 @@ basket design.
 \examples{
 design <- setupOneStageBasket(k = 3, p0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp)
+}
+\references{
+Pan, H., Yuan, Y., & Xia, J. (2017). A calibrated power prior
+approach to borrow information from historical data with application to
+biosimilar clinical trials. Journal of the Royal Statistical Society Series
+C: Applied Statistics, 66(5), 979-996.
 }
