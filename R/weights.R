@@ -26,7 +26,7 @@ NULL
 #' all baskets.
 #'
 #' The function is generally not called by the user but passed to another
-#' function such as \code{\link{toer}} and \code{\link{pow}} to specificy
+#' function such as \code{\link{toer}} and \code{\link{pow}} to specify
 #' how the weights are calculated.
 #'
 #' @references Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
@@ -362,3 +362,36 @@ setMethod("weights_cpp", "TwoStageBasket",
     class(weight_mat) <- "pp"
     weight_mat
   })
+
+
+
+setGeneric("weights_spline",
+           function(design, ...) standardGeneric("weights_spline")
+)
+
+#' @describeIn weights_spline Weights for a single-stage basket
+#'   design based on monotonic splines.
+#'
+#' @template design
+#' @template n
+setMethod("weights_spline", "OneStageBasket",
+          function(design, n, diffknots = c(1,0.5,0) , weightknots = c(0,0,1),
+                   splinemethod = "monoH.FC",...) {
+            n_sum <- n + 1
+            diff_matrix <- matrix(data = NA,
+                                  nrow = n_sum,
+                                  ncol = n_sum)
+            for(i in 1:n_sum){
+              diff_matrix[,i] <- abs((0:n / n) - ((i-1)/ n))
+            }
+
+            weight_spline <- splinefun(x=diffknots,
+                                       y=weightknots,
+                                       method = splinemethod)
+
+            weight_mat <- weight_spline(diff_matrix)
+
+
+            class(weight_mat) <- "spline"
+            weight_mat
+          })
