@@ -24,6 +24,17 @@ globalweights_diff <- function(n, r, eps_global = 1, w = 1) {
   (1 - sum(d) * 10^(-sum((d - 1 / length(d))^2)))^eps_global * w
 }
 
+#' Fixed Global Weights
+#'
+#' @template n
+#' @template r
+#' @param w Fixed number with wich all weights are multiplied
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' globalweights_fix(n = 20, r = c(1, 3, 5), w = 0.5)
 globalweights_fix <- function(n, r, w) {
   w
 }
