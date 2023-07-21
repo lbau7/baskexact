@@ -30,7 +30,7 @@ globalweights_diff <- function(n, r, eps_global = 1, w = 1) {
 #' @template r
 #' @param w Fixed number with wich all weights are multiplied
 #'
-#' @return
+#' @return A numeric value.
 #' @export
 #'
 #' @examples
