@@ -18,7 +18,7 @@ check_p1 <- function(design, p1, type) {
   }
   if (length(p1) == 1) p1 <- rep(p1, design@k)
   if ((type == "toer") & all(p1 != design@p0)) {
-    stop("no true null hyoptheses, cannot compute type 1 error rate")
+    stop("no true null hypotheses, cannot compute type 1 error rate")
   }
   if ((type == "pwr") & all(p1 == design@p0)) {
     stop("no true alternative hyoptheses, cannot compute power")

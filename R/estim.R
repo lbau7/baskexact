@@ -30,7 +30,7 @@ setGeneric("estim",
 setMethod("estim", "OneStageBasket",
   function(design, p1, n, weight_fun, weight_params = list(),
            globalweight_fun = NULL, globalweight_params = list(), ...) {
-    check_p1(design = design, p1 = p1, type = "pwr")
+    check_p1(design = design, p1 = p1, type = "estim")
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n))
 
