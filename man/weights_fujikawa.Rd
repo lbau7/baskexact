@@ -75,7 +75,7 @@ hypotheses can be rejected if the number of responses is exactly c for
 all baskets.
 
 The function is generally not called by the user but passed to another
-function such as \code{\link{toer}} and \code{\link{pow}} to specificy
+function such as \code{\link{toer}} and \code{\link{pow}} to specify
 how the weights are calculated.
 }
 \section{Methods (by class)}{

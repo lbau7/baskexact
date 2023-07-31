@@ -104,3 +104,39 @@ test_that("weight_cpp works", {
   expect_equal(unclass(weight_cpp1), weight_cpp2[-(1:11), -(1:11)])
   expect_equal(unclass(weight_cpp3), weight_cpp2[1:11, 1:11])
 })
+
+
+test_that("weight_spline works", {
+  # Single-stage design
+
+  n_test <- 20
+  clamplim_test <- c(0,1)
+  diffknots_test <- c(1,0.5,0)
+  weightknots_test <- c(0,0,0.8)
+
+  design1 <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.2)
+  weight_mspline1 <- weights_spline(design = design1,
+                                    n = n_test,
+                                    diffknots  = diffknots_test,
+                                    weightknots = weightknots_test,
+                                    splinemethod = "monoH.FC",
+                                    clamplim = clamplim_test)
+  r <- c(15, 5, 8, 16)
+
+  elmnts <- all_combs <- t(utils::combn(r, 2)) + 1
+  weights <- as.vector(weight_mspline1[elmnts])
+  weights_expected <- c(0.0000, 0.1224, 0.7128, 0.5096, 0.0000, 0.0576)
+
+  expect_equal(weights, weights_expected)
+
+
+  #Right S3 class
+  expect_s3_class(weight_mspline1, "pp")
+
+  #Symmetric matrix in output
+  expect_true(isSymmetric(unclass(weight_mspline1)))
+
+  #Main diagonale (same
+  upper_weightlim <- max(weightknots_test)
+  expect_true(all.equal(rep(upper_weightlim,n_test+1) , diag(unclass(weight_mspline1))))
+})
