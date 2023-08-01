@@ -362,3 +362,45 @@ setMethod("weights_cpp", "TwoStageBasket",
     class(weight_mat) <- "pp"
     weight_mat
   })
+
+#' Custom Weights
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details \code{weights_custom} simply returns the matrix that is passed
+#' to \code{mat}. The input of the matrix is used as follows: The value
+#' of the i-th row in the j-th column determines how much information is
+#' shared between two baskets where one basket has i-1 responses and
+#' the other basket hast j-1 responses. 1 is subtracted because 0 is also
+#' a possible number of responses.
+#'
+#' @return A matrix including the weights of all possible pairwise outcomes.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+#' mat <- matrix(0.5, nrow = 16, ncol = 16)
+#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_custom,
+#'   weight_params = list(mat = mat))
+setGeneric("weights_custom",
+  function(design, ...) standardGeneric("weights_custom")
+)
+
+#' @describeIn weights_custom Custom weights for a single-stage basket design.
+#'
+#' @template design
+#' @template n
+#' @param mat A matrix.
+#' @template dotdotdot
+setMethod("weights_custom", "OneStageBasket",
+  function(design, n, mat, ...) {
+    if (!is.matrix(mat)) {
+      stop("mat is not a matrix")
+    }
+    if (!all(dim(mat) == c(n + 1, n + 1))) {
+      stop("mat doesn't have the right dimension")
+    }
+    class(mat) <- "pp"
+    mat
+  })

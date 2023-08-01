@@ -104,3 +104,21 @@ test_that("weight_cpp works", {
   expect_equal(unclass(weight_cpp1), weight_cpp2[-(1:11), -(1:11)])
   expect_equal(unclass(weight_cpp3), weight_cpp2[1:11, 1:11])
 })
+
+test_that("weights_custom works", {
+  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+  weight_cpp <- unclass(weights_cpp(design = design, n = 15, a = 1, b = 1))
+
+  res1 <- toer(design, n = 15, lambda = 0.99, weight_fun = weights_custom,
+    weight_params = list(mat = weight_cpp))
+  res2 <- toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp,
+    weight_params = list(a = 1, b = 1))
+
+  expect_equal(res1, res2)
+
+  # Check errors
+  expect_error(toer(design, n = 14, lambda = 0.99, weight_fun = weights_custom,
+    weight_params = list(mat = weight_cpp)))
+  expect_error(toer(design, n = 15, lambda = 0.99, weight_fun = weights_custom,
+    weight_params = list(mat = as.list(weight_cpp))))
+})
