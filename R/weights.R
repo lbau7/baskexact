@@ -80,13 +80,15 @@ setMethod("weights_fujikawa", "OneStageBasket",
     jsd_mat <- jsd_mat + t(jsd_mat)
     weight_mat <- (1 - jsd_mat)^epsilon
     weight_mat[weight_mat <= tau] <- 0
+    class(weight_mat) <- "fujikawa"
 
     if (prune) {
-      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+        weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
       weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
     }
 
-    class(weight_mat) <- "fujikawa"
     weight_mat
   })
 
@@ -205,13 +207,15 @@ setMethod("weights_jsd", "OneStageBasket",
     jsd_mat <- jsd_mat + t(jsd_mat)
     weight_mat <- (1 - jsd_mat)^epsilon
     weight_mat[weight_mat <= tau] <- 0
+    class(weight_mat) <- "pp"
 
     if (prune) {
-      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+        weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
       weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
     }
 
-    class(weight_mat) <- "pp"
     weight_mat
   })
 
@@ -260,7 +264,7 @@ setMethod("weights_jsd", "TwoStageBasket",
 #' @template design
 #' @template dotdotdot
 #'
-#' @details \code{weights_cpp} calculates the weights based on a suggestion
+#' @details \code{weights_cpp} calculates the weights based on an approach
 #' by Pan & Yuan (2017). The weight for two baskets i and j is found by at
 #' first calculating \eqn{S_{KS;i,j}} as the Kolmogorov-Smirnov statistic,
 #' which is equal to the difference in response rates for binary variables.
@@ -363,44 +367,112 @@ setMethod("weights_cpp", "TwoStageBasket",
     weight_mat
   })
 
-#' Custom Weights
+#' Weights Based on the Marginal Maximum Likelihood
 #'
 #' @template design
 #' @template dotdotdot
 #'
-#' @details \code{weights_custom} simply returns the matrix that is passed
-#' to \code{mat}. The input of the matrix is used as follows: The value
-#' of the i-th row in the j-th column determines how much information is
-#' shared between two baskets where one basket has i-1 responses and
-#' the other basket hast j-1 responses. 1 is subtracted because 0 is also
-#' a possible number of responses.
+#' @details \code{weights_mml} calculates the weights based on the marginal
+#' maximum likelihood approach by Gravestock & Held (2017). In this approach,
+#' the weight is found as the maximum of the marginal likelihood of the
+#' weight-parameter given the dataset that information should be borrowed
+#' from. However, since this can lead to non-symmetric weights (meaning that
+#' the amount of information that data set 1 borrows from data set 2 is
+#' generally not identical to the information data set 2 borrows from data set
+#' 1), a symmetrised version is used here: For the sharing-weight of
+#' Basket 1 and Basket 2 the MML is calculted two times - once conditional
+#' on the data of Basket 1 and once conditional on the data of Basket 2.
+#' The mean of these two weights is then used, resulting in symmetrical
+#' sharing.
+#'
+#' @references Gravestock, I., & Held, L. (2017). Adaptive power priors with
+#' empirical Bayes for clinical trials. Pharmaceutical statistics, 16(5),
+#' 349-360.
 #'
 #' @return A matrix including the weights of all possible pairwise outcomes.
 #' @export
 #'
 #' @examples
 #' design <- setupOneStageBasket(k = 3, p0 = 0.2)
-#' mat <- matrix(0.5, nrow = 16, ncol = 16)
-#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_custom,
-#'   weight_params = list(mat = mat))
-setGeneric("weights_custom",
-  function(design, ...) standardGeneric("weights_custom")
+#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_mml)
+setGeneric("weights_mml",
+  function(design, ...) standardGeneric("weights_mml")
 )
 
-#' @describeIn weights_custom Custom weights for a single-stage basket design.
+#' @describeIn weights_mml Maximum marginal likelihood weights for a
+#'   single-stage basket design
 #'
 #' @template design
 #' @template n
-#' @param mat A matrix.
 #' @template dotdotdot
-setMethod("weights_custom", "OneStageBasket",
-  function(design, n, mat, ...) {
-    if (!is.matrix(mat)) {
-      stop("mat is not a matrix")
+setMethod("weights_mml", "OneStageBasket",
+  function(design, n, ...) {
+    n_sum <- n + 1
+    mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    r <- 0:n
+    for (i in 1:n_sum) {
+      for (j in 1:n_sum) {
+        f <- function(delta) -extraDistr::dbbinom(
+          x = r[i],
+          size = n,
+          alpha = design@shape1 + delta * r[j],
+          beta = design@shape2 + delta * (n - r[j])
+        )
+
+        l <- stats::optim(0.5, fn = f, lower = 0, upper = 1,
+          method = "Brent")$par
+        mat[i, j] <- ifelse(l <= 6.474096e-09, 0, l)
+      }
     }
-    if (!all(dim(mat) == c(n + 1, n + 1))) {
-      stop("mat doesn't have the right dimension")
-    }
+    mat <- (mat + t(mat)) / 2
+    diag(mat) <- 1
     class(mat) <- "pp"
     mat
+  })
+
+#' @describeIn weights_mml Maximum marginal likelihood weights for a
+#'   two-stage basket design
+#'
+#' @template design
+#' @template n
+#' @template n1
+#' @template dotdotdot
+setMethod("weights_mml", "TwoStageBasket",
+  function(design, n, n1, ...) {
+    r <-  c(0:n1, 0:n)
+    nvec <- c(rep(n1, n1 + 1), rep(n, n + 1))
+    n_sum <- n + n1 + 2
+    mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    for (i in 1:n_sum) {
+      for (j in i:n_sum) {
+        if (i == j) {
+          next
+        } else {
+          f1 <- function(delta) -extraDistr::dbbinom(
+            x = r[i],
+            size = nvec[i],
+            alpha = design@shape1 + delta * r[j],
+            beta = design@shape2 + delta * (nvec[j] - r[j])
+          )
+
+          f2 <- function(delta) -extraDistr::dbbinom(
+            x = r[j],
+            size = nvec[j],
+            alpha = design@shape1 + delta * r[i],
+            beta = design@shape2 + delta * (nvec[i] - r[i])
+          )
+
+          l1 <- stats::optim(0.5, fn = f1, lower = 0, upper = 1,
+            method = "Brent")$par
+          l2 <- stats::optim(0.5, fn = f2, lower = 0, upper = 1,
+            method = "Brent")$par
+          l <- mean(c(l1, l2))
+          mat[i, j] <- ifelse(l <= 6.474096e-09, 0, l)
+        }
+      }
+    }
+    weight_mat <- mat + t(mat)
+    diag(weight_mat) <- 1
+    class(weight_mat) <- "pp"
+    weight_mat
   })

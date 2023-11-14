@@ -34,7 +34,7 @@ A matrix including the weights of all possible pairwise outcomes.
 Weights Based on the Calibrated Power Prior
 }
 \details{
-\code{weights_cpp} calculates the weights based on a suggestion
+\code{weights_cpp} calculates the weights based on an approach
 by Pan & Yuan (2017). The weight for two baskets i and j is found by at
 first calculating \eqn{S_{KS;i,j}} as the Kolmogorov-Smirnov statistic,
 which is equal to the difference in response rates for binary variables.
