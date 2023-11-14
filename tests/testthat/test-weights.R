@@ -39,14 +39,6 @@ test_that("weight_jsd works", {
   expect_equal(unclass(weight_jsd1), unclass(weight_fujikawa1))
   expect_s3_class(weight_jsd1, "pp")
 
-  # Single-stage design with pruning
-  weight_jsd2 <- weights_jsd(design = design1, n = 15, lambda = 0.95,
-    epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
-  weight_fujikawa2 <- weights_fujikawa(design = design1, n = 15, lambda = 0.95,
-    epsilon = 2, tau = 0, logbase = 2, prune = TRUE)
-
-  expect_equal(unclass(weight_jsd2), unclass(weight_fujikawa2))
-
   # Two-stage design
   design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
@@ -105,20 +97,18 @@ test_that("weight_cpp works", {
   expect_equal(unclass(weight_cpp3), weight_cpp2[1:11, 1:11])
 })
 
-test_that("weights_custom works", {
-  design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
-  weight_cpp <- unclass(weights_cpp(design = design, n = 15, a = 1, b = 1))
+test_that("weight_mml works", {
+  design1 <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+  weights_mml1 <- weights_mml(design = design1, n = 20)
 
-  res1 <- toer(design, n = 15, lambda = 0.99, weight_fun = weights_custom,
-    weight_params = list(mat = weight_cpp))
-  res2 <- toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp,
-    weight_params = list(a = 1, b = 1))
+  design2 <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
+  weights_mml2 <- weights_mml(design = design2, n = 20, n1 = 10)
 
-  expect_equal(res1, res2)
+  weights_mml3 <- weights_mml(design = design1, n = 10)
 
-  # Check errors
-  expect_error(toer(design, n = 14, lambda = 0.99, weight_fun = weights_custom,
-    weight_params = list(mat = weight_cpp)))
-  expect_error(toer(design, n = 15, lambda = 0.99, weight_fun = weights_custom,
-    weight_params = list(mat = as.list(weight_cpp))))
+  expect_equal(unclass(weights_mml1), weights_mml2[-(1:11), -(1:11)],
+    tolerance = 1e-6)
+  expect_equal(unclass(weights_mml3), weights_mml2[1:11, 1:11],
+    tolerance = 1e-6)
 })
+

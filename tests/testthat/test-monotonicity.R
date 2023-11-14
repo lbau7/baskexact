@@ -61,7 +61,8 @@ test_that("check_mon_within works", {
 
   weights2 <- weights_fujikawa(design = design1, n = 24, epsilon = 7, tau = 0,
     logbase = 2, prune = FALSE)
-  crit_pool <- get_crit_pool(design = design1, n = 24, lambda = 0.99)
+  crit_pool <- get_crit_pool(design = design1, n = 24, lambda = 0.99,
+    weight_mat = weights2)
   weights2 <- prune_weights(weights2, cut = crit_pool)
 
   res6 <- bskt_final(design = design1, n = 24, lambda = 0.99, r = r6,
@@ -170,8 +171,10 @@ test_that("check_mon_between works", {
   expect_true(res_nodet2)
 
   # Check violating outcomes from no-prune analysis
-  crit_pool <- get_crit_pool(design = design, n = 15, lambda = 0.99)
+  crit_pool <- get_crit_pool(design = design, n = 15, lambda = 0.99,
+    weight_mat = weights1)
   weights2 <- prune_weights(weights1, cut = crit_pool)
+
   res4 <- bskt_final(design = design, n = 15, lambda = 0.99,
     r = ev1$Events[1, ], weight_mat = weights2, globalweight_fun = NULL)
   res5 <- t(apply(ev1$Events[-1, ], 1, function(x) bskt_final(design = design,
@@ -190,3 +193,4 @@ test_that("check_mon_between works", {
 
   expect_equal(res_nodet2, res_slow2)
 })
+

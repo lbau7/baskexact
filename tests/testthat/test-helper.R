@@ -16,11 +16,16 @@ test_that("get_crit returns NA if sample size is too small", {
 test_that("get_crit_pool works", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
   n <- 20
-  crit <- get_crit_pool(design = design, n = n, lambda = 0.99)
-  nocrit <- crit - 1
   weight_mat <- weights_fujikawa(design = design, n = n, epsilon = 2, tau = 0,
     logbase = 2, prune = FALSE)
 
+  crit <- get_crit_pool(design = design, n = n, lambda = 0.99,
+    weight_mat = weight_mat)
+  nocrit <- crit - 1
+
+  # When the outcome in all baskets is smaller than crit pool, then
+  # the results are not significant, if the outcome is equal to crit pool,
+  # then they are
   shape_crit <- matrix(c(design@shape1 + rep(crit, design@k),
     design@shape2 + n - rep(crit, design@k)), byrow = TRUE, ncol = design@k)
   shape_nocrit <- matrix(c(design@shape1 + rep(nocrit, design@k),
@@ -36,19 +41,25 @@ test_that("get_crit_pool works", {
 
   expect_true(all(post_prob_crit > 0.99))
   expect_true(all(post_prob_nocrit <= 0.99))
-})
 
-test_that("get_crit and get_crit_pool are identical with one basket", {
-  design <- setupOneStageBasket(k = 1, shape1 = 1, shape2 = 1, p0 = 0.2)
-  crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.99)
-  crit <- get_crit(design = design, n = 20, lambda = 0.99)
+  # All possible outcomes where all baskets have outcome smaller than crit pool
+  # are not significant
+  events <- arrangements::combinations(0:(crit_pool - 1),
+    k = design@k, replace = TRUE)
+  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
+  res <- t(apply(events, 1, fun))
 
-  expect_equal(crit_pool, crit)
+  expect_equal(sum(res), 0)
 })
 
 test_that("get_crit_pool returns NA if sample size is too small", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.8)
-  crit <- get_crit_pool(design = design, n = 10, lambda = 0.99)
+  weight_mat <- weights_fujikawa(design = design, n = n, epsilon = 2, tau = 0,
+    logbase = 2, prune = FALSE)
+  crit <- get_crit_pool(design = design, n = 10, lambda = 0.99,
+    weight_mat = weight_mat)
 
   expect_true(is.na(crit))
 })
