@@ -52,7 +52,8 @@ setMethod("toer", "OneStageBasket",
 
     results <- match.arg(results)
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, lambda = lambda))
+      n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params))
 
     if (results == "fwer") {
       reject_prob_ew(design = design, p1 = p1, n = n, lambda = lambda,
@@ -85,7 +86,7 @@ setMethod("toer", "TwoStageBasket",
 
     results <- match.arg(results)
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, n1, lambda = lambda))
+      n = n, n1))
 
     if (results == "fwer") {
       reject_prob_ew2(design = design, p1 = p1, n = n, n1 = n1,

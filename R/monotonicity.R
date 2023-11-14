@@ -55,10 +55,13 @@ setMethod("check_mon_within", "OneStageBasket",
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
 
-    crit <- get_crit(design = design, n = n, lambda = lambda)
-    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, lambda = lambda))
+      n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params))
+    crit <- get_crit(design = design, n = n, lambda = lambda)
+    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+      weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
@@ -158,9 +161,9 @@ setMethod("check_mon_between", "OneStageBasket",
            ...) {
     check_params(n = n, lambda = lambda)
 
-    crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, lambda = lambda))
+      n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params))
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)

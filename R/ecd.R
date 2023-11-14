@@ -40,7 +40,8 @@ setMethod("ecd", "OneStageBasket",
     if (is.null(p1)) p1 <- rep(design@p0, design@k)
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, lambda = lambda))
+      n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params))
 
     ecd_calc(design = design, p1 = p1, n = n, lambda = lambda,
       weight_mat = weight_mat, globalweight_fun = globalweight_fun,

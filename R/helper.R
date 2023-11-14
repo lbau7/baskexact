@@ -9,12 +9,17 @@ get_crit <- function(design, n, lambda) {
 
 # Get the critical value with borrowing when the number of responses
 # is equal in all baskets
-get_crit_pool <- function(design, n, lambda) {
-  shape1pool <- (design@shape1 + 1:n) * design@k
-  shape2pool <- (design@shape1 + n - 1:n) * design@k
-  betafun <- function(x, y) 1 - stats::pbeta(design@p0, x, y)
-  prob <- mapply(betafun, shape1pool, shape2pool)
-  which(prob >= lambda)[1]
+get_crit_pool <- function(design, n, lambda, weight_mat,
+                          globalweight_fun = NULL,
+                          globalweight_params = list()) {
+  poolevents <- matrix(0:n, ncol = design@k, nrow = n + 1)
+
+  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
+  res <- rowSums(t(apply(poolevents, 1, fun)))
+  crit <- suppressWarnings(min(which(res == design@k)) - 1)
+  ifelse(is.infinite(crit), NA, crit)
 }
 
 # Returns a vector that determines which baskets are of interest

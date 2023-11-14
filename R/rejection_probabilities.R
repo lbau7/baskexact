@@ -8,7 +8,9 @@ ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun,
 
   # Remove outcomes when no significant results are possible
   crit <- get_crit(design = design, n = n, lambda = lambda)
-  crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+  crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
   sel_nosig <- apply(events, 1, function(x) all(x < crit_pool))
   events_nosig <- events[sel_nosig, ]
   events_sel <- events[!sel_nosig, ]
@@ -87,7 +89,9 @@ reject_prob_ew <- function(design, p1, n, lambda, weight_mat,
 
   # Remove outcomes when no significant results are possible
   crit <- get_crit(design = design, n = n, lambda = lambda)
-  crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda)
+  crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+    globalweight_params = globalweight_params)
   sel_nosig <- apply(events, 1, function(x) all(x < crit_pool))
   events <- events[!sel_nosig, ]
 

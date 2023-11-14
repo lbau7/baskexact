@@ -57,7 +57,7 @@ setMethod("pow", "OneStageBasket",
 
     results <- match.arg(results)
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, lambda = lambda))
+      n = n, lambda = lambda, globalweight_fun, globalweight_params))
 
     if (results == "ewp") {
       reject_prob_ew(design = design, p1 = p1, n = n, lambda = lambda,
