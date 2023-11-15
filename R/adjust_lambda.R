@@ -108,11 +108,13 @@ setMethod("adjust_lambda", "OneStageBasket",
 #' @template n1
 #' @template interim
 #' @template weights
+#' @template globalweights
 #' @template prec_digits
 #' @template dotdotdot
 setMethod("adjust_lambda", "TwoStageBasket",
   function(design, alpha = 0.025, p1 = NULL, n, n1, interim_fun,
            interim_params = list(), weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params = list(),
            prec_digits, ...) {
     p1 <- check_p1(design = design, p1 = p1, type = "toer")
     if (alpha <= 0 | alpha >= 1) stop("alpha must be between 0 and 1")
@@ -123,7 +125,8 @@ setMethod("adjust_lambda", "TwoStageBasket",
     root_fun <- function(x) toer(design = design, p1 = p1, n = n,
       n1 = n1, lambda = x, interim_fun = interim_fun,
       interim_params = interim_params, weight_fun = weight_fun,
-      weight_params = weight_params, results = "fwer") - alpha
+      weight_params = weight_params, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params, results = "fwer") - alpha
 
     # Use uniroot to find lambda close to the smallest lambda that protects
     # the significance level at alpha

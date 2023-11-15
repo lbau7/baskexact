@@ -76,25 +76,32 @@ setMethod("toer", "OneStageBasket",
 #' @template lambda
 #' @template interim
 #' @template weights
+#' @template globalweights
 #' @template results_toer
 #' @template dotdotdot
 setMethod("toer", "TwoStageBasket",
   function(design, p1 = NULL, n, n1, lambda, interim_fun,
            interim_params = list(), weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params = list(),
            results = c("fwer", "group"), ...)  {
     p1 <- check_p1(design = design, p1 = p1, type = "toer")
 
     results <- match.arg(results)
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, n1))
+      n = n, n1 = n1, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params))
 
     if (results == "fwer") {
       reject_prob_ew2(design = design, p1 = p1, n = n, n1 = n1,
         lambda = lambda, interim_fun = interim_fun,
-        interim_params = interim_params, weight_mat = weight_mat, prob = "toer")
+        interim_params = interim_params, weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, prob = "toer")
     } else {
       reject_prob_group2(design = design, p1 = p1, n = n, n1 = n1,
         lambda = lambda, interim_fun = interim_fun,
-        interim_params = interim_params, weight_mat, prob = "toer")
+        interim_params = interim_params, weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, prob = "toer")
     }
   })

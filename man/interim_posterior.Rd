@@ -7,7 +7,17 @@
 \usage{
 interim_posterior(design, ...)
 
-\S4method{interim_posterior}{TwoStageBasket}(design, n1, r1, weight_mat, prob_futstop, prob_effstop, ...)
+\S4method{interim_posterior}{TwoStageBasket}(
+  design,
+  n1,
+  r1,
+  weight_mat,
+  globalweight_fun = NULL,
+  globalweight_params = list(),
+  prob_futstop,
+  prob_effstop,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
@@ -22,6 +32,12 @@ two-stage design.}
 
 \item{weight_mat}{The matrix with all weights. Automatically calculated
 in the functions to which \code{interim_postpred} is passed.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 
 \item{prob_futstop}{Probability cut-off for stopping for futility.}
 

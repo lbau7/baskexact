@@ -14,6 +14,8 @@ interim_postpred(design, ...)
   r1,
   lambda,
   weight_mat,
+  globalweight_fun = NULL,
+  globalweight_params = list(),
   prob_futstop = 0.1,
   prob_effstop = 0.9,
   ...
@@ -37,6 +39,12 @@ information.}
 
 \item{weight_mat}{The matrix with all weights. Automatically calculated
 in the functions to which \code{interim_postpred} is passed.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 
 \item{prob_futstop}{Probability cut-off for stopping for futility.}
 

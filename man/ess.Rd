@@ -17,6 +17,8 @@ ess(design, ...)
   interim_params = list(),
   weight_fun,
   weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
   ...
 )
 }
@@ -50,6 +52,12 @@ weights.}
 
 \item{weight_params}{A list of tuning parameters specific to
 \code{weight_fun}.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 }
 \description{
 Computes the expected sample size of a two-stage basket trial.

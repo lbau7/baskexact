@@ -53,6 +53,8 @@ reject_single_loop <- function(design, p1, n, lambda, weight_fun,
 reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
                                  interim_params = list(), weight_fun,
                                  weight_params = list(),
+                                 globalweight_fun = NULL,
+                                 globalweight_params = list(),
                                  prob = c("toer", "pwr")) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   rej_ew <- 0
@@ -65,7 +67,8 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
         events1 <- c(i1, i2, i3)
         res_int <- do.call(interim_fun, args = c(interim_params,
           design = design, n = n, n1 = n1, r1 = list(events1), lambda = lambda,
-          weight_mat = list(weight_mat)))
+          weight_mat = list(weight_mat), globalweight_fun = globalweight_fun,
+          globalweight_params = list(globalweight_params)))
         if (sum(res_int) == -design@k) {
           next
         } else if (all(res_int %in% c(-1, 1))) {
@@ -84,7 +87,7 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
               rej_ew <- rej_ew + prob_temp
             }
           }
-          # Muss signifikante Interimsergebnise berücksichtigen
+          # Consider significant interim results
           if (sum(res_int == 0) == 1) {
             for (i4 in 0:(n - n1)) {
               events2 <- numeric(3)
@@ -92,7 +95,8 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
               events_sum <- events1 + events2
               res_fin <- bskt_final_int(design = design, n = n, n1 = n1,
                 r = events_sum, res_int = res_int, lambda = lambda,
-                weight_mat = weight_mat)
+                weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+                globalweight_params = globalweight_params)
               if (any(res_fin == 1)) {
                 prob_temp <- get_prob(n = n1, r = events1, p = p1) *
                   get_prob(n = (n - n1), r = i4,
@@ -112,7 +116,8 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
                 events_sum <- events1 + events2
                 res_fin <- bskt_final_int(design = design, n = n, n1 = n1,
                   r = events_sum, res_int = res_int, lambda = lambda,
-                  weight_mat = weight_mat)
+                  weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+                  globalweight_params = globalweight_params)
                 if (any(res_fin == 1)) {
                   prob_temp <- get_prob(n = n1, r = events1, p = p1) *
                     get_prob(n = (n - n1), r = c(i4, i5),
@@ -133,7 +138,9 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
                   events_sum <- events1 + events2
                   res_fin <- bskt_final_int(design = design, n = n, n1 = n1,
                     r = events_sum, res_int = res_int, lambda = lambda,
-                    weight_mat = weight_mat)
+                    weight_mat = weight_mat,
+                    globalweight_fun = globalweight_fun,
+                    globalweight_params = globalweight_params)
                   if (any(res_fin == 1)) {
                     prob_temp <- get_prob(n = n1, r = events1, p = p1) *
                       get_prob(n = (n - n1), r = c(i4, i5, i6),

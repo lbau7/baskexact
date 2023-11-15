@@ -31,6 +31,8 @@ toer(design, ...)
   interim_params = list(),
   weight_fun,
   weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
   results = c("fwer", "group"),
   ...
 )

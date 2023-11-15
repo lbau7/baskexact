@@ -43,14 +43,18 @@ setGeneric("interim_postpred",
 #' @template lambda
 #' @param weight_mat The matrix with all weights. Automatically calculated
 #'   in the functions to which \code{interim_postpred} is passed.
+#' @template globalweights
 #' @param prob_futstop Probability cut-off for stopping for futility.
 #' @param prob_effstop Probability cut-off for stopping for efficacy.
 setMethod("interim_postpred", "TwoStageBasket",
-  function(design, n, n1, r1, lambda, weight_mat, prob_futstop = 0.1,
-           prob_effstop = 0.9, ...) {
+  function(design, n, n1, r1, lambda, weight_mat, globalweight_fun = NULL,
+           globalweight_params = list(), prob_futstop = 0.1, prob_effstop = 0.9,
+           ...) {
     crit <- get_crit(design = design, n = n, lambda = lambda)
-    shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design,
-      n = n1, r = r1)
+    shape_borrow <- beta_borrow(weight_mat = weight_mat,
+      globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params, design = design, n = n1,
+      r = r1)
     pred_prob <- post_pred(n = n, n1 = n1, r1 = r1, shape = shape_borrow,
       crit = crit)
     ifelse(pred_prob < prob_futstop, -1, ifelse(pred_prob > prob_effstop, 1, 0))
@@ -97,12 +101,16 @@ setGeneric("interim_posterior",
 #' @template r1
 #' @param weight_mat The matrix with all weights. Automatically calculated
 #'   in the functions to which \code{interim_postpred} is passed.
+#' @template globalweights
 #' @param prob_futstop Probability cut-off for stopping for futility.
 #' @param prob_effstop Probability cut-off for stopping for efficacy.
 setMethod("interim_posterior", "TwoStageBasket",
-  function(design, n1, r1, weight_mat, prob_futstop, prob_effstop, ...) {
-    shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design,
-      n = n1, r = r1)
+  function(design, n1, r1, weight_mat, globalweight_fun = NULL,
+           globalweight_params = list(), prob_futstop, prob_effstop, ...) {
+    shape_borrow <- beta_borrow(weight_mat = weight_mat,
+      globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params, design = design, n = n1,
+      r = r1)
     post_prob <- post_beta(shape = shape_borrow, p0 = design@p0)
     ifelse(post_prob < prob_futstop, -1, ifelse(post_prob > prob_effstop, 1, 0))
   })

@@ -31,6 +31,8 @@ adjust_lambda(design, ...)
   interim_params = list(),
   weight_fun,
   weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
   prec_digits,
   ...
 )

@@ -190,11 +190,11 @@ reject_prob_group <- function(design, p1, n, lambda, weight_mat,
 
 # Calculates the experimentwise rejection probability for a two-stage design
 reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
-                            interim_params, weight_mat,
-                            prob = c("toer", "pwr")) {
+                            interim_params, weight_mat, globalweight_fun,
+                            globalweight_params, prob = c("toer", "pwr")) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
 
-  # Überprüfen, ob diese Unterscheidung notwendig ist
+  # Check whether the response probabilities under the alternative are equal
   if (sum(targ) == design@k) {
     events_int <- arrangements::combinations(0:n1, k = design@k, replace = TRUE)
   } else {
@@ -203,6 +203,8 @@ reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
   }
 
   int_fun <- function(x) do.call(interim_fun, args = c(interim_params,
+    globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params),
     design = design, n = n, n1 = n1, r1 = list(x), lambda = lambda,
     weight_mat = list(weight_mat)))
   res_int <- t(apply(events_int, 1, int_fun))
@@ -246,7 +248,9 @@ reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
 
     events_fin <- t(t(events_loop) + events_cont[i, ])
     fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
-      r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat)
+      r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
+      globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
 
     fin_res <- t(apply(events_fin, 1, fin_func))
     sig_vec <- apply(fin_res, 1, function(x) any(x[targ] == 1))
@@ -269,15 +273,16 @@ reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
 
 # Calculates the groupwise rejection probability for a two-stage design
 reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
-                               interim_params, weight_mat,
-                               prob = c("toer", "pwr")) {
+                               interim_params, weight_mat, globalweight_fun,
+                               globalweight_params, prob = c("toer", "pwr")) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   events_int <- arrangements::permutations(x = 0:n1, k = design@k,
     replace = TRUE)
 
   int_fun <- function(x) do.call(interim_fun, args = c(interim_params,
     design = design, n = n, n1 = n1, r1 = list(x), lambda = lambda,
-    weight_mat = list(weight_mat)))
+    weight_mat = list(weight_mat), globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
 
   res_int <- t(apply(events_int, 1, int_fun))
   eff_vec <- apply(res_int, 1, function(x) any(x == 1))
@@ -308,7 +313,9 @@ reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
 
     events_fin <- t(t(events_loop) + events_cont[i, ])
     fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
-      r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat)
+      r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
+      globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
     res_fin <- t(apply(events_fin, 1, fin_func))
 
     prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
