@@ -62,6 +62,44 @@ test_that("pow works for a single-stage design with pruning", {
   expect_equal(toer_probs$rejection_probabilities,
     pow_probs$rejection_probabilities)
   expect_false(toer_probs$fwer == pow_probs$ewp)
+
+  # Compare then results when a global weight and pruning is used
+  pow_group2 <- pow(design = design1, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3), results = "group")
+  pow_ewp2 <- pow(design = design1, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3), results = "ewp")
+  mat_jsd <- weights_jsd(design = design1, n = 15, lambda = 0.98,
+    tau = 0, prune = TRUE, globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3))
+  pow_prob2 <- reject_prob_group(design, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_mat = mat_jsd, globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3), prob = "pow")
+  pow_loop2 <- reject_single_loop(design = design1, p1 = c(0.2, 0.4, 0.5),
+    n = 15, lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix, globalweight_params = list(w = 0.3),
+    prob = "pow")
+  pow_false2 <- pow(design = design1, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.9), results = "ewp")
+
+  expect_equal(pow_group2$rejection_probabilities,
+    pow_loop2$rejection_probabilities)
+  expect_equal(pow_group2$ewp, pow_ewp2)
+  expect_equal(pow_group2$rejection_probabilities,
+    pow_loop2$rejection_probabilities)
+  expect_equal(pow_group2$rejection_probabilities,
+    pow_prob2$rejection_probabilities)
+  expect_equal(pow_prob2$ewp, pow_ewp2)
+  expect_true(pow_ewp2 != pow_false2)
 })
 
 test_that("pow works for a two-stage design", {
@@ -95,4 +133,38 @@ test_that("pow works for a two-stage design", {
     rej_pow$rejection_probabilities)
   expect_equal(rej_loop$ewp, rej_pow$ewp)
   expect_equal(ewp_pow, rej_pow$ewp)
+
+  # With a global weight
+  rej_toer2 <- toer(design = design, p1 = c(0.2, 0.2, 0.5), n = 15,
+    n1 = 7, lambda = 0.97, interim_fun = interim_postpred,
+    weight_fun = weights_fujikawa,
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 1), results = "group")
+  rej_pow2 <- pow(design = design, p1 = c(0.2, 0.2, 0.5), n = 15,
+    n1 = 7, lambda = 0.97, interim_fun = interim_postpred,
+    weight_fun = weights_fujikawa,
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 1), results = "group")
+  rej_loop2 <- reject_twostage_loop(design = design, p1 = c(0.2, 0.2, 0.5),
+    n = 15, n1 = 7, lambda = 0.97, interim_fun = interim_postpred,
+    weight_fun = weights_fujikawa, globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 1), prob = "pow")
+  ewp_pow2 <- pow(design = design, p1 = c(0.2, 0.2, 0.5), n = 15,
+    n1 = 7, lambda = 0.97, interim_fun = interim_postpred,
+    weight_fun = weights_fujikawa,
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 1), results = "ewp")
+  ewp_false2 <- pow(design = design, p1 = c(0.2, 0.2, 0.5), n = 15,
+    n1 = 7, lambda = 0.97, interim_fun = interim_postpred,
+    weight_fun = weights_fujikawa,
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2), results = "ewp")
+
+  expect_equal(rej_toer2$rejection_probabilities,
+    rej_pow2$rejection_probabilities)
+  expect_equal(rej_loop2$rejection_probabilities,
+    rej_pow2$rejection_probabilities)
+  expect_equal(rej_loop2$ewp, rej_pow2$ewp)
+  expect_equal(ewp_pow2, rej_pow2$ewp)
+  expect_true(ewp_pow2 != ewp_false2)
 })

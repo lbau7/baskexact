@@ -98,6 +98,38 @@ test_that("toer works for a single-stage design without pruning", {
   expect_equal(toer_fwer4, toer_loop4$fwer)
   expect_equal(toer_group4$rejection_probabilities,
     toer_loop4$rejection_probabilities)
+
+  # Compare then results when a global weight and pruning is used
+  toer_group5 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3),
+    results = "group")
+  mat_jsd <- weights_jsd(design = design, n = 15, lambda = 0.98,
+    tau = 0, prune = TRUE, globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3))
+  toer_prob5 <- reject_prob_group(design, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_mat = mat_jsd, globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3), prob = "toer")
+  toer_fwer5 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 15,
+    lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.3),
+    results = "fwer")
+  toer_loop5 <- reject_single_loop(design = design, p1 = c(0.2, 0.4, 0.5),
+    n = 15, lambda = 0.98, weight_fun = weights_jsd,
+    weight_params = list(tau = 0, prune = TRUE),
+    globalweight_fun = globalweights_fix, globalweight_params = list(w = 0.3),
+    prob = "toer")
+
+  expect_equal(toer_fwer5, toer_group5$fwer)
+  expect_equal(toer_fwer5, toer_loop5$fwer)
+  expect_equal(toer_group5$rejection_probabilities,
+    toer_loop5$rejection_probabilities)
+  expect_equal(toer_group5$rejection_probabilities,
+    toer_prob5$rejection_probabilities)
 })
 
 test_that("toer works for a single-stage design with pruning", {
@@ -226,4 +258,26 @@ test_that("toer works for a two-stage design", {
   expect_equal(toer_fwer3, toer_loop3$fwer)
   expect_equal(toer_group3$rejection_probabilities,
     toer_loop3$rejection_probabilities)
+
+  # Compare the results of "fwer" and "group" when a global weight is used
+  toer_group4 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 15, n1 = 7,
+    lambda = 0.95, interim_fun = interim_postpred, weight_fun = weights_cpp,
+    weight_params = list(a = 1, b = 1), globalweight_fun =
+      globalweights_diff, globalweight_params = list(eps_global = 1),
+    results = "group")
+  toer_fwer4 <- toer(design = design, p1 = c(0.2, 0.4, 0.5), n = 15, n1 = 7,
+    lambda = 0.95, interim_fun = interim_postpred, weight_fun = weights_cpp,
+    weight_params = list(a = 1, b = 1), globalweight_fun =
+      globalweights_diff, globalweight_params = list(eps_global = 1),
+    results = "fwer")
+  toer_loop4 <- reject_twostage_loop(design = design, p1 = c(0.2, 0.4, 0.5),
+    n = 15, n1 = 7, lambda = 0.95, interim_fun = interim_postpred,
+    weight_fun = weights_cpp, weight_params = list(a = 1, b = 1),
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 1), prob = "toer")
+
+  expect_equal(toer_fwer4, toer_group4$fwer)
+  expect_equal(toer_fwer4, toer_loop4$fwer)
+  expect_equal(toer_group4$rejection_probabilities,
+    toer_loop4$rejection_probabilities)
 })
