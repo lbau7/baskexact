@@ -1,5 +1,5 @@
 # Calculates expected number of correct decisions for a single-stage design
-ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun,
+ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun = NULL,
                      globalweight_params) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = "pwr")
 
@@ -80,7 +80,7 @@ ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun,
 
 # Calculates the experimentwise rejection probability for a single-stage design
 reject_prob_ew <- function(design, p1, n, lambda, weight_mat,
-                           globalweight_fun, globalweight_params,
+                           globalweight_fun = NULL, globalweight_params,
                            prob = c("toer", "pwr")) {
   # Computational shortcuts don't work with unequal priors or n!
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
@@ -149,8 +149,7 @@ reject_prob_ew <- function(design, p1, n, lambda, weight_mat,
 
 # Calculates the groupwise rejection probabilities for a single-stage design
 reject_prob_group <- function(design, p1, n, lambda, weight_mat,
-                              globalweight_fun = globalweight_fun,
-                              globalweight_params = globalweight_params,
+                              globalweight_fun = NULL, globalweight_params,
                               prob = c("toer", "pwr")) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   # Create matrix with all possible outcomes
@@ -190,7 +189,7 @@ reject_prob_group <- function(design, p1, n, lambda, weight_mat,
 
 # Calculates the experimentwise rejection probability for a two-stage design
 reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
-                            interim_params, weight_mat, globalweight_fun,
+                            interim_params, weight_mat, globalweight_fun = NULL,
                             globalweight_params, prob = c("toer", "pwr")) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
 
@@ -273,7 +272,8 @@ reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
 
 # Calculates the groupwise rejection probability for a two-stage design
 reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
-                               interim_params, weight_mat, globalweight_fun,
+                               interim_params, weight_mat,
+                               globalweight_fun = NULL,
                                globalweight_params, prob = c("toer", "pwr")) {
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   events_int <- arrangements::permutations(x = 0:n1, k = design@k,

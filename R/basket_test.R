@@ -39,7 +39,8 @@ setMethod("basket_test", "OneStageBasket",
     if (any(r > n) | any(r < 0)) stop("responses must be between 0 and n")
     if (length(r) != design@k) stop("r must have length k")
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, lambda = lambda, globalweight_fun, globalweight_params))
+      n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = list(globalweight_params)))
 
     all_combs <- arrangements::combinations(r, 2) + 1
     weights_vec <- weight_mat[all_combs]

@@ -36,8 +36,7 @@ setMethod("ess", "TwoStageBasket",
     p1 <- check_p1(design = design, p1 = p1, type = "ess")
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n, n1 = n1, lambda = lambda, globalweight_fun = globalweight_fun,
-      globalweight_params = globalweight_params))
+      n = n, n1 = n1))
 
     events_int <- arrangements::permutations(x = 0:n1, k = design@k,
       replace = TRUE)

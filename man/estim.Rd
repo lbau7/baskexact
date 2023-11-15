@@ -11,6 +11,7 @@ estim(design, ...)
   design,
   p1,
   n,
+  lambda = NULL,
   weight_fun,
   weight_params = list(),
   globalweight_fun = NULL,
@@ -29,6 +30,9 @@ estim(design, ...)
 baskets.}
 
 \item{n}{The sample size per basket.}
+
+\item{lambda}{Probability threshold. This is only required when
+pruning is applied.}
 
 \item{weight_fun}{Which function should be used to calculate the pairwise
 weights.}

@@ -50,6 +50,12 @@ If this is \code{TRUE} then \code{lambda} is also required and
 if \code{globalweight_fun} is not \code{NULL} then
 \code{globalweight_fun} and \code{globalweight_params} are also used.}
 
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
+
 \item{n1}{The sample size per basket for the interim analysis in case of a
 two-stage design.}
 }

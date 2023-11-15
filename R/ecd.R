@@ -41,7 +41,7 @@ setMethod("ecd", "OneStageBasket",
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda, globalweight_fun = globalweight_fun,
-      globalweight_params = globalweight_params))
+      globalweight_params = list(globalweight_params)))
 
     ecd_calc(design = design, p1 = p1, n = n, lambda = lambda,
       weight_mat = weight_mat, globalweight_fun = globalweight_fun,

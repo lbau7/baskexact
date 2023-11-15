@@ -1,6 +1,6 @@
 # Function that conducts the final test in a one-stage design
 bskt_final <- function(design, n, lambda, r, weight_mat,
-                       globalweight_fun  = NULL, globalweight_params) {
+                       globalweight_fun = NULL, globalweight_params) {
   shape_borrow <- beta_borrow(weight_mat = weight_mat, design = design, n = n,
     r = r, globalweight_fun = globalweight_fun,
     globalweight_params = globalweight_params)

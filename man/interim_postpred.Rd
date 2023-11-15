@@ -15,7 +15,7 @@ interim_postpred(design, ...)
   lambda,
   weight_mat,
   globalweight_fun = NULL,
-  globalweight_params = list(),
+  globalweight_params,
   prob_futstop = 0.1,
   prob_effstop = 0.9,
   ...

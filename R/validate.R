@@ -11,15 +11,16 @@ reject_single_loop <- function(design, p1, n, lambda, weight_fun,
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
   rej_ew <- 0
   rej_group <- c(0, 0, 0)
-  weights <- do.call(weight_fun, args = c(weight_params, design = design,
-    n = n, lambda = lambda))
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
 
   for (i1 in 0:n) {
     for (i2 in 0:n) {
       for (i3 in 0:n) {
         events <- c(i1, i2, i3)
         res <- bskt_final(design = design, n = n, lambda = lambda, r = events,
-          weight_mat = weights, globalweight_fun = globalweight_fun,
+          weight_mat = weight_mat, globalweight_fun = globalweight_fun,
           globalweight_params = globalweight_params)
 
         if (any(res == 1)) {
@@ -176,12 +177,13 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
 mon_within_loop <- function(design, n, lambda, weight_fun, weight_params,
                             globalweight_fun = NULL,
                             globalweight_params = list()) {
-  weights <- do.call(weight_fun, args = c(weight_params, design = design,
-    n = n, lambda = lambda))
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
   func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-    r = x, weight_mat = weights, globalweight_fun = globalweight_fun,
+    r = x, weight_mat = weight_mat, globalweight_fun = globalweight_fun,
     globalweight_params = globalweight_params)
 
   viol <- c()
@@ -201,12 +203,13 @@ mon_within_loop <- function(design, n, lambda, weight_fun, weight_params,
 mon_between_loop <- function(design, n, lambda, weight_fun, weight_params,
                              globalweight_fun = NULL,
                              globalweight_params = list()) {
-  weights <- do.call(weight_fun, args = c(weight_params, design = design,
-    n = n, lambda = lambda))
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
 
   events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
   func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
-    r = x, weight_mat = weights, globalweight_fun = globalweight_fun,
+    r = x, weight_mat = weight_mat, globalweight_fun = globalweight_fun,
     globalweight_params = globalweight_params)
 
   res <- numeric(nrow(events))
@@ -237,7 +240,8 @@ ecd_loop <- function(design, p1, n, lambda, weight_fun,
                      weight_params = list(), globalweight_fun = NULL,
                      globalweight_params = list()) {
   weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-    n = n, lambda = lambda))
+    n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
   events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
   targ <- get_targ(p0 = design@p0, p1 = p1, prob = "pwr")
 

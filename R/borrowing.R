@@ -13,7 +13,7 @@ beta_borrow.fujikawa <- function(weight_mat, globalweight_fun = NULL,
   weights_vec <- weight_mat[all_combs]
 
   if (!is.null(globalweight_fun)) {
-    w <- do.call(globalweight_fun, args = c(n = n, list(r = r),
+    w <- do.call(globalweight_fun, args = c(n = n, r = list(r),
       globalweight_params))
     weights_vec <- weights_vec * w
   }
@@ -32,7 +32,7 @@ beta_borrow.pp <- function(weight_mat, globalweight_fun = NULL,
   weights_vec <- weight_mat[all_combs]
 
   if (!is.null(globalweight_fun)) {
-  w <- do.call(globalweight_fun, args = c(n = n, list(r = r),
+  w <- do.call(globalweight_fun, args = c(n = n, r = list(r),
     globalweight_params))
   weights_vec <- weights_vec * w
   }
@@ -61,7 +61,7 @@ beta_borrow_int.fujikawa <- function(weight_mat, globalweight_fun = NULL,
   weights_vec <- weight_mat[all_combs]
 
   if (!is.null(globalweight_fun)) {
-    w <- do.call(globalweight_fun, args = c(n = n, list(r = r),
+    w <- do.call(globalweight_fun, args = c(n = n, r = list(r),
       globalweight_params))
     weights_vec <- weights_vec * w
   }
@@ -83,7 +83,7 @@ beta_borrow_int.pp <- function(weight_mat, globalweight_fun = NULL,
   weights_vec <- weight_mat[all_combs]
 
   if (!is.null(globalweight_fun)) {
-    w <- do.call(globalweight_fun, args = c(n = n, list(r = r),
+    w <- do.call(globalweight_fun, args = c(n = n, r = list(r),
       globalweight_params))
     weights_vec <- weights_vec * w
   }

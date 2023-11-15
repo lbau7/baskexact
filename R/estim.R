@@ -24,15 +24,18 @@ setGeneric("estim",
 #' @template design
 #' @template p1_pow
 #' @template n
+#' @param lambda Probability threshold. This is only required when
+#'   pruning is applied.
 #' @template weights
 #' @template globalweights
 #' @template dotdotdot
 setMethod("estim", "OneStageBasket",
-  function(design, p1, n, weight_fun, weight_params = list(),
+  function(design, p1, n, lambda = NULL, weight_fun, weight_params = list(),
            globalweight_fun = NULL, globalweight_params = list(), ...) {
     check_p1(design = design, p1 = p1, type = "estim")
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
-      n = n))
+      n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = list(globalweight_params)))
 
     events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
     prob_events <- apply(events, 1, function(x) get_prob(n = n, r = x,

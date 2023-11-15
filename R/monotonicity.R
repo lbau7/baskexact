@@ -57,7 +57,7 @@ setMethod("check_mon_within", "OneStageBasket",
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda, globalweight_fun = globalweight_fun,
-      globalweight_params = globalweight_params))
+      globalweight_params = list(globalweight_params)))
     crit <- get_crit(design = design, n = n, lambda = lambda)
     crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
       weight_mat = weight_mat, globalweight_fun = globalweight_fun,
@@ -163,7 +163,7 @@ setMethod("check_mon_between", "OneStageBasket",
 
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n, lambda = lambda, globalweight_fun = globalweight_fun,
-      globalweight_params = globalweight_params))
+      globalweight_params = list(globalweight_params)))
 
     # Create matrix with all possible outcomes (without permutations)
     events <- arrangements::combinations(0:n, k = design@k, replace = TRUE)
