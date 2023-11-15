@@ -52,9 +52,11 @@ setGeneric("weights_fujikawa",
 #' @template lambda
 #' @template tuning_jsd
 #' @template prune
+#' @template globalweights
 setMethod("weights_fujikawa", "OneStageBasket",
   function(design, n, lambda, epsilon = 1.25, tau = 0.5, logbase = 2,
-           prune = FALSE, ...) {
+           prune = FALSE, globalweight_fun = NULL,
+           globalweight_params = list(), ...) {
     shape1_post <- design@shape1 + c(0:n)
     shape2_post <- design@shape2 + c(n:0)
     n_sum <- n + 1
@@ -178,10 +180,12 @@ setGeneric("weights_jsd",
 #' @template n
 #' @template lambda
 #' @template tuning_jsd
+#' @template globalweights
 #' @template prune
 setMethod("weights_jsd", "OneStageBasket",
   function(design, n, lambda, epsilon = 1.25, tau = 0.5, logbase = 2,
-           prune = FALSE, ...) {
+           prune = FALSE, globalweight_fun = NULL,
+           globalweight_params = list(), ...) {
     shape1_post <- design@shape1 + c(0:n)
     shape2_post <- design@shape2 + c(n:0)
     n_sum <- n + 1

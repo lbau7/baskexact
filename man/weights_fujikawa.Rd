@@ -16,6 +16,8 @@ weights_fujikawa(design, ...)
   tau = 0.5,
   logbase = 2,
   prune = FALSE,
+  globalweight_fun = NULL,
+  globalweight_params = list(),
   ...
 )
 
@@ -43,7 +45,16 @@ used to compute the Jensen-Shannon divergence. See details for more
 information.}
 
 \item{prune}{Whether baskets with a number of responses below the
-critical pooled value should be pruned before the final analysis.}
+critical pooled value should be pruned before the final analysis.
+If this is \code{TRUE} then \code{lambda} is also required and
+if \code{globalweight_fun} is not \code{NULL} then
+\code{globalweight_fun} and \code{globalweight_params} are also used.}
+
+\item{globalweight_fun}{Which function should be used to calculate the
+global weights.}
+
+\item{globalweight_params}{A list of tuning parameters specific to
+\code{globalweight_fun}.}
 
 \item{n1}{The sample size per basket for the interim analysis in case of a
 two-stage design.}
