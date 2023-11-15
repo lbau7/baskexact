@@ -64,15 +64,14 @@ test_that("toer works with various weights", {
 test_that("get_crit_pool works with various weights", {
   skip_on_cran()
 
-  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
-    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
-    globalweight_params = globalweight_params)
+  fun <- function(x) bskt_final(design = design, n = 20, lambda = 0.95, r = x,
+    weight_mat = weight_mat)
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
 
   # CPP Weights
-  mat_cpp <- weights_cpp(design = design, n = 20, a = 0.5, b = 0.5)
-  crit_pool <- get_crit_pool(design = design, n = n, lambda = 0.95,
-    weight_mat = mat_cpp)
+  weight_mat <- weights_cpp(design = design, n = 20, a = 0.5, b = 0.5)
+  crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.95,
+    weight_mat = weight_mat)
   events <- arrangements::combinations(0:(crit_pool - 1),
     k = design@k, replace = TRUE)
   res_cpp <- t(apply(events, 1, fun))
@@ -80,12 +79,12 @@ test_that("get_crit_pool works with various weights", {
   expect_equal(sum(res_cpp), 0)
 
   # CPP Weights with Fixed Global Weight
-  fun2 <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
+  fun2 <- function(x) bskt_final(design = design, n = 20, lambda = 0.95, r = x,
     weight_mat = weight_mat, globalweight_fun = globalweights_fix,
     globalweight_params = list(w = 0.3))
 
-  crit_pool <- get_crit_pool(design = design, n = n, lambda = 0.95,
-    weight_mat = mat_cpp, globalweight_fun = globalweights_fix,
+  crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.95,
+    weight_mat = weight_mat, globalweight_fun = globalweights_fix,
     globalweight_params = list(w = 0.3))
   events <- arrangements::combinations(0:(crit_pool - 1),
     k = design@k, replace = TRUE)
@@ -95,10 +94,10 @@ test_that("get_crit_pool works with various weights", {
   expect_equal(sum(res_cpp_fix), 0)
 
   # MML Weights
-  mat_mml <- weights_mml(design = design, n = 20)
+  weight_mat <- weights_mml(design = design, n = 20)
 
-  crit_pool <- get_crit_pool(design = design, n = n, lambda = 0.95,
-    weight_mat = mat_mml)
+  crit_pool <- get_crit_pool(design = design, n = 20, lambda = 0.95,
+    weight_mat = weight_mat)
   events <- arrangements::combinations(0:(crit_pool - 1),
     k = design@k, replace = TRUE)
   res_mml <- t(apply(events, 1, fun))

@@ -44,11 +44,10 @@ test_that("get_crit_pool works", {
 
   # All possible outcomes where all baskets have outcome smaller than crit pool
   # are not significant
-  events <- arrangements::combinations(0:(crit_pool - 1),
+  events <- arrangements::combinations(0:(crit - 1),
     k = design@k, replace = TRUE)
-  fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
-    weight_mat = weight_mat, globalweight_fun = globalweight_fun,
-    globalweight_params = globalweight_params)
+  fun <- function(x) bskt_final(design = design, n = n, lambda = 0.99, r = x,
+    weight_mat = weight_mat)
   res <- t(apply(events, 1, fun))
 
   expect_equal(sum(res), 0)
@@ -56,7 +55,7 @@ test_that("get_crit_pool works", {
 
 test_that("get_crit_pool returns NA if sample size is too small", {
   design <- setupOneStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.8)
-  weight_mat <- weights_fujikawa(design = design, n = n, epsilon = 2, tau = 0,
+  weight_mat <- weights_fujikawa(design = design, n = 10, epsilon = 2, tau = 0,
     logbase = 2, prune = FALSE)
   crit <- get_crit_pool(design = design, n = 10, lambda = 0.99,
     weight_mat = weight_mat)
