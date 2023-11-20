@@ -77,7 +77,7 @@ test_that("pow works for a single-stage design with pruning", {
   mat_jsd <- weights_jsd(design = design1, n = 15, lambda = 0.98,
     tau = 0, prune = TRUE, globalweight_fun = globalweights_fix,
     globalweight_params = list(w = 0.3))
-  pow_prob2 <- reject_prob_group(design, p1 = c(0.2, 0.4, 0.5), n = 15,
+  pow_prob2 <- reject_prob_group(design1, p1 = c(0.2, 0.4, 0.5), n = 15,
     lambda = 0.98, weight_mat = mat_jsd, globalweight_fun = globalweights_fix,
     globalweight_params = list(w = 0.3), prob = "pow")
   pow_loop2 <- reject_single_loop(design = design1, p1 = c(0.2, 0.4, 0.5),
