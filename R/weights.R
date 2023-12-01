@@ -300,11 +300,14 @@ setGeneric("weights_cpp",
 #'
 #' @template design
 #' @template n
-#' @param a first tuning parameter
-#' @param b second tuning parameter
+#' @template tuning_cpp
+#' @template prune
+#' @template lambda
+#' @template globalweights
 #' @template dotdotdot
 setMethod("weights_cpp", "OneStageBasket",
-  function(design, n, a = 1, b = 1, ...) {
+  function(design, n, a = 1, b = 1, prune = FALSE, lambda,
+    globalweight_fun = NULL, globalweight_params = list(), ...) {
     n_sum <- n + 1
     weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
     r1 <- r2 <- 0:n
@@ -329,6 +332,14 @@ setMethod("weights_cpp", "OneStageBasket",
     weight_mat <- weight_mat + t(weight_mat)
     diag(weight_mat) <- 1
     class(weight_mat) <- "pp"
+
+    if (prune) {
+      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+        weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
+      weight_mat <- prune_weights(weight_mat = weight_mat, cut = crit_pool)
+    }
+
     weight_mat
   })
 
@@ -338,8 +349,7 @@ setMethod("weights_cpp", "OneStageBasket",
 #' @template design
 #' @template n
 #' @template n1
-#' @param a first tuning parameter
-#' @param b second tuning parameter
+#' @template tuning_cpp
 #' @template dotdotdot
 setMethod("weights_cpp", "TwoStageBasket",
   function(design, n, n1, a = 1, b = 1, ...) {
