@@ -115,6 +115,30 @@ test_that("check_mon_within works", {
 
   expect_equal(res_noviol1, res_noviol2)
   expect_equal(res_noviol1, res_noviol3)
+
+  ## Check vectorized version
+  # Compare results
+  res_vect <- check_mon_within(design = design1, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = c(0.5, 1),
+      tau = 0, logbase = 2, prune = FALSE), details = TRUE)
+  res_vectcheck1 <- ifelse(check_mon_within(design = design1, n = 24,
+    lambda = 0.99, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 0.5, tau = 0, logbase = 2, prune = FALSE),
+    details = FALSE), "check", "x")
+  res_vectcheck2 <- ifelse(check_mon_within(design = design1, n = 24,
+    lambda = 0.99, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
+    details = FALSE), "check", "x")
+  expect_equal(as.vector(res_vect), c(res_vectcheck1, res_vectcheck2))
+
+  # Multidimensional vectorization
+  res_vect2 <- check_mon_within(design = design, n = 12, lambda = 0.99,
+    weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2)),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = c(0.5, 0.7)))
+
+  expect_true(all(dim(res_vect2) == c(2, 2, 2)))
 })
 
 test_that("check_mon_between works", {
@@ -192,5 +216,29 @@ test_that("check_mon_between works", {
     logbase = 2, prune = TRUE))
 
   expect_equal(res_nodet2, res_slow2)
+
+  ## Check vectorized version
+  # Compare results
+  res_vect <- check_mon_between(design = design1, n = 24, lambda = 0.99,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2:3,
+      tau = 0.5, logbase = 2, prune = FALSE), details = TRUE)
+  res_vectcheck1 <- ifelse(check_mon_between(design = design1, n = 24,
+    lambda = 0.99, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 2, tau = 0.5, logbase = 2, prune = FALSE),
+    details = FALSE), "check", "x")
+  res_vectcheck2 <- ifelse(check_mon_between(design = design1, n = 24,
+    lambda = 0.99, weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = 3, tau = 0.5, logbase = 2, prune = FALSE),
+    details = FALSE), "check", "x")
+  expect_equal(as.vector(res_vect), c(res_vectcheck1, res_vectcheck2))
+
+  # Multidimensional vectorization
+  res_vect2 <- check_mon_between(design = design, n = 12, lambda = 0.99,
+    weight_fun = weights_fujikawa,
+    weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2)),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = c(0.5, 0.7)))
+
+  expect_true(all(dim(res_vect2) == c(2, 2, 2)))
 })
 

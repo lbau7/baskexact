@@ -49,7 +49,10 @@ violated should be returned, in case there are any.}
 If \code{details = FALSE} then only a logical value is returned.
 If \code{details = TRUE} then if there are any cases where the
 within-trial monotonicity condition is violated, a list of these cases and
-their results are returned.
+their results are returned. If at least one tuning parameter is a vector,
+then an array that shows for which combination of parameters the
+within-trial monotonicity condition holds. In this case, the argument
+\code{details} is ignored.
 }
 \description{
 Checks whether the within-trial monotonicity condition holds.
@@ -68,7 +71,8 @@ pooled critical value is the smallest integer c for which all null
 hypotheses can be rejected if the number of responses is exactly c for
 all baskets.
 
-This method is implemented for the class \code{\link{OneStageBasket}}.
+The function is vectorized, such that vectors can be specified in
+\code{weight_params} and \code{globalweight_params}.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -78,7 +82,22 @@ single-stage design.
 }}
 \examples{
 design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.2)
+
+# Without vectorization, with details
+design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.2)
 check_mon_within(design = design, n = 24, lambda = 0.99,
   weight_fun = weights_fujikawa, weight_params = list(epsilon = 0.5,
    tau = 0), details = TRUE)
+
+# Vectorized
+check_mon_within(design = design, n = 24, lambda = 0.99,
+  weight_fun = weights_fujikawa,
+  weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2, 0.3)),
+  globalweight_fun = globalweights_fix,
+  globalweight_params = list(w = c(0.5, 0.7)))
+}
+\references{
+Baumann, L., Krisam, J., & Kieser, M. (2022). Monotonicity conditions for
+avoiding counterintuitive decisions in basket trials. Biometrical Journal,
+64(5), 934-947.
 }
