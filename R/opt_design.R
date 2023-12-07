@@ -86,15 +86,16 @@ setMethod("opt_design", "OneStageBasket",
       }
       p()
       res_loop
-      }
-
+    }
     if (lgrid == 1) {
       names(ecd_res) <- c("Lambda", colnames(scenarios))
-      c(ecd_res, "Mean_ECD" = mean(ecd_res[-1]))
+      c(ecd_res, "Mean ECD" = mean(ecd_res[-1]))
     } else {
       colnames(ecd_res) <- c("Lambda", colnames(scenarios))
-      ecd_res <- cbind(grid, ecd_res, "Mean_ECD" = rowMeans(ecd_res[, -1]))
-      ecd_res[order(ecd_res[, ncol(ecd_res)], decreasing = TRUE), ]
+      ecd_res <- cbind(grid, ecd_res, "Mean ECD" = rowMeans(ecd_res[, -1]))
+      ecd_res <- ecd_res[order(ecd_res[, ncol(ecd_res)], decreasing = TRUE), ]
+      rownames(ecd_res) <- NULL
+      ecd_res
     }
   })
 
