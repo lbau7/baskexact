@@ -222,7 +222,7 @@ test_that("check_mon_between works", {
   res_vect <- check_mon_between(design = design, n = 24, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2:3,
       tau = 0.5, logbase = 2, prune = FALSE), details = TRUE)
-  res_vectcheck1 <- check_mon_between(design = design1, n = 24,
+  res_vectcheck1 <- check_mon_between(design = design, n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 2, tau = 0.5, logbase = 2, prune = FALSE),
     details = FALSE)
