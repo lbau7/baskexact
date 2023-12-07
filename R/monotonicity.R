@@ -71,7 +71,7 @@ setGeneric("check_mon_within",
 setMethod("check_mon_within", "OneStageBasket",
   function(design, n, lambda, weight_fun, weight_params = list(),
            globalweight_fun = NULL, globalweight_params = list(),
-           details, ...) {
+           details = TRUE, ...) {
     # Not working with different priors and different n!
     check_params(n = n, lambda = lambda)
 
@@ -92,11 +92,10 @@ setMethod("check_mon_within", "OneStageBasket",
         } else {
           loop_gwparams <- list()
         }
-        check_loop <- check_mon_within(design = design, n = n, lambda = lambda,
+        check_mon_within(design = design, n = n, lambda = lambda,
           weight_fun = weight_fun, weight_params = loop_wparams,
           globalweight_fun = globalweight_fun,
           globalweight_params = loop_gwparams, details = FALSE, ...)
-        ifelse(check_loop, "check", "x")
       }
       param_grid <- cbind(param_grid, mon_res)
       array(param_grid[, ncol(param_grid)],
@@ -221,7 +220,8 @@ setGeneric("check_mon_between",
 #' @template dotdotdot
 setMethod("check_mon_between", "OneStageBasket",
   function(design, n, lambda, weight_fun, weight_params = list(),
-           details, globalweight_fun = NULL, globalweight_params = list(),
+           details = TRUE, globalweight_fun = NULL,
+           globalweight_params = list(),
            ...) {
     check_params(n = n, lambda = lambda)
 
@@ -242,11 +242,10 @@ setMethod("check_mon_between", "OneStageBasket",
         } else {
           loop_gwparams <- list()
         }
-        check_loop <- check_mon_between(design = design, n = n, lambda = lambda,
+        check_mon_between(design = design, n = n, lambda = lambda,
           weight_fun = weight_fun, weight_params = loop_wparams,
           globalweight_fun = globalweight_fun,
           globalweight_params = loop_gwparams, details = FALSE, ...)
-        ifelse(check_loop, "check", "x")
       }
       param_grid <- cbind(param_grid, mon_res)
       array(param_grid[, ncol(param_grid)],
