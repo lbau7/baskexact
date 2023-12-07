@@ -121,18 +121,18 @@ test_that("check_mon_within works", {
   res_vect <- check_mon_within(design = design1, n = 24, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = c(0.5, 1),
       tau = 0, logbase = 2, prune = FALSE), details = TRUE)
-  res_vectcheck1 <- ifelse(check_mon_within(design = design1, n = 24,
+  res_vectcheck1 <- check_mon_within(design = design1, n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 0.5, tau = 0, logbase = 2, prune = FALSE),
-    details = FALSE), "check", "x")
-  res_vectcheck2 <- ifelse(check_mon_within(design = design1, n = 24,
+    details = FALSE)
+  res_vectcheck2 <- check_mon_within(design = design1, n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 1, tau = 0, logbase = 2, prune = FALSE),
-    details = FALSE), "check", "x")
+    details = FALSE)
   expect_equal(as.vector(res_vect), c(res_vectcheck1, res_vectcheck2))
 
   # Multidimensional vectorization
-  res_vect2 <- check_mon_within(design = design, n = 12, lambda = 0.99,
+  res_vect2 <- check_mon_within(design = design1, n = 12, lambda = 0.99,
     weight_fun = weights_fujikawa,
     weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2)),
     globalweight_fun = globalweights_fix,
@@ -219,17 +219,17 @@ test_that("check_mon_between works", {
 
   ## Check vectorized version
   # Compare results
-  res_vect <- check_mon_between(design = design1, n = 24, lambda = 0.99,
+  res_vect <- check_mon_between(design = design, n = 24, lambda = 0.99,
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 2:3,
       tau = 0.5, logbase = 2, prune = FALSE), details = TRUE)
-  res_vectcheck1 <- ifelse(check_mon_between(design = design1, n = 24,
+  res_vectcheck1 <- check_mon_between(design = design1, n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 2, tau = 0.5, logbase = 2, prune = FALSE),
-    details = FALSE), "check", "x")
-  res_vectcheck2 <- ifelse(check_mon_between(design = design1, n = 24,
+    details = FALSE)
+  res_vectcheck2 <- check_mon_between(design = design, n = 24,
     lambda = 0.99, weight_fun = weights_fujikawa,
     weight_params = list(epsilon = 3, tau = 0.5, logbase = 2, prune = FALSE),
-    details = FALSE), "check", "x")
+    details = FALSE)
   expect_equal(as.vector(res_vect), c(res_vectcheck1, res_vectcheck2))
 
   # Multidimensional vectorization
