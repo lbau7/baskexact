@@ -3,18 +3,19 @@ NULL
 
 #' Plot Weight Functions
 #'
+#' @template design
 #' @template n
 #' @param r1 Number of responses in one basket
 #' @template weights
+#'
+#' @details A Beta(1, 1) prior is always used.
 #'
 #' @return A plot.
 #' @export
 #'
 #' @examples
 #' plot_weights(n = 20, r1 = 10, weight_fun = weights_jsd)
-plot_weights <- function(n, r1, weight_fun, weight_params = list()) {
-  design <- setupOneStageBasket(k = 2, p0 = 0.2)
-
+plot_weights <- function(design, n, r1, weight_fun, weight_params = list()) {
   if (!any(lapply(weight_params, length) > 1)) {
     weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
       n = n))
