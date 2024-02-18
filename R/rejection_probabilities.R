@@ -78,6 +78,70 @@ ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun = NULL,
   exp_cd
 }
 
+# Calculates expected number of correct decisions for a two-stage design
+ecd_calc2 <- function(design, p1, n, n1, lambda, interim_fun, interim_params,
+                      weight_mat, globalweight_fun = NULL,
+                      globalweight_params) {
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = "pwr")
+
+  events_int <- arrangements::permutations(x = 0:n1, k = design@k,
+    replace = TRUE)
+  int_fun <- function(x) do.call(interim_fun, args = c(interim_params,
+    design = design, n = n, n1 = n1, r1 = list(x), lambda = lambda,
+    weight_mat = list(weight_mat), globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
+
+  res_int <- t(apply(events_int, 1, int_fun))
+  cont_vec <- apply(res_int, 1, function(x) any(x == 0))
+  events_cont <- events_int[cont_vec, , drop = FALSE]
+  res_cont <- res_int[cont_vec, , drop = FALSE]
+
+  events_nocont <- events_int[!cont_vec, , drop = FALSE]
+  res_nocont <- res_int[!cont_vec, , drop = FALSE]
+  res_nocont <- ifelse(res_nocont == -1, 0, res_nocont)
+  cd <- rowSums(t(apply(res_nocont, 1, function(x) x == targ)))
+  prob_nocont <- apply(events_nocont, 1, function(x) get_prob(n = n1,
+    r = x, p = p1))
+  exp_cd <- sum(cd * prob_nocont)
+
+  all_events_stg2 <- lapply(1:design@k, function(x)
+    arrangements::permutations(x = 0:(n - n1), k = x, replace = TRUE))
+
+  if (nrow(events_cont) > 0) {
+    for (i in 1:nrow(events_cont)) {
+      no_cont <- sum(res_cont[i, ] == 0)
+      events_stg2 <- all_events_stg2[[no_cont]]
+      if (no_cont < design@k) {
+        events_loop <- matrix(0, nrow = nrow(events_stg2), ncol = design@k)
+        events_loop[, res_cont[i,] == 0] <- events_stg2
+      } else {
+        events_loop <- events_stg2
+      }
+
+      events_fin <- t(t(events_loop) + events_cont[i, ])
+      fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
+        r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
+      res_fin <- t(apply(events_fin, 1, fin_func))
+      # fin_func returns -1 for baskets that were significant
+      # at interim
+      res_fin <- t(apply(res_fin, 1, function(x) ifelse(x == -1,
+        0, x)))
+      res_fin <- t(apply(res_fin, 1, function(x) ifelse(res_cont[i, ] == 1,
+        1, x)))
+      cd <- rowSums(t(apply(res_fin, 1, function(x) x == targ)))
+
+      prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
+      prob_stg2 <- apply(events_stg2, 1, function(x)
+        get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
+      exp_cd <- exp_cd + sum(cd * prob_cont * prob_stg2)
+    }
+  }
+  exp_cd
+}
+
+
 # Calculates the experimentwise rejection probability for a single-stage design
 reject_prob_ew <- function(design, p1, n, lambda, weight_mat,
                            globalweight_fun = NULL, globalweight_params,
@@ -343,4 +407,75 @@ reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
       ewp = rej_ew
     )
   }
+}
+
+# Estimation for two-stage designs
+estim_group <- function(design, p1, n, n1, lambda, interim_fun,
+                        interim_params, weight_mat, globalweight_fun = NULL,
+                        globalweight_params = list()) {
+  events_int <- arrangements::permutations(x = 0:n1, k = design@k,
+    replace = TRUE)
+
+  int_fun <- function(x) do.call(interim_fun, args = c(interim_params,
+    design = design, n = n, n1 = n1, r1 = list(x), lambda = lambda,
+    weight_mat = list(weight_mat), globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
+
+  res_int <- t(apply(events_int, 1, int_fun))
+  cont_vec <- apply(res_int, 1, function(x) any(x == 0))
+
+  events_cont <- events_int[cont_vec, , drop = FALSE]
+  res_cont <- res_int[cont_vec, , drop = FALSE]
+
+  events_nocont <- events_int[!cont_vec, , drop = FALSE]
+  prob_nocont <- apply(events_nocont, 1,
+    function(x) get_prob(n = n1, r = x, p = p1))
+
+  post_means_w <- 0
+  mse_w <- 0
+  if (nrow(events_nocont) > 0) {
+    post_shapes_nocont <- apply(events_nocont, 1,
+      function(x) beta_borrow(weight_mat = weight_mat, # Baustelle
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, design = design, n = n1,
+        r = x), simplify = FALSE)
+    post_means_nocont <- t(sapply(post_shapes_nocont, mean_beta))
+    mse_nocont <- t(t(post_means_nocont) - p1)^2
+    post_means_w <- post_means_w + colSums(post_means_nocont * prob_nocont)
+    mse_w <- mse_w + colSums(mse_nocont * prob_nocont)
+  }
+
+  all_events_stg2 <- lapply(1:design@k, function(x)
+    arrangements::permutations(x = 0:(n - n1), k = x, replace = TRUE))
+
+  for (i in 1:nrow(events_cont)) {
+    no_cont <- sum(res_cont[i, ] == 0)
+    events_stg2 <- all_events_stg2[[no_cont]]
+    if (no_cont < design@k) {
+      events_loop <- matrix(0, nrow = nrow(events_stg2), ncol = design@k)
+      events_loop[, res_cont[i,] == 0] <- events_stg2
+    } else {
+      events_loop <- events_stg2
+    }
+
+    events_fin <- t(t(events_loop) + events_cont[i, ])
+    post_shapes_fin <- apply(events_fin, 1,
+      function(x) beta_borrow_int(weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params, design = design,
+        n = n, n1 = n1, r = x, res_int = res_cont[i, ]), simplify = FALSE)
+    post_means_fin <- t(sapply(post_shapes_fin, mean_beta))
+    mse_fin <- t(t(post_means_fin) - p1)^2
+
+    prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
+    prob_stg2 <- apply(events_stg2, 1, function(x)
+      get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
+    post_means_w <- post_means_w + colSums(post_means_fin * prob_stg2) *
+      prob_cont
+    mse_w <- mse_w + colSums(mse_fin * prob_stg2) * prob_cont
+  }
+  list(
+    Mean = post_means_w,
+    MSE = mse_w
+  )
 }

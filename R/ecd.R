@@ -47,3 +47,32 @@ setMethod("ecd", "OneStageBasket",
       weight_mat = weight_mat, globalweight_fun = globalweight_fun,
       globalweight_params = globalweight_params)
   })
+
+#' @describeIn ecd Expected number of correction decisions for a two-stage
+#'   basket design.
+#'
+#' @template design
+#' @template p1_pow
+#' @template n
+#' @template n1
+#' @template lambda
+#' @template interim
+#' @template weights
+#' @template globalweights
+#' @template dotdotdot
+setMethod("ecd", "TwoStageBasket",
+  function(design, p1 = NULL, n, n1, lambda, interim_fun,
+           interim_params = list(), weight_fun, weight_params = list(),
+           globalweight_fun = NULL, globalweight_params = list(), ...) {
+    check_params(n = n, lambda = lambda)
+    if (is.null(p1)) p1 <- rep(design@p0, design@k)
+
+    weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+      n = n, n1 = n1, lambda = lambda, globalweight_fun = globalweight_fun,
+      globalweight_params = list(globalweight_params)))
+
+    ecd_calc2(design = design, p1 = p1, n = n, n1 = n1, lambda = lambda,
+      weight_mat = weight_mat, interim_fun = interim_fun,
+      interim_params = interim_params, globalweight_fun = globalweight_fun,
+      globalweight_params = globalweight_params)
+  })

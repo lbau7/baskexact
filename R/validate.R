@@ -173,6 +173,137 @@ reject_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
   }
 }
 
+# Loop-based calculation of the mean posterior means of a single-stage
+# basket design with 3 baskets
+estim_loop <- function(design, p1, n, lambda = NULL, weight_fun,
+                       weight_params, globalweight_fun = NULL,
+                       globalweight_params = list()) {
+  post_means_w <- c(0, 0, 0)
+  mse_w <- c(0, 0, 0)
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, lambda = lambda, globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
+
+  for (i1 in 0:n) {
+    for (i2 in 0:n) {
+      for (i3 in 0:n) {
+        events_loop <- c(i1, i2, i3)
+        prob <- get_prob(n = n, r = events_loop, p = p1)
+        bshape <- beta_borrow(weight_mat = weight_mat,
+          globalweight_fun = globalweight_fun,
+          globalweight_params = globalweight_params, design = design,
+          n = n, r = events_loop)
+        bmean <- mean_beta(bshape)
+        mse <- (bmean - p1)^2
+        post_means_w <- post_means_w + bmean * prob
+        mse_w <- mse_w + mse * prob
+      }
+    }
+  }
+  list(
+    Mean = post_means_w,
+    MSE = mse_w
+  )
+}
+
+# Loop-based calculation of the mean posterior means of a two-stage
+# basket design with 3 baskets
+estim_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
+                                interim_params = list(), weight_fun,
+                                weight_params = list(), globalweight_fun = NULL,
+                                globalweight_params = list()) {
+  post_means_w <- c(0, 0, 0)
+  mse_w <- c(0, 0, 0)
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, n1 = n1, lambda = lambda))
+  for (i1 in 0:n1) {
+    for (i2 in 0:n1) {
+      for (i3 in 0:n1) {
+        events1 <- c(i1, i2, i3)
+        res_int <- do.call(interim_fun, args = c(interim_params,
+          design = design, n = n, n1 = n1, r1 = list(events1), lambda = lambda,
+          weight_mat = list(weight_mat), globalweight_fun = globalweight_fun,
+          globalweight_params = list(globalweight_params)))
+        if (all(res_int %in% c(-1, 1))) {
+          prob <- get_prob(n = n1, r = events1, p = p1)
+          bshape <- beta_borrow(weight_mat = weight_mat,
+            globalweight_fun = globalweight_fun,
+            globalweight_params = globalweight_params, design = design,
+            n = n1, r = events1)
+          bmean <- mean_beta(bshape)
+          mse <- (bmean - p1)^2
+          post_means_w <- post_means_w + bmean * prob
+          mse_w <- mse_w + mse * prob
+        } else {
+          if (sum(res_int == 0) == 1) {
+            for (i4 in 0:(n - n1)) {
+              events2 <- numeric(3)
+              events2[which(res_int == 0)] <- i4
+              events_sum <- events1 + events2
+
+              prob1 <- get_prob(n = n1, r = events1, p = p1)
+              prob2 <- get_prob(n = n - n1, r = i4,
+                p = p1[which(res_int == 0)])
+              bshape <- beta_borrow_int(weight_mat = weight_mat,
+                globalweight_fun = globalweight_fun,
+                globalweight_params = globalweight_params, design = design,
+                n = n, n1 = n1, r = events_sum, res_int = res_int)
+              bmean <- mean_beta(bshape)
+              mse <- (bmean - p1)^2
+              post_means_w <- post_means_w + bmean * prob1 * prob2
+              mse_w <- mse_w + mse * prob1 * prob2
+            }
+          } else if (sum(res_int == 0) == 2) {
+            for (i4 in 0:(n - n1)) {
+              for (i5 in 0:(n - n1)) {
+                events2 <- numeric(3)
+                events2[which(res_int == 0)] <- c(i4, i5)
+                events_sum <- events1 + events2
+
+                prob1 <- get_prob(n = n1, r = events1, p = p1)
+                prob2 <- get_prob(n = n - n1, r = c(i4, i5),
+                  p = p1[which(res_int == 0)])
+                bshape <- beta_borrow_int(weight_mat = weight_mat,
+                  globalweight_fun = globalweight_fun,
+                  globalweight_params = globalweight_params, design = design,
+                  n = n, n1 = n1, r = events_sum, res_int = res_int)
+                bmean <- mean_beta(bshape)
+                mse <- (bmean - p1)^2
+                post_means_w <- post_means_w + bmean * prob1 * prob2
+                mse_w <- mse_w + mse * prob1 * prob2
+              }
+            }
+          } else {
+            for (i4 in 0:(n - n1)) {
+              for (i5 in 0:(n - n1)) {
+                for (i6 in 0:(n - n1)) {
+                  events2 <- c(i4, i5, i6)
+                  events_sum <- events1 + events2
+
+                  prob1 <- get_prob(n = n1, r = events1, p = p1)
+                  prob2 <- get_prob(n = n - n1, r = events2, p = p1)
+                  bshape <- beta_borrow_int(weight_mat = weight_mat,
+                    globalweight_fun = globalweight_fun,
+                    globalweight_params = globalweight_params, design = design,
+                    n = n, n1 = n1, r = events_sum, res_int = res_int)
+                  bmean <- mean_beta(bshape)
+                  mse <- (bmean - p1)^2
+                  post_means_w <- post_means_w + bmean * prob1 * prob2
+                  mse_w <- mse_w + mse * prob1 * prob2
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  list(
+    Mean = post_means_w,
+    MSE = mse_w
+  )
+}
+
 # Loop-based version of check_mon_within
 mon_within_loop <- function(design, n, lambda, weight_fun, weight_params,
                             globalweight_fun = NULL,
@@ -235,7 +366,7 @@ mon_between_loop <- function(design, n, lambda, weight_fun, weight_params,
   }
 }
 
-# Loop-based version of ecd
+# Loop-based version of ecd for single-stage design
 ecd_loop <- function(design, p1, n, lambda, weight_fun,
                      weight_params = list(), globalweight_fun = NULL,
                      globalweight_params = list()) {
@@ -258,8 +389,89 @@ ecd_loop <- function(design, p1, n, lambda, weight_fun,
   sum(cd * prob)
 }
 
+# Loop-based version of ecd for two-stage design
+ecd_twostage_loop <- function(design, p1, n, n1, lambda, interim_fun,
+                              interim_params, weight_fun, weight_params,
+                              globalweight_fun = NULL,
+                              globalweight_params = list()) {
+  weight_mat <- do.call(weight_fun, args = c(weight_params, design = design,
+    n = n, n1 = n1, lambda = lambda, globalweight_fun = globalweight_fun,
+    globalweight_params = list(globalweight_params)))
 
+  events <- arrangements::permutations(0:n, k = design@k, replace = TRUE)
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = "pwr")
+  cd <- 0
 
-
-
-
+  for (i1 in 0:n1) {
+    for (i2 in 0:n1) {
+      for (i3 in 0:n1) {
+        events1 <- c(i1, i2, i3)
+        res_int <- do.call(interim_fun, args = c(interim_params,
+          design = design, n = n, n1 = n1, r1 = list(events1), lambda = lambda,
+          weight_mat = list(weight_mat), globalweight_fun = globalweight_fun,
+          globalweight_params = list(globalweight_params)))
+        if (sum(res_int) == -design@k) {
+          cd <- cd + sum(c(0, 0, 0) == targ) *
+            get_prob(n = n1, r = events1, p = p1)
+        } else if (all(res_int %in% c(-1, 1))) {
+          res_int <- ifelse(res_int == -1, 0, res_int)
+          cd <- cd + sum(res_int == targ) * get_prob(n = n1, r = events1,
+            p = p1)
+        } else {
+          if (sum(res_int == 0) == 1) {
+            for (i4 in 0:(n - n1)) {
+              events2 <- numeric(3)
+              events2[which(res_int == 0)] <- i4
+              events_sum <- events1 + events2
+              res_fin <- bskt_final_int(design = design, n = n, n1 = n1,
+                r = events_sum, res_int = res_int, lambda = lambda,
+                weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+                globalweight_params = globalweight_params)
+              res_fin <- ifelse(res_int == 1, 1, res_fin)
+              res_fin <- ifelse(res_fin == -1, 0, res_fin)
+              cd <- cd + sum(res_fin == targ) * get_prob(n = n1, r = events1,
+                p = p1) * get_prob(n = (n - n1), r = i4,
+                  p = p1[which(res_int == 0)])
+            }
+          } else if (sum(res_int == 0) == 2) {
+            for (i4 in 0:(n - n1)) {
+              for (i5 in 0:(n - n1)) {
+                events2 <- numeric(3)
+                events2[which(res_int == 0)] <- c(i4, i5)
+                events_sum <- events1 + events2
+                res_fin <- bskt_final_int(design = design, n = n, n1 = n1,
+                  r = events_sum, res_int = res_int, lambda = lambda,
+                  weight_mat = weight_mat, globalweight_fun = globalweight_fun,
+                  globalweight_params = globalweight_params)
+                res_fin <- ifelse(res_int == 1, 1, res_fin)
+                res_fin <- ifelse(res_fin == -1, 0, res_fin)
+                cd <- cd + sum(res_fin == targ) * get_prob(n = n1, r = events1,
+                  p = p1) * get_prob(n = (n - n1), r = c(i4, i5),
+                    p = p1[which(res_int == 0)])
+              }
+            }
+          } else {
+            for (i4 in 0:(n - n1)) {
+              for (i5 in 0:(n - n1)) {
+                for (i6 in 0:(n - n1)) {
+                  events2 <- c(i4, i5, i6)
+                  events_sum <- events1 + events2
+                  res_fin <- bskt_final_int(design = design, n = n, n1 = n1,
+                    r = events_sum, res_int = res_int, lambda = lambda,
+                    weight_mat = weight_mat,
+                    globalweight_fun = globalweight_fun,
+                    globalweight_params = globalweight_params)
+                  res_fin <- ifelse(res_int == 1, 1, res_fin)
+                  res_fin <- ifelse(res_fin == -1, 0, res_fin)
+                  cd <- cd + sum(res_fin == targ) * get_prob(n = n1, r = events1,
+                    p = p1) * get_prob(n = (n - n1), r = c(i4, i5, i6), p = p1)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  cd
+}
