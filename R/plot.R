@@ -8,7 +8,8 @@ NULL
 #' @param r1 Number of responses in one basket
 #' @template weights
 #'
-#' @details A Beta(1, 1) prior is always used.
+#' @details The design object is only used for the prior parameters,
+#' which affect the weights of some weight functions.
 #'
 #' @return A plot.
 #' @export

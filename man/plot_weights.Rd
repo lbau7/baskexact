@@ -4,9 +4,12 @@
 \alias{plot_weights}
 \title{Plot Weight Functions}
 \usage{
-plot_weights(n, r1, weight_fun, weight_params = list())
+plot_weights(design, n, r1, weight_fun, weight_params = list())
 }
 \arguments{
+\item{design}{An object of class \code{Basket} created by
+\code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
+
 \item{n}{The sample size per basket.}
 
 \item{r1}{Number of responses in one basket}
@@ -23,6 +26,10 @@ A plot.
 \description{
 Plot Weight Functions
 }
+\details{
+A Beta(1, 1) prior is always used.
+}
 \examples{
-plot_weights(n = 20, r1 = 10, weight_fun = weights_jsd)
+design <- setupOneStageBasket(k = 3, p0 = 0.2, shape1 = 1, shape2 = 1)
+plot_weights(design = design, n = 20, r1 = 10, weight_fun = weights_jsd)
 }
