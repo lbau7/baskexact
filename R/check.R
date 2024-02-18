@@ -21,7 +21,7 @@ check_p1 <- function(design, p1, type) {
     stop("no true null hypotheses, cannot compute type 1 error rate")
   }
   if ((type == "pwr") & all(p1 == design@p0)) {
-    stop("no true alternative hyoptheses, cannot compute power")
+    stop("no true alternative hypotheses, cannot compute power")
   }
 
   p1
