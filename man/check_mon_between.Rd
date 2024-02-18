@@ -13,7 +13,7 @@ check_mon_between(design, ...)
   lambda,
   weight_fun,
   weight_params = list(),
-  details,
+  details = TRUE,
   globalweight_fun = NULL,
   globalweight_params = list(),
   ...

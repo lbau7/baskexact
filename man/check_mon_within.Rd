@@ -15,7 +15,7 @@ check_mon_within(design, ...)
   weight_params = list(),
   globalweight_fun = NULL,
   globalweight_params = list(),
-  details,
+  details = TRUE,
   ...
 )
 }
