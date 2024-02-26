@@ -58,7 +58,8 @@ setMethod("opt_design", "OneStageBasket",
     lambdas <- numeric(lgrid)
     p <- progressr::progressor(steps = lgrid)
 
-    ecd_res <- foreach(i = 1:lgrid, .combine = 'rbind') %dofuture% {
+    ecd_res <- foreach(i = 1:lgrid, .combine = 'rbind',
+                       .options.future = list(seed = TRUE)) %dofuture% {
       res_loop <- numeric(ncol(scenarios) + 1)
       if (l1 >= 1) {
         ploop1 <- as.list(grid[i, 1:l1, drop = FALSE])
@@ -89,7 +90,7 @@ setMethod("opt_design", "OneStageBasket",
     }
     if (lgrid == 1) {
       names(ecd_res) <- c("Lambda", colnames(scenarios))
-      cbind(ecd_res, "Mean ECD" = mean(ecd_res[-1]))
+      ecd_res <- cbind(ecd_res, "Mean ECD" = mean(ecd_res[-1]))
       as.data.frame(t(ecd_res))
     } else {
       colnames(ecd_res) <- c("Lambda", colnames(scenarios))
