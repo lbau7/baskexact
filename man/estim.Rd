@@ -3,6 +3,7 @@
 \name{estim}
 \alias{estim}
 \alias{estim,OneStageBasket-method}
+\alias{estim,TwoStageBasket-method}
 \title{Posterior Mean and Mean Squared Error}
 \usage{
 estim(design, ...)
@@ -12,6 +13,21 @@ estim(design, ...)
   p1,
   n,
   lambda = NULL,
+  weight_fun,
+  weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
+  ...
+)
+
+\S4method{estim}{TwoStageBasket}(
+  design,
+  p1,
+  n,
+  n1,
+  lambda = NULL,
+  interim_fun,
+  interim_params = list(),
   weight_fun,
   weight_params = list(),
   globalweight_fun = NULL,
@@ -31,8 +47,8 @@ baskets.}
 
 \item{n}{The sample size per basket.}
 
-\item{lambda}{Probability threshold. This is only required when
-pruning is applied.}
+\item{lambda}{The posterior probability threshold. See details for more
+information.}
 
 \item{weight_fun}{Which function should be used to calculate the pairwise
 weights.}
@@ -45,6 +61,15 @@ global weights.}
 
 \item{globalweight_params}{A list of tuning parameters specific to
 \code{globalweight_fun}.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
+
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
 }
 \value{
 A list containing means of the posterior distributions and
@@ -57,6 +82,9 @@ design.
 \section{Methods (by class)}{
 \itemize{
 \item \code{estim(OneStageBasket)}: Posterior mean and mean squared error for a single-stage
+basket design.
+
+\item \code{estim(TwoStageBasket)}: Posterior mean and mean squared error for a two-stage
 basket design.
 
 }}

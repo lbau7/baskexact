@@ -3,6 +3,7 @@
 \name{ecd}
 \alias{ecd}
 \alias{ecd,OneStageBasket-method}
+\alias{ecd,TwoStageBasket-method}
 \title{Expected number of correct decisions}
 \usage{
 ecd(design, ...)
@@ -12,6 +13,21 @@ ecd(design, ...)
   p1 = NULL,
   n,
   lambda,
+  weight_fun,
+  weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
+  ...
+)
+
+\S4method{ecd}{TwoStageBasket}(
+  design,
+  p1 = NULL,
+  n,
+  n1,
+  lambda,
+  interim_fun,
+  interim_params = list(),
   weight_fun,
   weight_params = list(),
   globalweight_fun = NULL,
@@ -45,6 +61,15 @@ global weights.}
 
 \item{globalweight_params}{A list of tuning parameters specific to
 \code{globalweight_fun}.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
+
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
 }
 \value{
 A numeric value.
@@ -60,6 +85,9 @@ actually inactive baskets that are declared inactive.
 \section{Methods (by class)}{
 \itemize{
 \item \code{ecd(OneStageBasket)}: Expected number of correction decisions for a single-stage
+basket design.
+
+\item \code{ecd(TwoStageBasket)}: Expected number of correction decisions for a two-stage
 basket design.
 
 }}

@@ -27,7 +27,8 @@ A plot.
 Plot Weight Functions
 }
 \details{
-A Beta(1, 1) prior is always used.
+The design object is only used for the prior parameters,
+which affect the weights of some weight functions.
 }
 \examples{
 design <- setupOneStageBasket(k = 3, p0 = 0.2, shape1 = 1, shape2 = 1)
