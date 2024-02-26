@@ -89,7 +89,8 @@ setMethod("opt_design", "OneStageBasket",
     }
     if (lgrid == 1) {
       names(ecd_res) <- c("Lambda", colnames(scenarios))
-      c(ecd_res, "Mean ECD" = mean(ecd_res[-1]))
+      cbind(ecd_res, "Mean ECD" = mean(ecd_res[-1]))
+      as.data.frame(t(ecd_res))
     } else {
       colnames(ecd_res) <- c("Lambda", colnames(scenarios))
       ecd_res <- cbind(grid, ecd_res, "Mean ECD" = rowMeans(ecd_res[, -1]))
