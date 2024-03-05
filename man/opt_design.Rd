@@ -3,6 +3,7 @@
 \name{opt_design}
 \alias{opt_design}
 \alias{opt_design,OneStageBasket-method}
+\alias{opt_design,TwoStageBasket-method}
 \title{Optimize a Basket Design}
 \usage{
 opt_design(design, ...)
@@ -11,6 +12,22 @@ opt_design(design, ...)
   design,
   n,
   alpha,
+  weight_fun,
+  weight_params = list(),
+  globalweight_fun = NULL,
+  globalweight_params = list(),
+  scenarios,
+  prec_digits,
+  ...
+)
+
+\S4method{opt_design}{TwoStageBasket}(
+  design,
+  n,
+  n1,
+  alpha,
+  interim_fun,
+  interim_params,
   weight_fun,
   weight_params = list(),
   globalweight_fun = NULL,
@@ -48,6 +65,15 @@ matrix can be created with \code{\link{get_scenarios}}.}
 
 \item{prec_digits}{Number of decimal places that are considered when
 adjusting lambda.}
+
+\item{n1}{The sample size per basket for the interim analysis in case of a
+two-stage design.}
+
+\item{interim_fun}{Which type of interim analysis should be conducted
+in case of a two-stage design.}
+
+\item{interim_params}{A list of tuning parameters specific to
+\code{interim_fun}.}
 }
 \value{
 A matrix with the ECDs under all scenarios and the mean ECD for
@@ -68,6 +94,8 @@ below \code{alpha}.
 \section{Methods (by class)}{
 \itemize{
 \item \code{opt_design(OneStageBasket)}: Optimize a single-stage basket design.
+
+\item \code{opt_design(TwoStageBasket)}: Optimize a two-stage basket design.
 
 }}
 \examples{
