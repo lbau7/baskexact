@@ -290,7 +290,7 @@ reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
   # Continue only when there is no relevant significant result and
   # there is at least one basket left in the second stage
   cont_vec <- !eff_vec
-  cont_vec[which(cont_vec)] <- apply(res_int[cont_vec, ], 1,
+  cont_vec[which(cont_vec)] <- apply(res_int[cont_vec, , drop = FALSE], 1,
     function(x) any(x == 0))
   events_cont <- events_int[cont_vec, , drop = FALSE]
   res_cont <- res_int[cont_vec, , drop = FALSE]
@@ -298,38 +298,40 @@ reject_prob_ew2 <- function(design, p1, n, n1, lambda, interim_fun,
   all_events_stg2 <- lapply(1:design@k, function(x)
     arrangements::permutations(x = 0:(n - n1), k = x, replace = TRUE))
 
-  for (i in 1:nrow(events_cont)) {
-    no_cont <- sum(res_cont[i, ] == 0)
-    # Event-Matrix für die Gruppen die in Stage 2 gehen
-    events_stg2 <- all_events_stg2[[no_cont]]
-    if (no_cont < design@k) {
-      events_loop <- matrix(0, nrow = nrow(events_stg2), ncol = design@k)
-      events_loop[, res_cont[i, ] == 0] <- events_stg2
-    } else {
-      events_loop <- events_stg2
+  if (nrow(events_cont) > 0) {
+    for (i in 1:nrow(events_cont)) {
+      no_cont <- sum(res_cont[i, ] == 0)
+      # Event-Matrix für die Gruppen die in Stage 2 gehen
+      events_stg2 <- all_events_stg2[[no_cont]]
+      if (no_cont < design@k) {
+        events_loop <- matrix(0, nrow = nrow(events_stg2), ncol = design@k)
+        events_loop[, res_cont[i, ] == 0] <- events_stg2
+      } else {
+        events_loop <- events_stg2
+      }
+
+      events_fin <- t(t(events_loop) + events_cont[i, ])
+      fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
+        r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
+
+      fin_res <- t(apply(events_fin, 1, fin_func))
+      sig_vec <- apply(fin_res, 1, function(x) any(x[targ] == 1))
+
+      prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
+      prob_sig <- apply(events_stg2[sig_vec, , drop = FALSE], 1, function(x)
+        get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
+      rej_prob_temp <- prob_cont * sum(prob_sig)
+
+      if ((rej_prob_temp > 0) & (length(unique(events_cont[i, ])) > 1) &
+          (sum(targ) == design@k)) {
+        perm_temp <- arrangements::npermutations(
+          x = unique(events_cont[i, ]), freq = table(events_cont[i, ]))
+        rej_prob_temp <- rej_prob_temp * perm_temp
+      }
+      rej_prob <- rej_prob + rej_prob_temp
     }
-
-    events_fin <- t(t(events_loop) + events_cont[i, ])
-    fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
-      r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
-      globalweight_fun = globalweight_fun,
-      globalweight_params = globalweight_params)
-
-    fin_res <- t(apply(events_fin, 1, fin_func))
-    sig_vec <- apply(fin_res, 1, function(x) any(x[targ] == 1))
-
-    prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
-    prob_sig <- apply(events_stg2[sig_vec, , drop = FALSE], 1, function(x)
-      get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
-    rej_prob_temp <- prob_cont * sum(prob_sig)
-
-    if ((rej_prob_temp > 0) & (length(unique(events_cont[i, ])) > 1) &
-        (sum(targ) == design@k)) {
-      perm_temp <- arrangements::npermutations(
-        x = unique(events_cont[i, ]), freq = table(events_cont[i, ]))
-      rej_prob_temp <- rej_prob_temp * perm_temp
-    }
-    rej_prob <- rej_prob + rej_prob_temp
   }
   rej_prob
 }
@@ -350,8 +352,9 @@ reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
 
   res_int <- t(apply(events_int, 1, int_fun))
   eff_vec <- apply(res_int, 1, function(x) any(x == 1))
-  eff_vec_targ <- apply(res_int[eff_vec, ], 1, function(x) any(x[targ] == 1))
-  events_eff <- events_int[eff_vec, ]
+  eff_vec_targ <- apply(res_int[eff_vec, , drop = FALSE], 1,
+    function(x) any(x[targ] == 1))
+  events_eff <- events_int[eff_vec, , drop = FALSE]
   probs_eff <- apply(events_eff, 1,
     function(x) get_prob(n = n1, r = x, p = p1))
   res_eff <- res_int[eff_vec,]
@@ -365,34 +368,36 @@ reject_prob_group2 <- function(design, p1, n, n1, lambda, interim_fun,
   all_events_stg2 <- lapply(1:design@k, function(x)
     arrangements::permutations(x = 0:(n - n1), k = x, replace = TRUE))
 
-  for (i in 1:nrow(events_cont)) {
-    no_cont <- sum(res_cont[i, ] == 0)
-    events_stg2 <- all_events_stg2[[no_cont]]
-    if (no_cont < design@k) {
-      events_loop <- matrix(0, nrow = nrow(events_stg2), ncol = design@k)
-      events_loop[, res_cont[i,] == 0] <- events_stg2
-    } else {
-      events_loop <- events_stg2
-    }
+  if (nrow(events_cont) > 0) {
+    for (i in 1:nrow(events_cont)) {
+      no_cont <- sum(res_cont[i, ] == 0)
+      events_stg2 <- all_events_stg2[[no_cont]]
+      if (no_cont < design@k) {
+        events_loop <- matrix(0, nrow = nrow(events_stg2), ncol = design@k)
+        events_loop[, res_cont[i,] == 0] <- events_stg2
+      } else {
+        events_loop <- events_stg2
+      }
 
-    events_fin <- t(t(events_loop) + events_cont[i, ])
-    fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
-      r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
-      globalweight_fun = globalweight_fun,
-      globalweight_params = globalweight_params)
-    res_fin <- t(apply(events_fin, 1, fin_func))
+      events_fin <- t(t(events_loop) + events_cont[i, ])
+      fin_func <- function(x) bskt_final_int(design = design, n = n, n1 = n1,
+        r = x, res_int = res_cont[i, ], lambda = lambda, weight_mat = weight_mat,
+        globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
+      res_fin <- t(apply(events_fin, 1, fin_func))
 
-    prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
-    prob_stg2 <- apply(events_stg2, 1, function(x)
-      get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
-    rej <- rej + colSums(apply(res_fin == 1, 2, function(x) x * prob_stg2)) *
-      prob_cont
+      prob_cont <- get_prob(n = n1, r = events_cont[i, ], p = p1)
+      prob_stg2 <- apply(events_stg2, 1, function(x)
+        get_prob(n = n - n1, r = x, p = p1[res_cont[i, ] == 0]))
+      rej <- rej + colSums(apply(res_fin == 1, 2, function(x) x * prob_stg2)) *
+        prob_cont
 
-    # Ignore results which were already counted for rej_ew after the
-    # interim analysis
-    if (all(res_cont[i, ][targ] != 1)) {
-      rej_ew <- rej_ew + sum(apply(res_fin, 1, function(x) any(x[targ] == 1)) *
-          prob_stg2) * prob_cont
+      # Ignore results which were already counted for rej_ew after the
+      # interim analysis
+      if (all(res_cont[i, ][targ] != 1)) {
+        rej_ew <- rej_ew + sum(apply(res_fin, 1, function(x) any(x[targ] == 1)) *
+            prob_stg2) * prob_cont
+      }
     }
   }
 
