@@ -490,3 +490,110 @@ setMethod("weights_mml", "TwoStageBasket",
     class(weight_mat) <- "pp"
     weight_mat
   })
+
+#' Separate Analysis in Each Basket
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details When \code{weights_separate} is used as a weight function, a
+#' separate analysis performed in each basket.
+#'
+#' @return A weight matrix where all weights are 0.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_separate)
+setGeneric("weights_separate",
+  function(design, ...) standardGeneric("weights_separate")
+)
+
+#' @describeIn weights_separate Separate analysis for a single-stage basket
+#'   design
+#'
+#' @template design
+#' @template n
+#' @template dotdotdot
+setMethod("weights_separate", "OneStageBasket",
+  function(design, n, ...) {
+    n_sum <- n + 1
+    mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    class(mat) <- "pp"
+    mat
+  })
+
+#' @describeIn weights_separate Separate analysis for a two-stage basket
+#'   design
+#'
+#' @template design
+#' @template n
+#' @template n1
+#' @template dotdotdot
+setMethod("weights_separate", "TwoStageBasket",
+  function(design, n, n1, ...) {
+    n_sum <- n + n1 + 2
+    mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    class(mat) <- "pp"
+    mat
+  })
+
+#' Pooled Analysis
+#'
+#' @template design
+#' @template dotdotdot
+#'
+#' @details When \code{weights_pool} is used as a weight function, all data
+#' are pooled.
+#'
+#' @return A weight matrix where all weights are 1.
+#' @export
+#'
+#' @examples
+#' design <- setupOneStageBasket(k = 3, p0 = 0.2)
+#' toer(design, n = 15, lambda = 0.99, weight_fun = weights_pool)
+setGeneric("weights_pool",
+  function(design, ...) standardGeneric("weights_pool")
+)
+
+#' @describeIn weights_pool Pooled analysis for a single-stage basket design
+#'
+#' @template design
+#' @template n
+#' @template n1
+#' @template dotdotdot
+setMethod("weights_pool", "OneStageBasket",
+  function(design, n, ...) {
+    n_sum <- n + 1
+    mat <- matrix(1, nrow = n_sum, ncol = n_sum)
+    class(mat) <- "pp"
+    mat
+  })
+
+#' @describeIn weights_pool Pooled analysis for a single-stage basket design
+#'
+#' @template design
+#' @template n
+#' @template dotdotdot
+setMethod("weights_pool", "OneStageBasket",
+  function(design, n, ...) {
+    n_sum <- n + 1
+    mat <- matrix(1, nrow = n_sum, ncol = n_sum)
+    class(mat) <- "pp"
+    mat
+  })
+
+#' @describeIn weights_pool Pooled analysis for a two-stage basket design
+#'
+#' @template design
+#' @template n
+#' @template n1
+#' @template dotdotdot
+setMethod("weights_pool", "TwoStageBasket",
+  function(design, n, n1, ...) {
+    n_sum <- n + n1 + 2
+    mat <- matrix(1, nrow = n_sum, ncol = n_sum)
+    class(mat) <- "pp"
+    mat
+  })
+

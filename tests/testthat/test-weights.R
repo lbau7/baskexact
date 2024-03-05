@@ -112,3 +112,120 @@ test_that("weight_mml works", {
     tolerance = 1e-6)
 })
 
+test_that("weight_separate works", {
+  # Single-stage design
+  design <- setupOneStageBasket(k = 3, p0 = 0.2)
+
+  toer1 <- toer(
+    design = design,
+    n = 20,
+    lambda = 0.99,
+    weight_fun = weights_separate,
+    results = "group"
+  )
+
+  toer2 <- 0
+  for (i in 0:20) {
+    shape <- data.frame(shape = c(1 + i, 1 + 20 - i))
+    rej <- post_beta(shape = shape, p0 = 0.2) >= 0.99
+    if (rej) toer2 <- toer2 + get_prob(n = 20, r = i, p = 0.2)
+  }
+
+  expect_equal(toer1$rejection_probabilities[1], toer2)
+
+  pow1 <- pow(
+    design = design,
+    p1 = c(0.5, 0.5, 0.5),
+    n = 20,
+    lambda = 0.99,
+    weight_fun = weights_separate,
+    results = "group",
+  )
+
+  pow2 <- 0
+  for (i in 0:20) {
+    shape <- data.frame(shape = c(1 + i, 1 + 20 - i))
+    rej <- post_beta(shape = shape, p0 = 0.2) >= 0.99
+    if (rej) pow2 <- pow2 + get_prob(n = 20, r = i, p = 0.5)
+  }
+
+  expect_equal(pow1$rejection_probabilities[1], pow2)
+
+  ecd <- ecd(
+    design = design,
+    p1 = c(0.5, 0.5, 0.5),
+    n = 20,
+    lambda = 0.99,
+    weight_fun = weights_separate
+  )
+
+  expect_equal(ecd, 3 * pow2)
+
+  estim1 <- estim(
+    design = design,
+    p1 = c(0.4, 0.4, 0.4),
+    n = 20,
+    weight_fun = weights_separate
+  )
+
+  estim2 <- 0
+  mse2 <- 0
+  for (i in 0:20) {
+    shape <- data.frame(shape = c(1 + i, 1 + 20 - i))
+    prob <- get_prob(n = 20, r = i, p = 0.4)
+    estim2 <- estim2 + mean_beta(shape) * prob
+    mse2 <- mse2 + (mean_beta(shape) - 0.4)^2 * prob
+  }
+
+  expect_equal(estim1$Mean[1], as.numeric(estim2))
+  expect_equal(estim1$MSE[1], as.numeric(mse2))
+
+  # Two-stage design
+  design2 <- setupTwoStageBasket(k = 3, p0 = 0.2)
+  toer_2stage1 <- toer(
+    design = design2,
+    n = 14,
+    n1 = 7,
+    lambda = 0.99,
+    interim_fun = interim_posterior,
+    interim_params = list(prob_futstop = 0.1, prob_effstop = 0.9),
+    weight_fun = weights_separate,
+    results = "group"
+  )
+
+  toer_2stage2 <- 0
+  for (i in 0:7) {
+    shape <- data.frame(shape = c(1 + i, 1 + 7 - i))
+    pbeta_int <- post_beta(shape = shape, p0 = 0.2)
+    rej_interim <- pbeta_int > 0.9
+    stop_interim <- pbeta_int < 0.1
+    stop_interim <-
+    if (rej_interim) {
+      toer_2stage2 <- toer_2stage2 + get_prob(n = 7, r = i, p = 0.2)
+    } else if (!rej_interim & !stop_interim) {
+      for (j in 0:7) {
+        shape <- data.frame(shape = c(1 + i + j, 1 + 14 - i - j))
+        rej <- post_beta(shape = shape, p0 = 0.2) >= 0.99
+        if (rej) {
+          toer_2stage2 <- toer_2stage2 +
+          get_prob(n = 7, r = i, p = 0.2) * get_prob(n = 7, r = j, p = 0.2)
+        }
+      }
+    }
+  }
+
+  expect_equal(toer_2stage1$rejection_probabilities[1], toer_2stage2)
+})
+
+test_that("weight_separate works", {
+  design1 <- setupOneStageBasket(k = 3, p0 = 0.2)
+  weights1 <- weights_pool(design = design1, n = 10)
+
+  expect_true(all(weights1 == 1))
+
+  design2 <- setupTwoStageBasket(k = 3, p0 = 0.2)
+  weights2 <- weights_pool(design = design2, n = 10, n1 = 5)
+
+  expect_true(all(weights2 == 1))
+})
+
