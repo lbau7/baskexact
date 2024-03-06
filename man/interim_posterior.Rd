@@ -14,8 +14,8 @@ interim_posterior(design, ...)
   weight_mat,
   globalweight_fun = NULL,
   globalweight_params = list(),
-  prob_futstop,
-  prob_effstop,
+  prob_futstop = 0.1,
+  prob_effstop = 0.9,
   ...
 )
 }

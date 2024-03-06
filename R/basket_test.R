@@ -32,7 +32,7 @@ setGeneric("basket_test",
 #' @template weights
 #' @template globalweights
 #' @template dotdotdot
-#' @params details Whether a detailed list of results or only the vector
+#' @param details Whether a detailed list of results or only the vector
 #'   of posterior probabilities is returned.
 #' @describeIn basket_test Testing for a single-stage basket design.
 setMethod("basket_test", "OneStageBasket",

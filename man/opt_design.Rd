@@ -27,7 +27,7 @@ opt_design(design, ...)
   n1,
   alpha,
   interim_fun,
-  interim_params,
+  interim_params = list(),
   weight_fun,
   weight_params = list(),
   globalweight_fun = NULL,

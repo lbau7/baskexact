@@ -16,6 +16,7 @@ basket_test(design, ...)
   weight_params = list(),
   globalweight_fun = NULL,
   globalweight_params = list(),
+  details = TRUE,
   ...
 )
 }
@@ -43,12 +44,16 @@ global weights.}
 
 \item{globalweight_params}{A list of tuning parameters specific to
 \code{globalweight_fun}.}
+
+\item{details}{Whether a detailed list of results or only the vector
+of posterior probabilities is returned.}
 }
 \value{
-A list, including matrices of the weights that are used for
-borrowing, posterior distribution parameters for all baskets without and
-with borrowing, as well as the posterior probabilities for all baskets
-without and with borrowing.
+If \code{details = TRUE}: A list, including matrices of the weights
+that are used for borrowing, posterior distribution parameters for all
+baskets without and with borrowing, as well as the posterior probabilities
+for all baskets without and with borrowing. If \code{details = FALSE}:
+The posterior probabilities for all baskets with borrowing.
 }
 \description{
 \code{basket_test} evaluates the results of a basket trial and calculates
