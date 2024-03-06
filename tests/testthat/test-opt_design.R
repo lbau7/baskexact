@@ -78,41 +78,41 @@ test_that("opt_design works", {
     interim_params = list(prob_futstop = c(0.1, 0.2), prob_effstop = 0.99),
     weight_fun = weights_cpp,
     weight_params = list(a = c(1, 2), b = 1),
-    scenarios = get_scenarios(design, 0.5),
+    scenarios = get_scenarios(design2, 0.5),
     prec_digits = 3
   )
 
   lambdres_2stage <- adjust_lambda(design = design2, alpha = 0.1, n = 7, n1 = 3,
     interim_fun = interim_posterior,
-    interim_params = list(prob_futstop = opt_2stage[1, "prob_futstop"],
-      prob_effstop = opt_2stage[1, "prob_effstop"]),
+    interim_params = list(prob_futstop = optres_2stage[1, "prob_futstop"],
+      prob_effstop = optres_2stage[1, "prob_effstop"]),
     weight_fun = weights_cpp,
-    weight_params = list(a = opt_2stage[1, "a"], b = opt_2stage[1, "b"]),
+    weight_params = list(a = optres_2stage[1, "a"], b = optres_2stage[1, "b"]),
     prec_digits = 3)
   ecdres1_2stage <- ecd(design = design2, n = 7, n1 = 3,
     lambda = lambdres_2stage$lambda, interim_fun = interim_posterior,
-    interim_params = list(prob_futstop = opt_2stage[1, "prob_futstop"],
-      prob_effstop = opt_2stage[1, "prob_effstop"]),
+    interim_params = list(prob_futstop = optres_2stage[1, "prob_futstop"],
+      prob_effstop = optres_2stage[1, "prob_effstop"]),
     weight_fun = weights_cpp,
-    weight_params = list(a = opt_2stage[1, "a"], b = opt_2stage[1, "b"]))
+    weight_params = list(a = optres_2stage[1, "a"], b = optres_2stage[1, "b"]))
   ecdres2_2stage <- ecd(design = design2, n = 7, n1 = 3, p1 = c(0.2, 0.2, 0.5),
     lambda = lambdres_2stage$lambda, interim_fun = interim_posterior,
-    interim_params = list(prob_futstop = opt_2stage[1, "prob_futstop"],
-      prob_effstop = opt_2stage[1, "prob_effstop"]),
+    interim_params = list(prob_futstop = optres_2stage[1, "prob_futstop"],
+      prob_effstop = optres_2stage[1, "prob_effstop"]),
     weight_fun = weights_cpp,
-    weight_params = list(a = opt_2stage[1, "a"], b = opt_2stage[1, "b"]))
+    weight_params = list(a = optres_2stage[1, "a"], b = optres_2stage[1, "b"]))
   ecdres3_2stage <- ecd(design = design2, n = 7, n1 = 3, p1 = c(0.2, 0.5, 0.5),
     lambda = lambdres_2stage$lambda, interim_fun = interim_posterior,
-    interim_params = list(prob_futstop = opt_2stage[1, "prob_futstop"],
-      prob_effstop = opt_2stage[1, "prob_effstop"]),
+    interim_params = list(prob_futstop = optres_2stage[1, "prob_futstop"],
+      prob_effstop = optres_2stage[1, "prob_effstop"]),
     weight_fun = weights_cpp,
-    weight_params = list(a = opt_2stage[1, "a"], b = opt_2stage[1, "b"]))
+    weight_params = list(a = optres_2stage[1, "a"], b = optres_2stage[1, "b"]))
   ecdres4_2stage <- ecd(design = design2, n = 7, n1 = 3, p1 = c(0.5, 0.5, 0.5),
     lambda = lambdres_2stage$lambda, interim_fun = interim_posterior,
-    interim_params = list(prob_futstop = opt_2stage[1, "prob_futstop"],
-      prob_effstop = opt_2stage[1, "prob_effstop"]),
+    interim_params = list(prob_futstop = optres_2stage[1, "prob_futstop"],
+      prob_effstop = optres_2stage[1, "prob_effstop"]),
     weight_fun = weights_cpp,
-    weight_params = list(a = opt_2stage[1, "a"], b = opt_2stage[1, "b"]))
+    weight_params = list(a = optres_2stage[1, "a"], b = optres_2stage[1, "b"]))
   meanecd_2stage <- mean(c(ecdres1_2stage, ecdres2_2stage, ecdres3_2stage,
     ecdres4_2stage))
 
