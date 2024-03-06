@@ -51,6 +51,21 @@ test_that("toer works with various weights", {
 
   expect_equal(cppfixres1, cppfixres2)
 
+  # CPP weights with pruning
+  cpppruneres1 <- toer(design = design, n = 17, lambda = 0.98,
+    weight_fun = weights_cpp,
+    weight_params = list(a = 0.5, b = 0.5, prune = TRUE),
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = 0.5))
+  cpppruneres2 <- reject_single_loop(design = design, p1 = rep(0.2, 3), n = 17,
+    lambda = 0.98, weight_fun = weights_cpp,
+    weight_params = list(a = 0.5, b = 0.5, prune = TRUE),
+    globalweight_fun = globalweights_fix, globalweight_params = list(w = 0.5),
+    prob = "toer")$fwer
+
+  expect_equal(cpppruneres1, cpppruneres2)
+  expect_true(cpppruneres1 != cppfixres1)
+
   # MML weights
   mmlres1 <- toer(design = design, n = 17, lambda = 0.98,
     weight_fun = weights_mml)

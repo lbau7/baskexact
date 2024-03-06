@@ -122,4 +122,32 @@ test_that("opt_design works", {
   expect_equal(optres_2stage[1, 8], ecdres3_2stage)
   expect_equal(optres_2stage[1, 9], ecdres4_2stage)
   expect_equal(optres_2stage[1, 10], meanecd_2stage)
+
+  optres_2stage2 <- opt_design(
+    design = design2,
+    n = 7,
+    n1 = 3,
+    alpha = 0.3,
+    interim_fun = interim_posterior,
+    weight_fun = weights_cpp,
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = c(0.5, 0.1)),
+    scenarios = get_scenarios(design2, 0.5),
+    prec_digits = 3
+  )
+
+  expect_true(nrow(optres_2stage2) == 2)
+
+  optres_2stage3 <- opt_design(
+    design = design2,
+    n = 7,
+    n1 = 3,
+    alpha = 0.3,
+    interim_fun = interim_posterior,
+    weight_fun = weights_cpp,
+    scenarios = get_scenarios(design2, 0.5),
+    prec_digits = 3
+  )
+
+  expect_true(nrow(optres_2stage3) == 1)
 })

@@ -137,8 +137,13 @@ test_that("check_mon_within works", {
     weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2)),
     globalweight_fun = globalweights_fix,
     globalweight_params = list(w = c(0.5, 0.7)))
+  res_vect3 <- check_mon_within(design = design1, n = 12, lambda = 0.99,
+    weight_fun = weights_fujikawa,
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = c(0.5, 0.7)))
 
   expect_true(all(dim(res_vect2) == c(2, 2, 2)))
+  expect_true(dim(res_vect3) == 2)
 })
 
 test_that("check_mon_between works", {
@@ -238,7 +243,12 @@ test_that("check_mon_between works", {
     weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2)),
     globalweight_fun = globalweights_fix,
     globalweight_params = list(w = c(0.5, 0.7)))
+  res_vect3 <- check_mon_between(design = design1, n = 12, lambda = 0.99,
+    weight_fun = weights_fujikawa,
+    globalweight_fun = globalweights_fix,
+    globalweight_params = list(w = c(0.5, 0.7)))
 
   expect_true(all(dim(res_vect2) == c(2, 2, 2)))
+  expect_true(dim(res_vect3) == 2)
 })
 

@@ -41,6 +41,14 @@ test_that("basket_test works", {
   # Weights are strictly smaller when global weight is used
   expect_true(all(res3$weights[rbind(c(1, 2), c(3, 1), c(3, 2))] <
     res1$weights[rbind(c(1, 2), c(3, 1), c(3, 2))]))
+
+  # Without details
+  res4 <- basket_test(design = design, n = 24, r = c(5, 3, 8), lambda = 0.99,
+    weight_fun = weights_fujikawa, weight_params = list(epsilon = 2, tau = 0,
+      logbase = exp(1), prune = FALSE), globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2, w = 0.5), details = FALSE)
+
+  expect_equal(unname(res3$post_prob_borrow), res4)
 })
 
 test_that("errors in basket_test work", {
