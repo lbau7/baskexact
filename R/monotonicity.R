@@ -117,15 +117,6 @@ setMethod("check_mon_within", "OneStageBasket",
         function(x) all(x >= crit) | all(x < crit_pool))
       events <- events[!sel_events, ]
 
-      # If pruning is used and no list of violating outcomes is desired,
-      # then outcomes with a different number of responses in baskets that
-      # are pruned can be ignored -
-      ### funktioniert aktuell nicht mehr -- verallgemeinern?
-      # if (prune & !details) {
-      #   events[which(events < crit_pool)] <- 0
-      #   events <- events[!duplicated(events), ]
-      # }
-
       func <- function(x) bskt_final(design = design, n = n, lambda = lambda,
         r = x, weight_mat = weight_mat, globalweight_fun = globalweight_fun,
         globalweight_params = globalweight_params)

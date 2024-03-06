@@ -114,8 +114,8 @@ setMethod("opt_design", "OneStageBasket",
 #' @template prec_digits
 #' @template dotdotdot
 setMethod("opt_design", "TwoStageBasket",
-  function(design, n, n1, alpha, interim_fun, interim_params, weight_fun,
-           weight_params = list(), globalweight_fun = NULL,
+  function(design, n, n1, alpha, interim_fun, interim_params = list(),
+           weight_fun, weight_params = list(), globalweight_fun = NULL,
            globalweight_params = list(), scenarios, prec_digits, ...) {
     all_params <- c(weight_params, globalweight_params, interim_params)
     grid <- expand.grid(all_params)

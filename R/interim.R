@@ -106,7 +106,8 @@ setGeneric("interim_posterior",
 #' @param prob_effstop Probability cut-off for stopping for efficacy.
 setMethod("interim_posterior", "TwoStageBasket",
   function(design, n1, r1, weight_mat, globalweight_fun = NULL,
-           globalweight_params = list(), prob_futstop, prob_effstop, ...) {
+           globalweight_params = list(), prob_futstop = 0.1, prob_effstop = 0.9,
+           ...) {
     shape_borrow <- beta_borrow(weight_mat = weight_mat,
       globalweight_fun = globalweight_fun,
       globalweight_params = globalweight_params, design = design, n = n1,
