@@ -74,6 +74,19 @@ test_that("toer works with various weights", {
     prob = "toer")$fwer
 
   expect_equal(mmlres1, mmlres2)
+
+  # MML weights with pruning
+  mmlpruneres1 <- toer(design = design, n = 17, lambda = 0.98,
+    weight_fun = weights_mml,
+    weight_params = list(prune = TRUE)
+  )
+  mmlpruneres2 <- reject_single_loop(design = design, p1 = rep(0.2, 3), n = 17,
+    lambda = 0.98, weight_fun = weights_mml,
+    weight_params = list(prune = TRUE),
+    prob = "toer")$fwer
+
+  expect_equal(mmlpruneres1, mmlpruneres2)
+  expect_true(mmlres1 != mmlpruneres1)
 })
 
 test_that("get_crit_pool works with various weights", {
