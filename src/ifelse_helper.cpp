@@ -7,7 +7,7 @@ NumericVector get_res_fin(const NumericVector& prob, const NumericVector& res_in
   int n = prob.size();
   NumericVector out(n);
   for (int i = 0; i < n; ++i) {
-    if ((prob[i] >= lambda) & (res_int[i] == 0)) {
+    if ((prob[i] >= lambda) && (res_int[i] == 0)) {
       out[i] = 1;
     } else {
       out[i] = -1;
