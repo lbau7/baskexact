@@ -85,6 +85,9 @@ design <- setupOneStageBasket(k = 3, p0 = 0.2)
 toer(design, n = 15, lambda = 0.99, weight_fun = weights_cpp)
 }
 \references{
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+power priors. arXiv:2309.06988.
+
 Pan, H., Yuan, Y., & Xia, J. (2017). A calibrated power prior
 approach to borrow information from historical data with application to
 biosimilar clinical trials. Journal of the Royal Statistical Society Series

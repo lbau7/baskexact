@@ -1,13 +1,14 @@
 Type: Package
 Package: baskexact
-Title: Exact Calculation of Basket Trial Operating Characteristics
-Version: 0.2.0
+Title: Analytical Calculation of Basket Trial Operating Characteristics
+Version: 1.0.0
 Authors@R:
     person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7931-7470"))
-Description: Calculates the exact operating characteristics of a
-    single-stage basket trial with the design of Fujikawa, K., Teramukai,
-    S., Yokota, I., & Daimon, T. (2020). <doi:10.1002/bimj.201800404>.
+Description: Analytically calculates the operating characteristics of
+    single-stage and two-stage basket trials with equal sample sizes using the
+	power prior design by Baumann et al. (2024) <doi:10.48550/arXiv.2309.06988>
+	and the design by Fujikawa et al. (2020) <doi:10.1002/bimj.201800404>.
 License: GPL (>= 3)
 URL: https://github.com/lbau7/baskexact
 Imports: 

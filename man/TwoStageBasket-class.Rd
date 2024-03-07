@@ -6,12 +6,19 @@
 \alias{TwoStageBasket}
 \title{Class TwoStageBasket}
 \description{
-OneStageBasket is an S4 class. An object of this class contains the most
-important design features of a single-stage basket trial.
+TwoStageBasket is an S4 class. An object of this class contains the most
+important design features of a two-stage basket trial.
 }
 \details{
-This class implements a two-stage basket trial based on the design
-proposed by Fujikawa et al.
+This class implements a two-stage basket trial based on the power prior
+design or the design proposed by Fujikawa et al. In these designs,
+information is borrowed between baskets by calculating weights that
+reflect the similarity between the baskets (and optionally the overall
+heterogeneity). Posterior distributions for each basket are beta
+distributions where the parameters are found by adding weighted sums
+of the observed responses and non-responses in each basket to the
+prior parameters (or in case of Fujikawa's design by calculating
+weighted sums of the individual posterior distributions).
 }
 \section{Slots}{
 
@@ -25,3 +32,12 @@ proposed by Fujikawa et al.
 \item{\code{p0}}{A common probability under the null hypothesis.}
 }}
 
+\references{
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+power priors. arXiv:2309.06988.
+
+Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
+A Bayesian basket trial design that borrows information across strata based
+on the similarity between the posterior distributions of the response
+probability. Biometrical Journal, 62(2), 330-338.
+}

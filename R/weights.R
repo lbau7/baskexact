@@ -280,7 +280,11 @@ setMethod("weights_jsd", "TwoStageBasket",
 #' function such as \code{\link{toer}} and \code{\link{pow}} to specificy
 #' how the weights are calculated.
 #'
-#' @references Pan, H., Yuan, Y., & Xia, J. (2017). A calibrated power prior
+#' @references
+#' Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+#' power priors. arXiv:2309.06988.
+#'
+#' Pan, H., Yuan, Y., & Xia, J. (2017). A calibrated power prior
 #' approach to borrow information from historical data with application to
 #' biosimilar clinical trials. Journal of the Royal Statistical Society Series
 #' C: Applied Statistics, 66(5), 979-996.
@@ -418,9 +422,13 @@ setGeneric("weights_mml",
 #'
 #' @template design
 #' @template n
+#' @template prune
+#' @template lambda
+#' @template globalweights
 #' @template dotdotdot
 setMethod("weights_mml", "OneStageBasket",
-  function(design, n, ...) {
+  function(design, n, prune = FALSE, lambda,
+           globalweight_fun = NULL, globalweight_params = list(), ...) {
     n_sum <- n + 1
     mat <- matrix(0, nrow = n_sum, ncol = n_sum)
     r <- 0:n
@@ -441,6 +449,14 @@ setMethod("weights_mml", "OneStageBasket",
     mat <- (mat + t(mat)) / 2
     diag(mat) <- 1
     class(mat) <- "pp"
+
+    if (prune) {
+      crit_pool <- get_crit_pool(design = design, n = n, lambda = lambda,
+        weight_mat = mat, globalweight_fun = globalweight_fun,
+        globalweight_params = globalweight_params)
+      mat <- prune_weights(weight_mat = mat, cut = crit_pool)
+    }
+
     mat
   })
 
