@@ -86,11 +86,11 @@ check_mon_between(design = design, n = 24, lambda = 0.99,
     tau = 0), details = TRUE)
 
 # Vectorized
-check_mon_between(design = design, n = 24, lambda = 0.99,
+\donttest{check_mon_between(design = design, n = 24, lambda = 0.99,
   weight_fun = weights_fujikawa,
   weight_params = list(epsilon = c(0.5, 1),  tau = c(0, 0.2, 0.3)),
   globalweight_fun = globalweights_fix,
-  globalweight_params = list(w = c(0.5, 0.7)))
+  globalweight_params = list(w = c(0.5, 0.7)))}
 }
 \references{
 Baumann, L., Krisam, J., & Kieser, M. (2022). Monotonicity conditions for

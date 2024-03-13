@@ -23,9 +23,9 @@ NULL
 #' @examples
 #' \donttest{
 #' design <- setupOneStageBasket(k = 3, p0 = 0.2)
-#' opt_design(design = design, n = 20, alpha = 0.05,
+#' opt_design(design = design, n = 10, alpha = 0.05,
 #'   weight_fun = weights_fujikawa, weight_params = list(epsilon = c(1, 2),
-#'   tau = c(0, 0.5)), scenarios = get_scenarios(design, 0.5), prec_digits = 4)
+#'   tau = c(0, 0.5)), scenarios = get_scenarios(design, 0.5), prec_digits = 3)
 #' }
 setGeneric("opt_design",
   function(design, ...) standardGeneric("opt_design")

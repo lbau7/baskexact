@@ -121,3 +121,13 @@ test_that("post_pred works", {
 
   expect_equal(res, prob_expect, tolerance = 1e-6)
 })
+
+test_that("get_res_fin works", {
+  res <- get_res_fin(c(0.8, 0.94, 0.93) , c(1, 0, -1), 0.9)
+  expect_equal(res, c(-1, 1, -1))
+})
+
+test_that("get_n_vec works", {
+  nvec <- get_n_vec(20, 15, c(0, 1, -1))
+  expect_equal(nvec, c(20, 15, 15))
+})
