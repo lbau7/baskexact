@@ -1,0 +1,39 @@
+---
+title: "Extending baskexact"
+output: rmarkdown::html_vignette
+author: "Lukas Baumann"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{Extending baskexact}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Information Sharing in baskexact
+
+`baskexact` implements the power prior design (Baumann et. al, 2024) and the design of Fujikawa et al. (2020) for the analysis of basket trials. In both designs, information is shared between baskets by computing weighted sums of the available information. The weights are derived from functions that quantify the pairwise similarity between baskets. Additionally, global weights (see Baumann et al., 2024 for details) can be used, which quantify the heterogeneity between all baskets. In this vignette it is shown how `baskexact` can be extended with additional weight functions.
+
+## Pairwise Weights
+
+Functions that calculate the pairwise weights are passed to the argument `weight_fun` (e.g. of the function `toer`, `pow`, etc.). Since `baskexact` utilises the S4 class system, new functions have to be a method of one of the two classes of `baskexact`: `OneStageBasket` - for single-stage basket trials - or `TwoStageBasket` - for two-stage basket trials. See `?setMethod` for details. A new function for pairwise weights must have at least two arguments: `design` - for the design object - and `n` for the sample size per basket. Tuning parameters are possible, these are then passed as a list via `weight_params` in function calls. The output of the function has to be a matrix.
+
+For single-stage designs, the dimension of the matrix has to be (`n` + 1) x (`n` + 1). Element [i, j] of the matrix contains the weight that determines how much information is shared between two baskets where in one i-1 responses were observed and in the other j-1 responses were observed. All weights should be between 0 and 1. The diagonal elements are usually 1, i.e. the entire information is shared between baskets with an equal number of responses. The matrix should be symmetric.
+
+For two-stage designs, the dimension of the matrix has to be (`n` + `n1` + 2) x (`n` + `n1` + 2). The submatrix [1:(`n1` + 1),  1:(`n1` + 1)] contains the weights for sharing information in the interim analysis. I.e., element [i, j] conaints the weight for sharing information between two baskets with i-1 and j-1 responses after the first stage, respectively. The submatrix [(`n1` + 2):(`n`+ `n1`+ 2), (`n1` + 2):(`n`+ `n1`+ 2)] contains the weights for sharing information in the final analysis between baskets that were not stopped during interim. I.e., element [i, j] of this submatrix contains the weight for sharing information between two baskets with i-1 and j-1 responses after the second stage, respectively. The two submatrices [1:(`n1` + 1), (`n`+ `n1`+ 2)] and [(`n`+ `n1`+ 2), 1:(`n1` + 1)] contain the weights for sharing between baskets which were stopped in the interim analysis and those that were not. I.e., element [i, j] of submatrix [1:(`n1` + 1), (`n`+ `n1`+ 2)] contains the the weight for sharing between a basket with i-1 responses (out of `n1` observations) which was stopped in the interim analysis and a basket with j-1 responses (out of `n` observations) after the final stage and vice verca, the [i, j] element of submatrix [(`n`+ `n1`+ 2), 1:(`n1` + 1)] corresponds to the weight for sharing between a basket with i-1 responses out of `n` observations and a basket with j-1 responses out of `n1` observations. This matrix should also be symmetric.
+
+The weight matrix must have an S3 class, either `"pp"`, corresponding to the power prior design or `"fujikawa"`, corresponding to the information sharing approach of Fujikawa's design. The only difference is that in the power prior design only the observed data is shared and in Fujikawa's design also the information contained in the prior is shared. See Baumann et al. (2024) for details.
+
+## Global Weights
+
+Additionally to pairwise weights, global weights can be used, which are calculated from the data of all baskets and multiplied with the pairwise weights do determine the amount of shared information. The global weight function is passed with `globalweight_fun`. New functions for calculating global weights must have at least two arguments: `n`,  the sample size per basket and `r`, the vector of responses. Tuning parameters are possible, which are passed as a list to `globalweight_params`in function calls. The output of the function must be a single numeric value which corresponds to the global weight.
+
+## References
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on power priors. arXiv:2309.06988.
+Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020). A Bayesian basket trial design that borrows information across strata based on the similarity between the posterior distributions of the response probability. Biometrical Journal, 62(2), 330-338.

@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## Scope
 
-`baskexact` analytically calculates the operating characteristics of the power prior basket trial design (Baumann et. al, 2024) and the power prior design of Fujikawa et al. (2020). Both designs were developed for the analysis of uncontrolled basket trials with a binary endpoint. Baskets are analysed using beta posteriors, where the posterior parameters are computed as weighted sums of the available information to share information between baskets. Currently `baskexact` supports single-stage and two-stage designs with equal sample sizes.
+`baskexact` analytically calculates the operating characteristics of the power prior basket trial design (Baumann et. al, 2024) and the design of Fujikawa et al. (2020). Both designs were developed for the analysis of uncontrolled basket trials with a binary endpoint. Baskets are analysed using beta posteriors, where the posterior parameters are computed as weighted sums of the available information to share information between baskets. Currently `baskexact` supports single-stage and two-stage designs with equal sample sizes.
 
 ## Basic Usage
 

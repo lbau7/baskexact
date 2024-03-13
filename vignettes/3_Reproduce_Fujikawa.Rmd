@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this vignette we show how the results from Fujikawa et al. (2020) can be reproduced using `baskexact`. At first, we have to set up a a design object, using either `setupOneStageBasket()` for a single-stage design or `setupTwoStageBasket()`for a two-stage design with one interim analysis.
+In this vignette it is shown how the results from Fujikawa et al. (2020) can be reproduced using `baskexact`. At first, we have to set up a a design object, using either `setupOneStageBasket()` for a single-stage design or `setupTwoStageBasket()`for a two-stage design with one interim analysis.
 
 ```{r setup, eval=FALSE}
 library(baskexact)
