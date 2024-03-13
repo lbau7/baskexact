@@ -8,6 +8,8 @@
 [![R-CMD-check](https://github.com/lbau7/baskexact/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lbau7/baskexact/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/lbau7/baskexact/branch/main/graph/badge.svg)](https://app.codecov.io/gh/lbau7/baskexact?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/baskexact)](https://CRAN.R-project.org/package=baskexact)
 <!-- badges: end -->
 
 ## Overview
