@@ -2,6 +2,63 @@
 # validate the results of the main functions, by using other (mostly
 # slower but easier to follow) algorithms to calculate the same values.
 
+# Validate borrowing
+val_borrow_cpp <- function(design, n, r, a, b,
+                           globalweight_fun = NULL,
+                           globalweight_params = list()) {
+  cpp_fun <- function(x, n, a, b) {
+    1 / (1 + exp(a + b * log(n^(1 / 4) * abs(x[1]/n - x[2]/n))))
+  }
+
+  shape1 <- shape2 <- numeric(length(r))
+  if (!is.null(globalweight_fun)) {
+    gw <- do.call(globalweight_fun, args = c(globalweight_params, n = n,
+      r = list(r)))
+  }
+
+  for (i in 1:length(r)) {
+    w <- sapply((1:length(r))[-i],
+      function(x) cpp_fun(x = r[c(i, x)], n = n, a = a, b = b))
+
+    if (!is.null(globalweight_fun)) {
+      w <- w * gw
+    }
+
+    shape1[i] <- design@shape1 + r[i] + sum(r[-i] * w)
+    shape2[i] <- design@shape2 + (n - r[i]) + sum((n - r[-i]) * w)
+  }
+  rbind(shape1, shape2)
+}
+
+val_borrow_fujikawa <- function(design, n, r, epsilon, tau, logbase) {
+  kl_fun <- function(x, y) {
+    f <- function(z) x(z) * log(x(z) / y(z), base = logbase)
+    integrate(f, lower = 0, upper = 1)$value
+  }
+
+  jsd_fun <- function(sp1, sp2, n, epsilon, tau, logbase) {
+    j1 <- function(x) dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
+    j2 <- function(x) dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
+    m <- function(x) (1 / 2) * (j1(x) + j2(x))
+    jsd <- (1 / 2) * kl_fun(j1, m) + (1 / 2) * kl_fun(j2, m)
+    w <- (1 - jsd)^epsilon
+    ifelse(w <= tau, 0, w)
+  }
+
+  shape1 <- shape2 <- numeric(length(r))
+  shape_prior1 <- design@shape1 + r
+  shape_prior2 <- design@shape2 + (n - r)
+  for (i in 1:length(r)) {
+    w <- sapply((1:length(r))[-i],
+      function(x) jsd_fun(sp1 = shape_prior1[c(i, x)],
+        sp2 = shape_prior2[c(i, x)], n = n, epsilon = epsilon, tau = tau,
+        logbase = logbase))
+    shape1[i] <- shape_prior1[i] + sum(shape_prior1[-i] * w)
+    shape2[i] <- shape_prior2[i] + sum(shape_prior2[-i] * w)
+  }
+  rbind(shape1, shape2)
+}
+
 # Loop-based calculation of the rejection probabilities of a single-stage
 # basket design with 3 baskets
 reject_single_loop <- function(design, p1, n, lambda, weight_fun,
@@ -45,6 +102,61 @@ reject_single_loop <- function(design, p1, n, lambda, weight_fun,
     list(
       rejection_probabilities = rej_group,
       ewp = rej_ew
+    )
+  }
+}
+
+# Loop-based calculation of the rejection probabilities of a single-stage
+# basket design with 4 baskets with additional use of validation functions
+reject_single_loop4 <- function(design, p1, n, lambda, weightval_fun,
+                                weightval_params, globalweight_fun = NULL,
+                                globalweight_params = list(),
+                                prob = c("toer", "pwr")) {
+
+  targ <- get_targ(p0 = design@p0, p1 = p1, prob = prob)
+  targ_ecd <- design@p0 != p1
+
+  rej_ew <- 0
+  rej_group <- c(0, 0, 0, 0)
+  ecd <- 0
+
+  for (i1 in 0:n) {
+    for (i2 in 0:n) {
+      for (i3 in 0:n) {
+        for (i4 in 0:n) {
+          events <- c(i1, i2, i3, i4)
+          shape_post <- do.call(weightval_fun, args = c(weightval_params,
+            globalweight_fun = globalweight_fun,
+            globalweight_params = list(globalweight_params),
+            design = design, n = n, r = list(events)))
+          postprob <- stats::pbeta(q = design@p0, shape1 = shape_post[1, ],
+            shape2 = shape_post[2, ], lower.tail = FALSE)
+          res <- ifelse(postprob >= lambda, 1, 0)
+          prob_temp <- get_prob(n = n, r = events, p = p1)
+          ecd <- ecd + sum(res == targ_ecd) * prob_temp
+
+          if (any(res == 1)) {
+            rej_group[which(res == 1)] <- rej_group[which(res == 1)] +
+              prob_temp
+            if (any(res[targ] == 1)) {
+              rej_ew <- rej_ew + prob_temp
+          }
+        }
+      }
+    }
+  }
+  }
+  if (prob == "toer") {
+    list(
+      rejection_probabilities = rej_group,
+      fwer = rej_ew,
+      ecd = ecd
+    )
+  } else {
+    list(
+      rejection_probabilities = rej_group,
+      ewp = rej_ew,
+      ecd = ecd
     )
   }
 }

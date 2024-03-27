@@ -132,3 +132,73 @@ test_that("get_crit_pool works with various weights", {
 
   expect_equal(sum(res_mml), 0)
 })
+
+test_that("toer, pow and ecd work with 4 baskets", {
+  design <- setupOneStageBasket(k = 4, p0 = 0.2)
+
+  # Without global weight
+  res_loop1 <- reject_single_loop4(design = design, p1 = c(0.2, 0.2, 0.4, 0.5),
+    n = 12, lambda = 0.95, weightval_fun = val_borrow_cpp,
+    weightval_params = list(a = 2, b = 1.5), prob = "toer")
+
+  res_toer1 <- toer(design = design, p1 = c(0.2, 0.2, 0.4, 0.5), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5), results = "group")
+  res_fwer1 <- toer(design = design, p1 = c(0.2, 0.2, 0.4, 0.5), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5), results = "fwer")
+  res_pow1 <- pow(design = design, p1 = c(0.2, 0.2, 0.4, 0.5), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5), results = "group")
+  res_ecd1 <- ecd(design = design, p1 = c(0.2, 0.2, 0.4, 0.5), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5))
+
+  expect_equal(res_loop1$rejection_probabilities,
+    res_toer1$rejection_probabilities)
+  expect_equal(res_loop1$fwer, res_toer1$fwer)
+  expect_equal(res_loop1$fwer, res_fwer1)
+  expect_equal(res_loop1$rejection_probabilities,
+    res_pow1$rejection_probabilities)
+  expect_equal(res_loop1$ecd, res_ecd1)
+
+  # With global weight
+  res_loop2 <- reject_single_loop4(design = design, p1 = c(0.2, 0.4, 0.3, 0.2),
+    n = 12, lambda = 0.95, weightval_fun = val_borrow_cpp,
+    weightval_params = list(a = 2, b = 1.5),
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2),
+    prob = "toer")
+
+  res_toer2 <- toer(design = design, p1 = c(0.2, 0.4, 0.3, 0.2), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5),
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2),
+    results = "group")
+  res_fwer2 <- toer(design = design, p1 = c(0.2, 0.4, 0.3, 0.2), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5),
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2),
+    results = "fwer")
+  res_pow2 <- pow(design = design, p1 = c(0.2, 0.4, 0.3, 0.2), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5),
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2),
+    results = "group")
+  res_ecd2 <- ecd(design = design, p1 = c(0.2, 0.4, 0.3, 0.2), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5),
+    globalweight_fun = globalweights_diff,
+    globalweight_params = list(eps_global = 2))
+
+  expect_equal(res_loop2$rejection_probabilities,
+    res_toer2$rejection_probabilities)
+  expect_equal(res_loop2$fwer, res_toer2$fwer)
+  expect_equal(res_loop2$fwer, res_fwer2)
+  expect_equal(res_loop2$rejection_probabilities,
+    res_pow2$rejection_probabilities)
+  expect_equal(res_loop2$ecd, res_ecd2)
+})
