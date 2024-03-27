@@ -2,13 +2,18 @@
 % Please edit documentation in R/plot.R
 \name{plot_weights}
 \alias{plot_weights}
+\alias{plot_weights,OneStageBasket-method}
 \title{Plot Weight Functions}
 \usage{
-plot_weights(design, n, r1, weight_fun, weight_params = list())
+plot_weights(design, ...)
+
+\S4method{plot_weights}{OneStageBasket}(design, n, r1, weight_fun, weight_params = list(), ...)
 }
 \arguments{
 \item{design}{An object of class \code{Basket} created by
 \code{setupOneStageBasket} or \code{setupTwoStageBasket}.}
+
+\item{...}{Further arguments.}
 
 \item{n}{The sample size per basket.}
 
@@ -30,6 +35,11 @@ Plot Weight Functions
 The design object is only used for the prior parameters,
 which affect the weights of some weight functions.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{plot_weights(OneStageBasket)}: Plot weights for a single-stage basket trials
+
+}}
 \examples{
 design <- setupOneStageBasket(k = 3, p0 = 0.2, shape1 = 1, shape2 = 1)
 plot_weights(design = design, n = 20, r1 = 10, weight_fun = weights_jsd)
