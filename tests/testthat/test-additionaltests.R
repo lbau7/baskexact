@@ -140,6 +140,9 @@ test_that("toer, pow and ecd work with 4 baskets", {
   res_loop1 <- reject_single_loop4(design = design, p1 = c(0.2, 0.2, 0.4, 0.5),
     n = 12, lambda = 0.95, weightval_fun = val_borrow_cpp,
     weightval_params = list(a = 2, b = 1.5), prob = "toer")
+  res_loop1a <- reject_single_loop4(design = design, p1 = c(0.2, 0.2, 0.4, 0.5),
+    n = 12, lambda = 0.95, weightval_fun = val_borrow_cpp,
+    weightval_params = list(a = 2, b = 1.5), prob = "pow")
 
   res_toer1 <- toer(design = design, p1 = c(0.2, 0.2, 0.4, 0.5), n = 12,
     lambda = 0.95, weight_fun = weights_cpp,
@@ -161,6 +164,7 @@ test_that("toer, pow and ecd work with 4 baskets", {
   expect_equal(res_loop1$rejection_probabilities,
     res_pow1$rejection_probabilities)
   expect_equal(res_loop1$ecd, res_ecd1)
+  expect_equal(res_loop1a$ewp, res_pow1$ewp)
 
   # With global weight
   res_loop2 <- reject_single_loop4(design = design, p1 = c(0.2, 0.4, 0.3, 0.2),
@@ -201,4 +205,16 @@ test_that("toer, pow and ecd work with 4 baskets", {
   expect_equal(res_loop2$rejection_probabilities,
     res_pow2$rejection_probabilities)
   expect_equal(res_loop2$ecd, res_ecd2)
+
+  # Results are consistent
+  res_toer3 <- toer(design = design, p1 = c(0.2, 0.3, 0.4, 0.5), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5), results = "group")
+  res_toer4 <- toer(design = design, p1 = c(0.5, 0.4, 0.3, 0.2), n = 12,
+    lambda = 0.95, weight_fun = weights_cpp,
+    weight_params = list(a = 2, b = 1.5), results = "group")
+
+  expect_equal(res_toer3$fwer, res_toer4$fwer)
+  expect_equal(res_toer3$rejection_probabilities,
+    rev(res_toer4$rejection_probabilities))
 })
