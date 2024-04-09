@@ -62,12 +62,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// weight_mat_validate
+arma::mat weight_mat_validate(const int& k, const arma::vec& weights);
+RcppExport SEXP _baskexact_weight_mat_validate(SEXP kSEXP, SEXP weightsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type weights(weightsSEXP);
+    rcpp_result_gen = Rcpp::wrap(weight_mat_validate(k, weights));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_baskexact_get_res_fin", (DL_FUNC) &_baskexact_get_res_fin, 3},
     {"_baskexact_get_n_vec", (DL_FUNC) &_baskexact_get_n_vec, 3},
     {"_baskexact_get_r_temp", (DL_FUNC) &_baskexact_get_r_temp, 3},
     {"_baskexact_weight_beta", (DL_FUNC) &_baskexact_weight_beta, 3},
+    {"_baskexact_weight_mat_validate", (DL_FUNC) &_baskexact_weight_mat_validate, 2},
     {NULL, NULL, 0}
 };
 

@@ -59,6 +59,22 @@ val_borrow_fujikawa <- function(design, n, r, epsilon, tau, logbase) {
   rbind(shape1, shape2)
 }
 
+val_borrow_mat <- function(design, n, r, weight_mat) {
+  all_combs <- arrangements::combinations(r, 2) + 1
+  weights_vec <- weight_mat[all_combs]
+
+  val1 <- weight_mat_validate(design@k, weights_vec)
+  val2 <- matrix(nrow = design@k, ncol = design@k)
+
+  for (i in 1:design@k) {
+    for (j in 1:design@k) {
+      val2[i, j] <- weight_mat[r[i] + 1, r[j] + 1]
+    }
+  }
+
+  return(list(val1, val2))
+}
+
 # Loop-based calculation of the rejection probabilities of a single-stage
 # basket design with 3 baskets
 reject_single_loop <- function(design, p1, n, lambda, weight_fun,

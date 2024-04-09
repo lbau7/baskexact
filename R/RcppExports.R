@@ -17,3 +17,7 @@ weight_beta <- function(k, weights, shape) {
     .Call(`_baskexact_weight_beta`, k, weights, shape)
 }
 
+weight_mat_validate <- function(k, weights) {
+    .Call(`_baskexact_weight_mat_validate`, k, weights)
+}
+

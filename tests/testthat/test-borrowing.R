@@ -128,6 +128,12 @@ test_that("beta_borrow works", {
     r = c(3, 5, 7, 9, 12), a = 1.5, b = 2))
 
   expect_equal(postshape_val7, postshape_val8)
+
+  # Test cpp function
+  wmat_valid <- weights_cpp(design = design5, n = 17, a = 2, b = 1.5)
+  res <- val_borrow_mat(design5, 20, r = c(7, 9, 12, 7, 3), wmat_valid)
+  expect_equal(res[[1]], res[[2]])
+  expect_true(isSymmetric(res[[1]]))
 })
 
 test_that("beta_borrow_int works", {
