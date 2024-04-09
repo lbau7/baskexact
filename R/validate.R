@@ -33,12 +33,12 @@ val_borrow_cpp <- function(design, n, r, a, b,
 val_borrow_fujikawa <- function(design, n, r, epsilon, tau, logbase) {
   kl_fun <- function(x, y) {
     f <- function(z) x(z) * log(x(z) / y(z), base = logbase)
-    integrate(f, lower = 0, upper = 1)$value
+    stats::integrate(f, lower = 0, upper = 1)$value
   }
 
   jsd_fun <- function(sp1, sp2, n, epsilon, tau, logbase) {
-    j1 <- function(x) dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
-    j2 <- function(x) dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
+    j1 <- function(x) stats::dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
+    j2 <- function(x) stats::dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
     m <- function(x) (1 / 2) * (j1(x) + j2(x))
     jsd <- (1 / 2) * kl_fun(j1, m) + (1 / 2) * kl_fun(j2, m)
     w <- (1 - jsd)^epsilon
