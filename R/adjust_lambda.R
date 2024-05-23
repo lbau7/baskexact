@@ -95,7 +95,7 @@ setMethod("adjust_lambda", "OneStageBasket",
     }
     return(list(
       lambda = root,
-      toer = val + alpha
+      fwer = val + alpha
     ))
   })
 
@@ -170,7 +170,7 @@ setMethod("adjust_lambda", "TwoStageBasket",
     }
     return(list(
       lambda = root,
-      toer = val + alpha
+      fwer = val + alpha
     ))
   })
 

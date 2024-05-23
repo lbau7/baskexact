@@ -13,8 +13,8 @@ test_that("adjust_lambda works for a single-stage design", {
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0,
     logbase = 2, prune = FALSE), results = "fwer")
 
-  expect_equal(adj_res1$toer, toer_adj1)
-  expect_lte(adj_res1$toer, 0.025)
+  expect_equal(adj_res1$fwer, toer_adj1)
+  expect_lte(adj_res1$fwer, 0.025)
   expect_gt(toer_high1, 0.025)
 
   # With Pruning
@@ -29,8 +29,8 @@ test_that("adjust_lambda works for a single-stage design", {
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0,
     logbase = 2, prune = TRUE), results = "fwer")
 
-  expect_equal(adj_res2$toer, toer_adj2)
-  expect_lte(adj_res2$toer, 0.025)
+  expect_equal(adj_res2$fwer, toer_adj2)
+  expect_lte(adj_res2$fwer, 0.025)
   expect_gt(toer_high2, 0.025)
 
   # Cases with an additional step after uniroot
@@ -56,18 +56,18 @@ test_that("adjust_lambda works for a single-stage design", {
     weight_fun = weights_fujikawa, weight_params = list(epsilon = 1, tau = 0.2,
     logbase = 2, prune = FALSE), results = "fwer")
 
-  expect_equal(adj_res3$toer, toer_adj3)
-  expect_lte(adj_res3$toer, 0.025)
+  expect_equal(adj_res3$fwer, toer_adj3)
+  expect_lte(adj_res3$fwer, 0.025)
   expect_gt(toer_high3, 0.025)
-  expect_equal(adj_res3$toer, toer_adj3)
-  expect_lte(adj_res3$toer, 0.025)
+  expect_equal(adj_res3$fwer, toer_adj3)
+  expect_lte(adj_res3$fwer, 0.025)
   expect_gt(toer_high3, 0.025)
 
-  expect_equal(adj_res4$toer, toer_adj4)
-  expect_lte(adj_res4$toer, 0.025)
+  expect_equal(adj_res4$fwer, toer_adj4)
+  expect_lte(adj_res4$fwer, 0.025)
   expect_gt(toer_high4, 0.025)
-  expect_equal(adj_res4$toer, toer_adj4)
-  expect_lte(adj_res4$toer, 0.025)
+  expect_equal(adj_res4$fwer, toer_adj4)
+  expect_lte(adj_res4$fwer, 0.025)
   expect_gt(toer_high4, 0.025)
 })
 
@@ -101,8 +101,8 @@ test_that("adjust_lambda works for a two-stage design", {
     interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
       effstop = 0.1))
 
-  expect_equal(adj_res1$toer, toer_adj1)
-  expect_lte(adj_res1$toer, 0.025)
+  expect_equal(adj_res1$fwer, toer_adj1)
+  expect_lte(adj_res1$fwer, 0.025)
   expect_gt(toer_high1, 0.025)
 
   adj_res2 <- adjust_lambda(design = design, alpha = 0.025, n = 20, n1 = 10,
@@ -121,8 +121,8 @@ test_that("adjust_lambda works for a two-stage design", {
     interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
       effstop = 0.1))
 
-  expect_equal(adj_res2$toer, toer_adj2)
-  expect_lte(adj_res2$toer, 0.025)
+  expect_equal(adj_res2$fwer, toer_adj2)
+  expect_lte(adj_res2$fwer, 0.025)
   expect_gt(toer_high2, 0.025)
 
   # Cases with an additional step after uniroot
@@ -142,8 +142,8 @@ test_that("adjust_lambda works for a two-stage design", {
     interim_fun = interim_postpred, interim_params = list(futstop = 0.1,
       effstop = 0.1))
 
-  expect_equal(adj_res3$toer, toer_adj3)
-  expect_lte(adj_res3$toer, 0.025)
+  expect_equal(adj_res3$fwer, toer_adj3)
+  expect_lte(adj_res3$fwer, 0.025)
   expect_gt(toer_high3, 0.025)
 
   adj_res4 <- adjust_lambda(design = design, alpha = 0.025, n = 23, n1 = 10,
@@ -160,8 +160,8 @@ test_that("adjust_lambda works for a two-stage design", {
       logbase = 2), interim_fun = interim_postpred, interim_params =
       list(futstop = 0.1, effstop = 0.1))
 
-  expect_equal(adj_res4$toer, toer_adj4)
-  expect_lte(adj_res4$toer, 0.025)
+  expect_equal(adj_res4$fwer, toer_adj4)
+  expect_lte(adj_res4$fwer, 0.025)
   expect_gt(toer_high4, 0.025)
 })
 
