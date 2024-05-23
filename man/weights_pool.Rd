@@ -10,8 +10,6 @@ weights_pool(design, ...)
 
 \S4method{weights_pool}{OneStageBasket}(design, n, ...)
 
-\S4method{weights_pool}{OneStageBasket}(design, n, ...)
-
 \S4method{weights_pool}{TwoStageBasket}(design, n, n1, ...)
 }
 \arguments{
@@ -37,8 +35,6 @@ are pooled.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{weights_pool(OneStageBasket)}: Pooled analysis for a single-stage basket design
-
 \item \code{weights_pool(OneStageBasket)}: Pooled analysis for a single-stage basket design
 
 \item \code{weights_pool(TwoStageBasket)}: Pooled analysis for a two-stage basket design
