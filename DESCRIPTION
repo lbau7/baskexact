@@ -1,7 +1,7 @@
 Type: Package
 Package: baskexact
 Title: Analytical Calculation of Basket Trial Operating Characteristics
-Version: 1.0.1
+Version: 1.0.2
 Authors@R:
     person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7931-7470"))
