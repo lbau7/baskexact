@@ -96,12 +96,6 @@ p1 > p0. The rejection probabilities correspond to the type 1 error
 rate for baskets with p1 = p0 and to the power for baskets with
 p1 > p0.
 
-If \code{prune = TRUE} then the baskets with an observed number of baskets
-smaller than the pooled critical value are not borrowed from. The
-pooled critical value is the smallest integer c for which all null
-hypotheses can be rejected if the number of responses is exactly c for
-all baskets.
-
 This method is implemented for the class \code{\link{OneStageBasket}}.
 }
 \section{Methods (by class)}{
