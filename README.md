@@ -110,7 +110,7 @@ adjust_lambda(
 # $lambda
 # [1] 0.991
 # 
-# $toer
+# $fwer
 # [1] 0.0231528
 ```
 
