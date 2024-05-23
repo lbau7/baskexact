@@ -576,20 +576,6 @@ setGeneric("weights_pool",
 #'
 #' @template design
 #' @template n
-#' @template n1
-#' @template dotdotdot
-setMethod("weights_pool", "OneStageBasket",
-  function(design, n, ...) {
-    n_sum <- n + 1
-    mat <- matrix(1, nrow = n_sum, ncol = n_sum)
-    class(mat) <- "pp"
-    mat
-  })
-
-#' @describeIn weights_pool Pooled analysis for a single-stage basket design
-#'
-#' @template design
-#' @template n
 #' @template dotdotdot
 setMethod("weights_pool", "OneStageBasket",
   function(design, n, ...) {
