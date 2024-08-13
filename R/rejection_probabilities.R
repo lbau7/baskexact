@@ -233,16 +233,29 @@ reject_prob_group <- function(design, p1, n, lambda, weight_mat,
 
   eff_vec <- apply(res, 1, function(x) any(x == 1))
   eff_vec_targ <- apply(res[eff_vec, ], 1, function(x) any(x[targ] == 1))
-  events_eff <- events[eff_vec, ]
-  # Calculate probability of ouctomes where any null hypothesis was rejected
-  probs_eff <- apply(events_eff, 1,
-    function(x) get_prob(n = n, r = x, p = p1))
-  res_eff <- res[eff_vec,]
-  rej <- colSums(apply(res_eff == 1, 2, function(x) x * probs_eff))
-  # Use only the probabilities of outcomes with a rejected null hypothesis
-  # where a targeted basket was significant to calculate experimentwise
-  # rejection probability
-  rej_ew <- sum(probs_eff[eff_vec_targ])
+
+  if(any(eff_vec)){
+    events_eff <- events[eff_vec, ]
+    # Calculate probability of outcomes where any null hypothesis was rejected
+    probs_eff <- apply(events_eff, 1,
+                       function(x) get_prob(n = n, r = x, p = p1))
+    res_eff <- res[eff_vec,]
+    rej <- colSums(apply(res_eff == 1, 2, function(x) x * probs_eff))
+  } else {
+    # If eff_vec does not contain any TRUE value, rejection probability is 0 in
+    # every basket.
+    rej <- rep(0, times = design@k)
+  }
+  if(length(eff_vec_targ) > 0){
+    # Use only the probabilities of outcomes with a rejected null hypothesis
+    # where a targeted basket was significant to calculate experiment-wise
+    # rejection probability
+    rej_ew <- sum(probs_eff[eff_vec_targ])
+  } else {
+    rej_ew <- 0
+  }
+
+
 
   if (prob == "toer") {
     list(
