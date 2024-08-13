@@ -103,3 +103,12 @@ test_that("ecd works for a two-stage design", {
 
   expect_equal(ecd4, ecd_loop4)
 })
+
+test_that("ecd works for a single-stage design with small sample size and
+          high lambda", {
+    design <- setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1, p0 = 0.15)
+    ecd1 <- ecd(design, p1 = c(0.15, 0.15, 0.15, 0.15), n = 10,
+                lambda = 0.9999999999999998889777,
+                weight_fun = weights_fujikawa)
+    expect_equal(ecd1, 4)
+})

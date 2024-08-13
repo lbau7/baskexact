@@ -17,9 +17,15 @@ ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun = NULL,
 
   # Remove outcomes where all results are significant and calculate the
   # probabilities later
-  sel_sig <- apply(events_sel, 1, function(x) all(x >= crit))
-  events_sig <- events_sel[sel_sig, ]
-  events_sel <- events_sel[!sel_sig, ]
+  if(!is.na(crit)){
+    sel_sig <- apply(events_sel, 1, function(x) all(x >= crit))
+    events_sig <- events_sel[sel_sig, ]
+    events_sel <- events_sel[!sel_sig, ]
+  } else {
+    sel_sig <- numeric(0)
+    events_sig <- events_sel[sel_sig, ] # i.e. an empty matrix with k columns
+    # events_sel remains the same if there are no significant results
+  }
 
   # Conduct test for the remaining outcomes
   fun <- function(x) bskt_final(design = design, n = n, lambda = lambda, r = x,
@@ -34,7 +40,7 @@ ecd_calc <- function(design, p1, n, lambda, weight_mat, globalweight_fun = NULL,
     ncol = design@k)
   res <- rbind(res_nosig, res_sel, res_allsig)
 
-  # Reorder events to allign with res
+  # Reorder events to align with res
   events <- rbind(events_nosig, events_sel, events_sig)
 
   # If all p1 are equal each permutation has the same probability
