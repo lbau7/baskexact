@@ -1,7 +1,7 @@
 # Get the critical value for individual baskets
 get_crit <- function(design, n, lambda) {
   shape1post <- design@shape1 + 1:n
-  shape2post <- design@shape1 + n - 1:n
+  shape2post <- design@shape2 + n - 1:n
   betafun <- function(x, y) 1 - stats::pbeta(design@p0, x, y)
   prob <- mapply(betafun, shape1post, shape2post)
   which(prob >= lambda)[1]
