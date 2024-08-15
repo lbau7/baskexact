@@ -153,7 +153,19 @@ test_that("toer works for a single-stage design with pruning", {
   expect_equal(toer_group1$rejection_probabilities,
     toer_loop1$rejection_probabilities)
 })
-
+test_that("toer works for a single-stage design with extremal tau and lambda", {
+  design <- baskexact::setupOneStageBasket(k = 4, shape1 = 1, shape2 = 1,
+                                           p0 = 0.15)
+  toer1 <- baskexact::toer(design, p1 = c(0.15, 0.15, 0.15, 0.15), n = 10,
+                  lambda = 0.9999999999,
+                  weight_fun = baskexact::weights_fujikawa,
+                  weight_params = list(epsilon = 2, tau = 1, logbase = 2.72),
+                  results = "group")
+  expect_equal(toer1$rejection_probabilities,
+               c(0, 0, 0, 0))
+  expect_equal(toer1$fwer,
+               0)
+})
 test_that("toer works for a two-stage design", {
   # Compare Fujikawa et al., 2020
   design <- setupTwoStageBasket(k = 3, shape1 = 1, shape2 = 1, p0 = 0.2)
